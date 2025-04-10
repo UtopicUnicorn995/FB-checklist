@@ -1,5 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, FlatList, Button, Image} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Button,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import {getApp} from '@react-native-firebase/app';
 import {
   getDatabase,
@@ -56,14 +64,41 @@ export default function Checklist() {
       .catch(error => console.error('Error adding item:', error.message));
   };
 
+  const checkItem = (itemId, check) => {
+    const db = getDatabase();
+    const itemRef = ref(db, `/checklists/${itemId}`);
+
+    const updatedCheckedValue = !check;
+
+    itemRef
+      .update({
+        checked: updatedCheckedValue,
+        updatedAt: new Date().toISOString(),
+      })
+      .then(() => console.log(`Item ${itemId} updated successfully!`))
+      .catch(error =>
+        console.error(`Error updating item ${itemId}:`, error.message),
+      );
+  };
+
   const renderItem = ({item}) => (
-    <View style={styles.itemContainer}>
-      <Image
-        source={require('../assets/checkedfalse.png')}
-        style={{width: 20, height: 20}}
-      />
+    <TouchableOpacity
+      style={styles.itemContainer}
+      onPress={() => checkItem(item.id, item.checked)}>
+      {item.checked ? (
+        <Image
+          source={require('../assets/checkedtrue.png')}
+          style={{width: 24, height: 20}}
+        />
+      ) : (
+        <Image
+          source={require('../assets/checkedfalse.png')}
+          style={{width: 20, height: 20}}
+        />
+      )}
+
       <Text style={styles.itemTitle}>{item.title}</Text>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
