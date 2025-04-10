@@ -1,0 +1,34 @@
+{
+    "users": {
+        "userId1": {
+            "description": "+1234567890",
+            "verificationCode": "123456",
+            "createdAt": "2025-04-08T12:00:00Z"
+        },
+        "userId2": {
+            "phoneNumber": "+0987654321231",
+            "verificationCode": "654321",
+            "createdAt": "2025-04-08T12:05:00Z"
+        }
+    },
+    "checklists": {
+        "checklistId1": {
+            "title": "Clean something",
+            "description": "Clean the house",
+            "checked": false,
+            "checkedAt": null,
+            "checkedBy": null,
+            "createdAt": "2025-04-08T12:05:00Z",
+            "updatedAt": "2025-04-08T12:10:00Z"
+        },
+        "checklistId2": {
+            "title": "Find something",
+            "description": "Find the remote",
+            "checked": false,
+            "checkedAt": null,
+            "checkedBy": null,
+            "createdAt": "2025-04-08T12:05:00Z",
+            "updatedAt": "2025-04-08T12:10:00Z"
+        }
+    }
+}
