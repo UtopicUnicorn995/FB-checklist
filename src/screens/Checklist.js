@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, FlatList, Button} from 'react-native';
+import {View, Text, StyleSheet, FlatList, Button, Image} from 'react-native';
 import {getApp} from '@react-native-firebase/app';
 import {
   getDatabase,
@@ -8,7 +8,6 @@ import {
   onValue,
   off,
   set,
-  databaseUrl
 } from '@react-native-firebase/database';
 
 export default function Checklist() {
@@ -20,11 +19,7 @@ export default function Checklist() {
 
   useEffect(() => {
     const db = getDatabase();
-    const checklistRef = ref(db, '/checklists');
-
-    const onValueChange = snapshot => {
-      console.log('Snapshot received:', snapshot);
-
+    ref(db, '/checklists').on('value', snapshot => {
       if (snapshot.exists()) {
         const data = snapshot.val();
         console.log('Checklist data:', data);
@@ -39,16 +34,7 @@ export default function Checklist() {
         setChecklistItems([]);
       }
       setLoading(false);
-    };
-
-    onValue(checklistRef, onValueChange, error => {
-      console.error('Error retrieving checklist data:', error);
-      setLoading(false);
     });
-
-    return () => {
-      off(checklistRef, 'value', onValueChange);
-    };
   }, []);
 
   console.log('checklistitems', checklistItems);
@@ -72,25 +58,26 @@ export default function Checklist() {
 
   const renderItem = ({item}) => (
     <View style={styles.itemContainer}>
+      <Image
+        source={require('../assets/checkedfalse.png')}
+        style={{width: 20, height: 20}}
+      />
       <Text style={styles.itemTitle}>{item.title}</Text>
-      <Text style={styles.itemDescription}>{item.description}</Text>
-      <Text style={styles.itemStatus}>
-        {item.checked ? 'Completed' : 'Pending'}
-      </Text>
     </View>
   );
 
   return (
     <View style={styles.container}>
       <View style={styles.checklistContainer}>
+        <View style={styles.checklistHeaderFold}>
+          <Image
+            source={require('../assets/fold.png')}
+            style={{width: 40, height: 40}}
+          />
+        </View>
         <View style={styles.checklistHeader}>
           <Text style={styles.headerText}>Checklist:</Text>
         </View>
-{/* 
-        <Button
-          title="Add Test Item"
-          onPress={() => addItem('New Item', "A new item's descriptio")}
-        /> */}
 
         {loading ? (
           <Text>Loading...</Text>
@@ -103,6 +90,11 @@ export default function Checklist() {
         ) : (
           <Text style={styles.noItemsText}>No checklist items found.</Text>
         )}
+
+        <Button
+          title="Add Test Item"
+          onPress={() => addItem('item 1', 'Item 1 description1')}
+        />
       </View>
     </View>
   );
@@ -122,14 +114,23 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
     paddingHorizontal: 32,
     flexDirection: 'column',
-    borderRadiusTopRight: 32,
-    gap: 32,
+    borderTopRightRadius: 32,
+    gap: 20,
+    position: 'relative',
   },
   checklistHeader: {
     paddingBottom: 20,
-    borderBottomWidth: 2,
+    borderBottomWidth: 1.5,
     borderStyle: 'dashed',
     borderColor: 'black',
+  },
+  checklistHeaderFold: {
+    borderRadius: 2,
+    alignSelf: 'center',
+    marginBottom: 16,
+    position: 'absolute',
+    top: 0,
+    right: 0,
   },
   headerText: {
     fontSize: 20,
@@ -137,18 +138,14 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   itemContainer: {
-    marginBottom: 16,
-    padding: 16,
-    backgroundColor: '#FFF',
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    gap: 10,
+    marginBottom: 10,
   },
   itemTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 16,
     color: 'black',
   },
   itemDescription: {
