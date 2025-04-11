@@ -13,22 +13,29 @@
     },
     "checklists": {
         "checklistId1": {
-            "title": "Clean something",
-            "description": "Clean the house",
-            "checked": false,
-            "checkedAt": null,
-            "checkedBy": null,
-            "createdAt": "2025-04-08T12:05:00Z",
-            "updatedAt": "2025-04-08T12:10:00Z"
-        },
-        "checklistId2": {
-            "title": "Find something",
-            "description": "Find the remote",
-            "checked": false,
-            "checkedAt": null,
-            "checkedBy": null,
-            "createdAt": "2025-04-08T12:05:00Z",
-            "updatedAt": "2025-04-08T12:10:00Z"
+            "createdBy": "userId1",
+            "title": "First checklist",
+            "description": "This is the first checklist",
+            "checklistItems": {
+                "item1": {
+                    "title": "Clean something",
+                    "description": "Clean the house",
+                    "checked": false,
+                    "checkedAt": null,
+                    "checkedBy": null,
+                    "createdAt": "2025-04-08T12:05:00Z",
+                    "updatedAt": "2025-04-08T12:10:00Z"
+                },
+                "item2": {
+                    "title": "Clean something else",
+                    "description": "Clean the car",
+                    "checked": false,
+                    "checkedAt": null,
+                    "checkedBy": null,
+                    "createdAt": "2025-04-08T12:05:00Z",
+                    "updatedAt": "2025-04-08T12:10:00Z"
+                }
+            }
         }
     }
 }
