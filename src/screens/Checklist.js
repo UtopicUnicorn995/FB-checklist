@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import {getDatabase, ref, push, set} from '@react-native-firebase/database';
 import ModalView from '../components/ModalView';
+import ChecklistItem from '../components/ChecklistItem';
+import styles from '../styles/Checklist.styles'
 
 export default function Checklist() {
   const [checklist, setChecklist] = useState([]);
@@ -134,62 +136,16 @@ export default function Checklist() {
       .catch(error => console.log('Error changing title'));
   };
 
-  const renderItem = ({item, index}) => (
-    <View style={styles.itemContainer}>
-      {editingItem?.id === item.id ? (
-        <View style={styles.editContainer}>
-          <TextInput
-            style={[styles.itemTitle, styles.editableTextInput]}
-            value={editingItem.title}
-            onChangeText={text =>
-              setEditingItem(prev => ({...prev, title: text}))
-            }
-            onBlur={() => {
-              editChecklistItem(selectedChecklist.id, item.id, {
-                title: editingItem.title,
-              });
-            }}
-          />
-        </View>
-      ) : (
-        <TouchableOpacity
-          style={[styles.itemChecklist, item.checked ? {gap: 10} : {gap: 14}]}
-          onPress={() =>
-            checkItem(selectedChecklist.id, item.id, item.checked)
-          }>
-          {item.checked ? (
-            <Image
-              source={require('../assets/checkedtrue.png')}
-              style={{width: 24, height: 20}}
-            />
-          ) : (
-            <Image
-              source={require('../assets/checkedfalse.png')}
-              style={{width: 20, height: 20}}
-            />
-          )}
-          <Text
-            style={[
-              styles.itemTitle,
-              item.checked && {textDecorationLine: 'line-through'},
-            ]}>
-            {index + 1}. {item.title}
-          </Text>
-        </TouchableOpacity>
-      )}
-
-      <TouchableOpacity
-        onPress={() =>
-          editingItem
-            ? setEditingItem(null)
-            : setEditingItem({id: item.id, title: item.title})
-        }>
-        <Image
-          source={require('../assets/editItem.png')}
-          style={{width: 20, height: 18}}
-        />
-      </TouchableOpacity>
-    </View>
+  const renderItem = ({ item, index }) => (
+    <ChecklistItem
+      item={item}
+      index={index}
+      checkItem={checkItem}
+      editingItem={editingItem}
+      setEditingItem={setEditingItem}
+      editChecklistItem={editChecklistItem}
+      selectedChecklistId={selectedChecklist.id}
+    />
   );
 
   return (
@@ -299,103 +255,3 @@ export default function Checklist() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  checklistContainer: {
-    backgroundColor: '#FFF7E3',
-    flex: 1,
-    width: '100%',
-    paddingVertical: 40,
-    paddingHorizontal: 32,
-    flexDirection: 'column',
-    borderTopRightRadius: 32,
-    gap: 20,
-    position: 'relative',
-  },
-  checklistHeader: {
-    paddingBottom: 20,
-    borderBottomWidth: 1.5,
-    borderStyle: 'dashed',
-    borderColor: 'black',
-  },
-  checklistHeaderFold: {
-    borderRadius: 2,
-    alignSelf: 'center',
-    marginBottom: 16,
-    position: 'absolute',
-    top: 0,
-    right: 0,
-  },
-  headerText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'black',
-  },
-  itemContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 10,
-    gap: 10,
-    marginBottom: 10,
-    width: '100%',
-  },
-  editContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-    gap: 10,
-    marginBottom: -12,
-  },
-  editableTextInput: {
-    flex: 1,
-    backgroundColor: '#fff',
-    padding: 5,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#ccc',
-  },
-  itemChecklist: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  itemTitle: {
-    fontSize: 16,
-    color: 'black',
-  },
-  itemDescription: {
-    fontSize: 16,
-    color: '#555',
-    marginTop: 4,
-  },
-  itemStatus: {
-    fontSize: 14,
-    color: '#888',
-    marginTop: 8,
-  },
-  noItemsText: {
-    fontSize: 16,
-    color: '#888',
-    textAlign: 'center',
-    marginTop: 20,
-  },
-  floatingIcon: {
-    backgroundColor: '#fff',
-    padding: 10,
-    borderRadius: 99,
-    width: 55,
-    height: 55,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    bottom: 32,
-    right: 32,
-    elevation: 5,
-  },
-});
