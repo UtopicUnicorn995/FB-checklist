@@ -134,7 +134,7 @@ export default function Checklist() {
       .catch(error => console.log('Error changing title'));
   };
 
-  const renderItem = ({item}) => (
+  const renderItem = ({item, index}) => (
     <View style={styles.itemContainer}>
       {editingItem?.id === item.id ? (
         <View style={styles.editContainer}>
@@ -173,7 +173,7 @@ export default function Checklist() {
               styles.itemTitle,
               item.checked && {textDecorationLine: 'line-through'},
             ]}>
-            {item.title}
+            {index + 1}. {item.title}
           </Text>
         </TouchableOpacity>
       )}
