@@ -14,7 +14,7 @@ import {
 import {getDatabase, ref, push, set} from '@react-native-firebase/database';
 import ModalView from '../components/ModalView';
 import ChecklistItem from '../components/ChecklistItem';
-import styles from '../styles/Checklist.styles'
+import styles from '../styles/Checklist.styles';
 
 export default function Checklist() {
   const [checklist, setChecklist] = useState([]);
@@ -136,7 +136,7 @@ export default function Checklist() {
       .catch(error => console.log('Error changing title'));
   };
 
-  const renderItem = ({ item, index }) => (
+  const renderItem = ({item, index}) => (
     <ChecklistItem
       item={item}
       index={index}
@@ -219,15 +219,11 @@ export default function Checklist() {
 
         <Pressable style={styles.floatingIcon} onPress={toggleMenu}>
           <Animated.Image
-            source={
-              isMenuOpen
-                ? require('../assets/addIcon.png')
-                : require('../assets/menu.png')
-            }
+            source={require('../assets/addIcon.png')}
             style={[
               {
-                width: isMenuOpen ? 20 : 22,
-                height: isMenuOpen ? 20 : 25,
+                width: 25,
+                height: 25,
                 transform: [
                   {
                     scale: animationValue.interpolate({
