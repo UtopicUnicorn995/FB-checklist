@@ -27,6 +27,7 @@ export default function Checklist() {
     title: '',
   });
   const animationValue = useRef(new Animated.Value(0)).current;
+  const animationFold = useRef(new Animated.Value(1)).current
 
   useEffect(() => {
     const db = getDatabase();
@@ -62,6 +63,8 @@ export default function Checklist() {
       useNativeDriver: true,
     }).start();
   };
+
+  
 
   const addItem = (title, description) => {
     const db = getDatabase();
@@ -154,7 +157,7 @@ export default function Checklist() {
         <View style={styles.checklistHeaderFold}>
           <Image
             source={require('../assets/fold.png')}
-            style={{width: 40, height: 40}}
+            style={{width: 45, height: 45}}
           />
         </View>
         <View style={styles.checklistHeader}>
@@ -196,6 +199,31 @@ export default function Checklist() {
               }}
             />
           </TouchableOpacity>
+          <Pressable style={styles.floatingIcon} onPress={toggleMenu}>
+            <Animated.Image
+              source={require('../assets/addIcon.png')}
+              style={[
+                {
+                  width: 25,
+                  height: 25,
+                  transform: [
+                    {
+                      scale: animationValue.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [1, 1.2],
+                      }),
+                    },
+                    {
+                      rotate: animationValue.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: ['0deg', '45deg'],
+                      }),
+                    },
+                  ],
+                },
+              ]}
+            />
+          </Pressable>
         </View>
         {loading ? (
           <Text>Loading...</Text>
@@ -217,31 +245,6 @@ export default function Checklist() {
           <Text style={styles.noItemsText}>No checklist items found.</Text>
         )}
 
-        <Pressable style={styles.floatingIcon} onPress={toggleMenu}>
-          <Animated.Image
-            source={require('../assets/addIcon.png')}
-            style={[
-              {
-                width: 25,
-                height: 25,
-                transform: [
-                  {
-                    scale: animationValue.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [1, 1.2],
-                    }),
-                  },
-                  {
-                    rotate: animationValue.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: ['0deg', '45deg'],
-                    }),
-                  },
-                ],
-              },
-            ]}
-          />
-        </Pressable>
         <ModalView
           openMenu={isMenuOpen}
           setModalMenu={toggleMenu}
