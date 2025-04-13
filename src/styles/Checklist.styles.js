@@ -19,7 +19,7 @@ export default StyleSheet.create({
     gap: 20,
     position: 'relative',
   },
-  checklistHeader: {
+  header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -28,7 +28,7 @@ export default StyleSheet.create({
     borderStyle: 'dashed',
     borderColor: 'black',
   },
-  checklistHeaderFold: {
+  headerFold: {
     borderRadius: 2,
     alignSelf: 'center',
     marginBottom: 16,

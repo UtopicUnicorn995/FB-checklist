@@ -22,10 +22,7 @@ export default function Checklist() {
   const [loading, setLoading] = useState(true);
   const [editingItem, setEditingItem] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [checklistTitle, setChecklistTitle] = useState({
-    isEdit: false,
-    title: '',
-  });
+
   const animationValue = useRef(new Animated.Value(0)).current;
   const animationFold = useRef(new Animated.Value(1)).current
 
@@ -41,10 +38,10 @@ export default function Checklist() {
         }));
         setChecklist(itemsArray);
         setSelectedChecklist(itemsArray[0]);
-        setChecklistTitle(prev => ({
-          ...prev,
-          title: itemsArray[0]?.title || '',
-        }));
+        // setChecklistTitle(prev => ({
+        //   ...prev,
+        //   title: itemsArray[0]?.title || '',
+        // }));
         setLoading(false);
       } else {
         console.log('No checklist items found');
@@ -123,21 +120,7 @@ export default function Checklist() {
       );
   };
 
-  const editChecklistTitle = (checklistId, newTitle) => {
-    const db = getDatabase();
-    const checklistRef = ref(db, `/checklists/${checklistId}`);
 
-    console.log('checklist ref', checklistRef);
-
-    checklistRef
-      .update({
-        title: checklistTitle.title,
-      })
-      .then(() =>
-        console.log(`Item ${checklistId}'s title has successfully been edited`),
-      )
-      .catch(error => console.log('Error changing title'));
-  };
 
   const renderItem = ({item, index}) => (
     <ChecklistItem
@@ -154,77 +137,8 @@ export default function Checklist() {
   return (
     <View style={styles.container}>
       <View style={styles.checklistContainer}>
-        <View style={styles.checklistHeaderFold}>
-          <Image
-            source={require('../assets/fold.png')}
-            style={{width: 45, height: 45}}
-          />
-        </View>
-        <View style={styles.checklistHeader}>
-          <TouchableOpacity
-            onPress={() =>
-              setChecklistTitle(prev => ({
-                ...prev,
-                isEdit: !prev.isEdit,
-              }))
-            }>
-            <TextInput
-              style={[
-                styles.headerText,
-                checklistTitle.isEdit && {backgroundColor: '#fff'},
-              ]}
-              editable={checklistTitle.isEdit}
-              value={
-                checklistTitle
-                  ? checklistTitle.title
-                  : 'No title for this checklist'
-              }
-              onChangeText={text =>
-                setChecklistTitle(prev => ({
-                  ...prev,
-                  title: text,
-                }))
-              }
-              onBlur={() => {
-                if (checklistTitle.isEdit) {
-                  editChecklistTitle(
-                    selectedChecklist.id,
-                    checklistTitle.title,
-                  );
-                  setChecklistTitle(prev => ({
-                    ...prev,
-                    isEdit: false,
-                  }));
-                }
-              }}
-            />
-          </TouchableOpacity>
-          <Pressable style={styles.floatingIcon} onPress={toggleMenu}>
-            <Animated.Image
-              source={require('../assets/addIcon.png')}
-              style={[
-                {
-                  width: 25,
-                  height: 25,
-                  transform: [
-                    {
-                      scale: animationValue.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [1, 1.2],
-                      }),
-                    },
-                    {
-                      rotate: animationValue.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: ['0deg', '45deg'],
-                      }),
-                    },
-                  ],
-                },
-              ]}
-            />
-          </Pressable>
-        </View>
+        
+
         {loading ? (
           <Text>Loading...</Text>
         ) : checklist.length > 0 ? (
