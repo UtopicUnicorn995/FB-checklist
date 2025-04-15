@@ -1,4 +1,5 @@
 import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Checklist from './screens/Checklist';
 import Login from './screens/Login';
 import ChecklistDetails from './screens/ChecklistDetails';
@@ -31,11 +32,13 @@ const RootStack = () => {
 export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <AppProvider>
-        <NavigationContainer>
-          <RootStack />
-        </NavigationContainer>
-      </AppProvider>
+      <SafeAreaProvider>
+        <AppProvider>
+          <NavigationContainer>
+            <RootStack />
+          </NavigationContainer>
+        </AppProvider>
+      </SafeAreaProvider>
     </GestureHandlerRootView>
   );
 }

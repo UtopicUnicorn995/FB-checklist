@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {View, Text, FlatList, Alert} from 'react-native';
 import {getDatabase, ref, push, set} from '@react-native-firebase/database';
 import ModalView from '../components/ModalView';
@@ -15,6 +16,8 @@ export default function Checklist() {
   const [title, setTitle] = useState('');
   const [isEditable, setIsEditable] = useState(false);
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
+
+  const insets = useSafeAreaInsets()
 
   useEffect(() => {
     const db = getDatabase();
@@ -178,6 +181,7 @@ export default function Checklist() {
         ) : checklist.length > 0 ? (
           <FlatList
             showsVerticalScrollIndicator={false}
+            contentContainerStyle={{paddingBottom: insets.bottom}}
             data={
               selectedChecklist?.checklistItems
                 ? Object.keys(selectedChecklist.checklistItems).map(key => ({

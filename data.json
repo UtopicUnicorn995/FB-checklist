@@ -1,217 +1,202 @@
 {
-    "checklists": {
-      "checklistId1": {
-        "checklistItems": {
-          "-ONTO0twDFOb9Y5qtZeI": {
-            "checked": false,
-            "createdAt": "2025-04-10T06:29:58.942Z",
-            "description": "Aquarium",
-            "title": "Aquarium",
-            "updatedAt": "2025-04-11T01:22:25.079Z"
-          },
-          "-ONXWqSU0DeICTozxNvG": {
-            "checked": true,
-            "createdAt": "2025-04-11T01:47:00.228Z",
-            "description": "Food",
-            "title": "Samgyup",
-            "updatedAt": "2025-04-11T02:10:34.761Z"
-          },
-          "-ONXXMf0w99F7an9uthD": {
-            "checked": false,
-            "createdAt": "2025-04-11T01:49:16.263Z",
-            "description": "Food",
-            "title": "Samgyup",
-            "updatedAt": "2025-04-11T01:49:16.263Z"
-          },
-          "-ONXZOAj3a0tgOm9mDp8": {
-            "checked": false,
-            "createdAt": "2025-04-11T01:58:06.737Z",
-            "description": "",
-            "title": "Add user authentication ",
-            "updatedAt": "2025-04-11T01:58:06.737Z"
-          },
-          "-ONXZRmNPJsyx2oSRfcN": {
-            "checked": false,
-            "createdAt": "2025-04-11T01:58:21.498Z",
-            "description": "",
-            "title": "Add delete to edit btn",
-            "updatedAt": "2025-04-11T05:30:32.753Z"
-          },
-          "-ONXZUbmNCYvVr_Tvq2e": {
-            "checked": false,
-            "createdAt": "2025-04-11T01:58:33.109Z",
-            "description": "",
-            "title": "Add more items to the menu",
-            "updatedAt": "2025-04-11T01:58:33.109Z"
-          },
-          "-ONXZZgVkhNMzUrNmq4M": {
-            "checked": false,
-            "createdAt": "2025-04-11T01:58:53.890Z",
-            "description": "",
-            "title": "Add date to schema",
-            "updatedAt": "2025-04-11T01:58:53.890Z"
-          },
-          "-ONXZbgWn7hTq4iuPZi_": {
-            "checked": false,
-            "createdAt": "2025-04-11T01:59:06.180Z",
-            "description": "",
-            "title": "Make app more responsive ",
-            "updatedAt": "2025-04-11T02:10:00.121Z"
-          },
-          "-ONXZe7nJDONd4NzVcOE": {
-            "checked": false,
-            "createdAt": "2025-04-11T01:59:16.181Z",
-            "description": "",
-            "title": "Improve text description ",
-            "updatedAt": "2025-04-11T01:59:16.181Z"
-          },
-          "-ONXZflWjlh3aAxyUpp5": {
-            "checked": false,
-            "createdAt": "2025-04-11T01:59:22.883Z",
-            "description": "",
-            "title": "Refractor codes",
-            "updatedAt": "2025-04-11T01:59:22.883Z"
-          },
-          "-ONXZihewrrB3pHWFzR_": {
-            "checked": false,
-            "createdAt": "2025-04-11T01:59:34.924Z",
-            "description": "",
-            "title": "Add function to firebase",
-            "updatedAt": "2025-04-11T01:59:34.924Z"
-          },
-          "-ONXZnmQPUgO9hBsUULQ": {
-            "checked": false,
-            "createdAt": "2025-04-11T01:59:55.709Z",
-            "description": "",
-            "title": "Add color theme",
-            "updatedAt": "2025-04-11T01:59:55.709Z"
-          },
-          "-ONXZp9-KsIKKYWJYh5q": {
-            "checked": true,
-            "createdAt": "2025-04-11T02:00:01.314Z",
-            "description": "",
-            "title": "Create basic UI",
-            "updatedAt": "2025-04-11T02:00:06.409Z"
-          },
-          "-ONX_87Mz6M52XJjcY9k": {
-            "checked": false,
-            "createdAt": "2025-04-11T02:01:22.968Z",
-            "description": "",
-            "title": "Sort app buy created date",
-            "updatedAt": "2025-04-11T02:01:22.968Z"
-          },
-          "-ONX_XJnVM3jfQ_UmyFL": {
-            "checked": true,
-            "createdAt": "2025-04-11T02:03:06.338Z",
-            "description": "",
-            "title": "Add checklist number",
-            "updatedAt": "2025-04-11T05:29:42.801Z"
-          },
-          "-ONX_qx97zeWzxlFd4SS": {
-            "checked": true,
-            "createdAt": "2025-04-11T02:04:30.842Z",
-            "description": "",
-            "title": "It's not done yet Kristine",
-            "updatedAt": "2025-04-11T05:29:40.283Z"
-          },
-          "-ONXa1I_4Ar1-aW1jB6A": {
-            "checked": true,
-            "createdAt": "2025-04-11T02:05:18.321Z",
-            "description": "",
-            "title": "Love Ian Forever",
-            "updatedAt": "2025-04-11T02:05:27.573Z"
-          },
-          "-ONXaBO1h_YNa7u2B_9F": {
-            "checked": true,
-            "createdAt": "2025-04-11T02:05:58.642Z",
-            "description": "",
-            "title": "I loves Kristines more ",
-            "updatedAt": "2025-04-11T05:29:58.810Z"
-          },
-          "-ONXaZfdt9YJVZm1Y0Cy": {
-            "checked": true,
-            "createdAt": "2025-04-11T02:07:39.166Z",
-            "description": "",
-            "title": "Siomai",
-            "updatedAt": "2025-04-11T02:10:26.170Z"
-          },
-          "-ONXcKVjz29UG7DIFEUF": {
-            "checked": false,
-            "createdAt": "2025-04-11T02:15:20.271Z",
-            "description": "",
-            "title": "Thinking about adding animations",
-            "updatedAt": "2025-04-11T02:15:20.271Z"
-          },
-          "-ONXcXeKq_jw4d1_gB04": {
-            "checked": true,
-            "createdAt": "2025-04-11T02:16:14.141Z",
-            "description": "",
-            "title": "Text fixxxx especially for lng texts that overflows or adding some character limitations ",
-            "updatedAt": "2025-04-11T04:01:07.827Z"
-          },
-          "-ONXdzobXkViSFjutc8t": {
-            "checked": false,
-            "createdAt": "2025-04-11T02:22:36.715Z",
-            "description": "",
-            "title": "Hungarian Sausage",
-            "updatedAt": "2025-04-11T02:22:36.715Z"
-          },
-          "-ONXeESZWbF8s5tZ6pZj": {
-            "checked": true,
-            "createdAt": "2025-04-11T02:23:40.775Z",
-            "description": "",
-            "title": "Add Kristine to your life forever",
-            "updatedAt": "2025-04-11T03:15:21.117Z"
-          },
-          "-ONXpmgET3aPWn0SIWFx": {
-            "checked": false,
-            "createdAt": "2025-04-11T03:14:08.656Z",
-            "description": "",
-            "title": "1st Month Anniversary Gift of Kristine to Ian",
-            "updatedAt": "2025-04-11T03:14:08.656Z"
-          },
-          "item1": {
-            "checked": false,
-            "createdAt": "2025-04-08T12:05:00Z",
-            "description": "Clean the house",
-            "title": "Saj hut",
-            "updatedAt": "2025-04-11T01:22:26.906Z"
-          },
-          "item2": {
-            "checked": false,
-            "createdAt": "2025-04-08T12:05:00Z",
-            "description": "Clean the car",
-            "title": "Agatona food place",
-            "updatedAt": "2025-04-10T08:42:26.671Z"
-          }
+  "checklists": {
+    "checklistId1": {
+      "checklistItems": {
+        "-ONTO0twDFOb9Y5qtZeI": {
+          "checked": false,
+          "createdAt": "2025-04-10T06:29:58.942Z",
+          "description": "Aquarium",
+          "title": "Aquarium",
+          "updatedAt": "2025-04-11T01:22:25.079Z"
         },
-        "createdBy": "userId1",
-        "collaborators": ["userId2", "userId3"],
-        "description": "This is the first checklist",
-        "title": "Todo list for now "
-      }
+        "-ONXWqSU0DeICTozxNvG": {
+          "checked": true,
+          "createdAt": "2025-04-11T01:47:00.228Z",
+          "description": "Food",
+          "title": "Samgyup",
+          "updatedAt": "2025-04-11T02:10:34.761Z"
+        },
+        "-ONXXMf0w99F7an9uthD": {
+          "checked": false,
+          "createdAt": "2025-04-11T01:49:16.263Z",
+          "description": "Food",
+          "title": "Samgyup",
+          "updatedAt": "2025-04-11T01:49:16.263Z"
+        },
+        "-ONXZOAj3a0tgOm9mDp8": {
+          "checked": false,
+          "createdAt": "2025-04-11T01:58:06.737Z",
+          "description": "",
+          "title": "Add user authentication ",
+          "updatedAt": "2025-04-11T01:58:06.737Z"
+        },
+        "-ONXZRmNPJsyx2oSRfcN": {
+          "checked": false,
+          "createdAt": "2025-04-11T01:58:21.498Z",
+          "description": "",
+          "title": "Add delete to edit btn",
+          "updatedAt": "2025-04-11T05:30:32.753Z"
+        },
+        "-ONXZUbmNCYvVr_Tvq2e": {
+          "checked": false,
+          "createdAt": "2025-04-11T01:58:33.109Z",
+          "description": "",
+          "title": "Add more items to the menu",
+          "updatedAt": "2025-04-11T01:58:33.109Z"
+        },
+        "-ONXZZgVkhNMzUrNmq4M": {
+          "checked": false,
+          "createdAt": "2025-04-11T01:58:53.890Z",
+          "description": "",
+          "title": "Add date to schema",
+          "updatedAt": "2025-04-15T03:08:47.555Z"
+        },
+        "-ONXZbgWn7hTq4iuPZi_": {
+          "checked": false,
+          "createdAt": "2025-04-11T01:59:06.180Z",
+          "description": "",
+          "title": "Make app more responsive ",
+          "updatedAt": "2025-04-11T02:10:00.121Z"
+        },
+        "-ONXZe7nJDONd4NzVcOE": {
+          "checked": false,
+          "createdAt": "2025-04-11T01:59:16.181Z",
+          "description": "",
+          "title": "Improve text description ",
+          "updatedAt": "2025-04-11T01:59:16.181Z"
+        },
+        "-ONXZflWjlh3aAxyUpp5": {
+          "checked": false,
+          "createdAt": "2025-04-11T01:59:22.883Z",
+          "description": "",
+          "title": "Refractor codes",
+          "updatedAt": "2025-04-11T01:59:22.883Z"
+        },
+        "-ONXZnmQPUgO9hBsUULQ": {
+          "checked": false,
+          "createdAt": "2025-04-11T01:59:55.709Z",
+          "description": "",
+          "title": "Add color theme",
+          "updatedAt": "2025-04-12T02:01:45.720Z"
+        },
+        "-ONXZp9-KsIKKYWJYh5q": {
+          "checked": true,
+          "createdAt": "2025-04-11T02:00:01.314Z",
+          "description": "",
+          "title": "Create basic UI",
+          "updatedAt": "2025-04-11T02:00:06.409Z"
+        },
+        "-ONX_87Mz6M52XJjcY9k": {
+          "checked": false,
+          "createdAt": "2025-04-11T02:01:22.968Z",
+          "description": "",
+          "title": "Sort app buy created date",
+          "updatedAt": "2025-04-11T02:01:22.968Z"
+        },
+        "-ONX_XJnVM3jfQ_UmyFL": {
+          "checked": true,
+          "createdAt": "2025-04-11T02:03:06.338Z",
+          "description": "",
+          "title": "Add checklist number",
+          "updatedAt": "2025-04-11T05:29:42.801Z"
+        },
+        "-ONX_qx97zeWzxlFd4SS": {
+          "checked": true,
+          "createdAt": "2025-04-11T02:04:30.842Z",
+          "description": "",
+          "title": "It's not done yet Kristine",
+          "updatedAt": "2025-04-13T07:56:29.912Z"
+        },
+        "-ONXaBO1h_YNa7u2B_9F": {
+          "checked": true,
+          "createdAt": "2025-04-11T02:05:58.642Z",
+          "description": "",
+          "title": "I loves Kristines more ",
+          "updatedAt": "2025-04-14T07:23:10.290Z"
+        },
+        "-ONXaZfdt9YJVZm1Y0Cy": {
+          "checked": true,
+          "createdAt": "2025-04-11T02:07:39.166Z",
+          "description": "",
+          "title": "Siomai",
+          "updatedAt": "2025-04-11T02:10:26.170Z"
+        },
+        "-ONXcXeKq_jw4d1_gB04": {
+          "checked": true,
+          "createdAt": "2025-04-11T02:16:14.141Z",
+          "description": "",
+          "title": "Text fixxxx especially for lng texts that overflows or adding some character limitations ",
+          "updatedAt": "2025-04-11T04:01:07.827Z"
+        },
+        "-ONXdzobXkViSFjutc8t": {
+          "checked": false,
+          "createdAt": "2025-04-11T02:22:36.715Z",
+          "description": "",
+          "title": "Hungarian Sausage",
+          "updatedAt": "2025-04-12T01:52:58.544Z"
+        },
+        "-ONXpmgET3aPWn0SIWFx": {
+          "checked": true,
+          "createdAt": "2025-04-11T03:14:08.656Z",
+          "description": "",
+          "title": "1st Month Anniversary Gift of Kristine to Ian",
+          "updatedAt": "2025-04-15T03:10:17.568Z"
+        },
+        "-ONrQJDoQ_k8_Ndli5LD": {
+          "checked": false,
+          "createdAt": "2025-04-15T03:10:29.812Z",
+          "description": "",
+          "title": "Monthsary Gift to Iyan",
+          "updatedAt": "2025-04-15T03:10:29.812Z"
+        },
+        "item1": {
+          "checked": false,
+          "createdAt": "2025-04-08T12:05:00Z",
+          "description": "Clean the house",
+          "title": "Saj hut",
+          "updatedAt": "2025-04-14T06:12:42.704Z"
+        },
+        "item2": {
+          "checked": false,
+          "createdAt": "2025-04-08T12:05:00Z",
+          "description": "Clean the car",
+          "title": "Agatona food place",
+          "updatedAt": "2025-04-10T08:42:26.671Z"
+        }
+      },
+      "collaborators": [
+        "userId2",
+        "userId3"
+      ],
+      "createdBy": "userId1",
+      "description": "This is the first checklist",
+      "title": "Sample2"
+    }
+  },
+  "test": {
+    "test": "connection"
+  },
+  "users": {
+    "userId1": {
+      "allowedPages": 3,
+      "createdAt": "2025-04-08T12:00:00Z",
+      "password": "123",
+      "subscription": "free",
+      "username": "123456"
     },
-    "users": {
-      "userId1": {
-        "createdAt": "2025-04-08T12:00:00Z",
-        "username": "123456",
-        "password": "123",
-        "allowedPages": 3,
-        "subscription": "free"
-      },
-      "userId2": {
-        "createdAt": "2025-04-08T12:05:00Z",
-        "username": "123",
-        "password": "123",
-        "allowedPages": 5,
-        "subscription": "pro"
-      },
-      "userId3": {
-        "createdAt": "2025-04-08T12:05:00Z",
-        "username": "987",
-        "password": "123",
-        "allowedPages": 4,
-        "subscription": "free"
-      }
+    "userId2": {
+      "allowedPages": 5,
+      "createdAt": "2025-04-08T12:05:00Z",
+      "password": "123",
+      "subscription": "pro",
+      "username": "123"
+    },
+    "userId3": {
+      "allowedPages": 4,
+      "createdAt": "2025-04-08T12:05:00Z",
+      "password": "123",
+      "subscription": "free",
+      "username": "987"
     }
   }
+}

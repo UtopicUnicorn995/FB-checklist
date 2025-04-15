@@ -1,8 +1,17 @@
 import {useState, useRef, useContext} from 'react';
-import {View, TextInput, Animated, Easing, Image} from 'react-native';
+import {useSafeAreaInsets, SafeAreaView} from 'react-native-safe-area-context';
+import {
+  View,
+  TextInput,
+  Animated,
+  Easing,
+  Image,
+  StatusBar,
+} from 'react-native';
 import Pressable from '../components/Pressable';
 import {AppContext} from '../context/AppContext';
 import styles from '../styles/AppLayout.styles';
+import {useNavigation} from '@react-navigation/native';
 
 export default function AppLayout({
   children,
@@ -14,69 +23,73 @@ export default function AppLayout({
   handleTitleEdit,
 }) {
   const {} = useContext(AppContext);
+  const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
 
   return (
-    <View style={styles.app}>
-      <View style={styles.container}>
-        <View style={styles.headerFold}>
-          <Image
-            source={require('../assets/fold.png')}
-            style={{width: 45, height: 45}}
-          />
-        </View>
-        <View style={styles.header}>
+    <SafeAreaView
+      style={{flex: 1, backgroundColor: 'black'}}
+      edges={['bottom', 'left', 'right']}>
+      <StatusBar hidden={true} />
+      <View style={[styles.app]}>
+        <View
+          style={[
+            styles.container,
+            {paddingTop: insets.top + 10, paddingBottom: insets.bottom},
+          ]}>
           <Pressable
-            style={{flex: 1}}
-            onPress={() => {
-              if (handleTitleEdit) setIsEditable(true);
-            }}>
-            <TextInput
-              style={[
-                styles.headerText,
-                isEditable && {
-                  backgroundColor: '#fff',
-                  borderRadius: 5,
-                  borderWidth: 1,
-                  borderColor: '#ccc',
-                },
-              ]}
-              editable={isEditable ? true : false}
-              value={title}
-              onChangeText={setTitle}
-              onBlur={() => {
-                setIsEditable(false);
-                handleTitleEdit();
-              }}
+            onPress={navigation.toggleDrawer}
+            style={styles.headerFold}>
+            <Image
+              source={require('../assets/fold.png')}
+              style={{width: 45, height: 45}}
             />
           </Pressable>
-          {isEditable ? (
-            <Pressable style={styles.floatingIcon} onPress={toggleAddItemModal}>
-              <Animated.Image
-                source={require('../assets/editItem.png')}
+
+          <View style={styles.header}>
+            <Pressable
+              style={{flex: 1}}
+              onPress={() => {
+                if (handleTitleEdit) setIsEditable(true);
+              }}>
+              <TextInput
                 style={[
-                  {
-                    width: 25,
-                    height: 25,
+                  styles.headerText,
+                  isEditable && {
+                    backgroundColor: '#fff',
+                    borderRadius: 5,
+                    borderWidth: 1,
+                    borderColor: '#ccc',
                   },
                 ]}
+                editable={isEditable}
+                value={title}
+                onChangeText={setTitle}
               />
             </Pressable>
-          ) : (
-            <Pressable style={styles.floatingIcon} onPress={toggleAddItemModal}>
-              <Animated.Image
-                source={require('../assets/addIcon.png')}
-                style={[
-                  {
-                    width: 25,
-                    height: 25,
-                  },
-                ]}
-              />
-            </Pressable>
-          )}
+
+            {isEditable ? (
+              <Pressable style={styles.floatingIcon} onPress={handleTitleEdit}>
+                <Animated.Image
+                  source={require('../assets/editItem.png')}
+                  style={{width: 28, height: 25}}
+                />
+              </Pressable>
+            ) : (
+              <Pressable
+                style={styles.floatingIcon}
+                onPress={toggleAddItemModal}>
+                <Animated.Image
+                  source={require('../assets/addIcon.png')}
+                  style={{width: 25, height: 25}}
+                />
+              </Pressable>
+            )}
+          </View>
+
+          {children}
         </View>
-        {children}
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
