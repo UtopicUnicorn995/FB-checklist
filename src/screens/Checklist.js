@@ -1,20 +1,10 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  Image,
-  TouchableOpacity,
-  TextInput,
-  Pressable,
-  Animated,
-  Easing,
-} from 'react-native';
+import React, {useState, useEffect, useRef, useContext} from 'react';
+import {View, Text, FlatList, Alert} from 'react-native';
 import {getDatabase, ref, push, set} from '@react-native-firebase/database';
 import ModalView from '../components/ModalView';
 import ChecklistItem from '../components/ChecklistItem';
 import styles from '../styles/Checklist.styles';
+import AppLayout from '../layout/AppLayout';
 
 export default function Checklist() {
   const [checklist, setChecklist] = useState([]);
@@ -22,9 +12,9 @@ export default function Checklist() {
   const [loading, setLoading] = useState(true);
   const [editingItem, setEditingItem] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const animationValue = useRef(new Animated.Value(0)).current;
-  const animationFold = useRef(new Animated.Value(1)).current
+  const [title, setTitle] = useState('');
+  const [isEditable, setIsEditable] = useState(false);
+  const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
 
   useEffect(() => {
     const db = getDatabase();
@@ -38,10 +28,7 @@ export default function Checklist() {
         }));
         setChecklist(itemsArray);
         setSelectedChecklist(itemsArray[0]);
-        // setChecklistTitle(prev => ({
-        //   ...prev,
-        //   title: itemsArray[0]?.title || '',
-        // }));
+        setTitle(itemsArray[0]?.title || 'My Checklist');
         setLoading(false);
       } else {
         console.log('No checklist items found');
@@ -49,19 +36,6 @@ export default function Checklist() {
       }
     });
   }, []);
-
-  const toggleMenu = () => {
-    setIsMenuOpen(prev => !prev);
-
-    Animated.timing(animationValue, {
-      toValue: isMenuOpen ? 0 : 1,
-      duration: 200,
-      easing: Easing.ease,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  
 
   const addItem = (title, description) => {
     const db = getDatabase();
@@ -120,7 +94,61 @@ export default function Checklist() {
       );
   };
 
+  const deleteItem = (checklistId, itemId) => {
+    const db = getDatabase();
+    const itemRef = ref(
+      db,
+      `/checklists/${checklistId}/checklistItems/${itemId}`,
+    );
 
+    Alert.alert(
+      'Delete checklist item?',
+      'Are you sure you want to delete this item? This action can’t be undone.',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => setEditingItem(null),
+          style: 'cancel',
+        },
+        {
+          text: 'Okay',
+          onPress: () => {
+            itemRef
+              .remove()
+              .then(() => {
+                console.log(`Item ${itemId} deleted successfully!`);
+                setEditingItem(null);
+              })
+              .catch(error =>
+                console.error(`Error deleting item ${itemId}:`, error.message),
+              );
+          },
+        },
+      ],
+    );
+  };
+
+  const handleTitleEdit = () => {
+    if (selectedChecklist?.id) {
+      const db = getDatabase();
+      const checklistRef = ref(db, `/checklists/${selectedChecklist.id}`);
+
+      checklistRef
+        .update({title})
+        .then(() => {
+          console.log(`Checklist ${selectedChecklist.id} updated`);
+          setIsEditable(false);
+        })
+        .catch(error =>
+          console.error('Error updating checklist title:', error.message),
+        );
+    }
+  };
+
+  const toggleAddItemModal = () => {
+    console.log('to');
+    setIsAddItemModalOpen(prev => !prev);
+  };
 
   const renderItem = ({item, index}) => (
     <ChecklistItem
@@ -131,14 +159,20 @@ export default function Checklist() {
       setEditingItem={setEditingItem}
       editChecklistItem={editChecklistItem}
       selectedChecklistId={selectedChecklist.id}
+      handleDeleteItem={deleteItem}
     />
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.checklistContainer}>
-        
-
+    <AppLayout
+      selectedChecklist={selectedChecklist}
+      title={title}
+      setTitle={setTitle}
+      isEditable={isEditable}
+      setIsEditable={setIsEditable}
+      handleTitleEdit={handleTitleEdit}
+      toggleAddItemModal={toggleAddItemModal}>
+      <View style={styles.checklist}>
         {loading ? (
           <Text>Loading...</Text>
         ) : checklist.length > 0 ? (
@@ -158,13 +192,12 @@ export default function Checklist() {
         ) : (
           <Text style={styles.noItemsText}>No checklist items found.</Text>
         )}
-
-        <ModalView
-          openMenu={isMenuOpen}
-          setModalMenu={toggleMenu}
-          handleAddItem={addItem}
-        />
       </View>
-    </View>
+      <ModalView
+        openMenu={isAddItemModalOpen}
+        setModalMenu={toggleAddItemModal}
+        handleAddItem={addItem}
+      />
+    </AppLayout>
   );
 }

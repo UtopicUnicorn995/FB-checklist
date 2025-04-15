@@ -1,13 +1,7 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  Image,
-  StyleSheet,
-} from 'react-native';
-import styles from '../styles/ChecklistItem.styles'
+import {View, Text, TextInput, Image, StyleSheet} from 'react-native';
+import Pressable from './Pressable';
+import styles from '../styles/ChecklistItem.styles';
 
 export default function ChecklistItem({
   item,
@@ -17,11 +11,19 @@ export default function ChecklistItem({
   setEditingItem,
   editChecklistItem,
   selectedChecklistId,
+  handleDeleteItem,
 }) {
   return (
     <View style={styles.itemContainer}>
       {editingItem?.id === item.id ? (
         <View style={styles.editContainer}>
+          <Pressable
+            onPress={() => handleDeleteItem(selectedChecklistId, item.id)}>
+            <Image
+              source={require('../assets/delete.png')}
+              style={{width: 20, height: 23}}
+            />
+          </Pressable>
           <TextInput
             style={[styles.itemTitle, styles.editableTextInput]}
             value={editingItem.title}
@@ -36,11 +38,9 @@ export default function ChecklistItem({
           />
         </View>
       ) : (
-        <TouchableOpacity
+        <Pressable
           style={[styles.itemChecklist, item.checked ? {gap: 10} : {gap: 14}]}
-          onPress={() =>
-            checkItem(selectedChecklistId, item.id, item.checked)
-          }>
+          onPress={() => checkItem(selectedChecklistId, item.id, item.checked)}>
           {item.checked ? (
             <Image
               source={require('../assets/checkedtrue.png')}
@@ -59,10 +59,10 @@ export default function ChecklistItem({
             ]}>
             {index + 1}. {item.title}
           </Text>
-        </TouchableOpacity>
+        </Pressable>
       )}
 
-      <TouchableOpacity
+      <Pressable
         onPress={() =>
           editingItem
             ? setEditingItem(null)
@@ -72,7 +72,7 @@ export default function ChecklistItem({
           source={require('../assets/editItem.png')}
           style={{width: 20, height: 18}}
         />
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }

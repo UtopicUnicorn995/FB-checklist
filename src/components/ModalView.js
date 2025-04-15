@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {
   Modal,
   Text,
-  Pressable,
   View,
   StyleSheet,
   TextInput,
@@ -10,6 +9,7 @@ import {
   Image,
   Keyboard,
 } from 'react-native';
+import Pressable from './Pressable';
 
 export default function ModalView({openMenu, setModalMenu, handleAddItem}) {
   const [itemDetails, setItemDetails] = useState({title: '', description: ''});

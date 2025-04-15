@@ -1,31 +1,23 @@
-import {useState} from 'react';
-import {View, Image} from 'react-native';
-import {getDatabase, ref, push, set} from '@react-native-firebase/database';
+import {useState, useRef, useContext} from 'react';
+import {View, TextInput, Animated, Easing, Image} from 'react-native';
+import Pressable from '../components/Pressable';
+import {AppContext} from '../context/AppContext';
+import styles from '../styles/AppLayout.styles';
 
-export default function AppLayout({children}) {
-  const [checklistTitle, setChecklistTitle] = useState({
-    isEdit: false,
-    title: '',
-  });
+export default function AppLayout({
+  children,
+  title,
+  setTitle,
+  isEditable,
+  setIsEditable,
+  toggleAddItemModal,
+  handleTitleEdit,
+}) {
+  const {} = useContext(AppContext);
 
-  const editChecklistTitle = (checklistId, newTitle) => {
-    const db = getDatabase();
-    const checklistRef = ref(db, `/checklists/${checklistId}`);
-
-    console.log('checklist ref', checklistRef);
-
-    checklistRef
-      .update({
-        title: checklistTitle.title,
-      })
-      .then(() =>
-        console.log(`Item ${checklistId}'s title has successfully been edited`),
-      )
-      .catch(error => console.log('Error changing title'));
-  };
   return (
     <View style={styles.app}>
-      <View styles={styles.container}>
+      <View style={styles.container}>
         <View style={styles.headerFold}>
           <Image
             source={require('../assets/fold.png')}
@@ -33,69 +25,55 @@ export default function AppLayout({children}) {
           />
         </View>
         <View style={styles.header}>
-          <TouchableOpacity
-            onPress={() =>
-              setChecklistTitle(prev => ({
-                ...prev,
-                isEdit: !prev.isEdit,
-              }))
-            }>
+          <Pressable
+            style={{flex: 1}}
+            onPress={() => {
+              if (handleTitleEdit) setIsEditable(true);
+            }}>
             <TextInput
               style={[
                 styles.headerText,
-                checklistTitle.isEdit && {backgroundColor: '#fff'},
-              ]}
-              editable={checklistTitle.isEdit}
-              value={
-                checklistTitle
-                  ? checklistTitle.title
-                  : 'No title for this checklist'
-              }
-              onChangeText={text =>
-                setChecklistTitle(prev => ({
-                  ...prev,
-                  title: text,
-                }))
-              }
-              onBlur={() => {
-                if (checklistTitle.isEdit) {
-                  editChecklistTitle(
-                    selectedChecklist.id,
-                    checklistTitle.title,
-                  );
-                  setChecklistTitle(prev => ({
-                    ...prev,
-                    isEdit: false,
-                  }));
-                }
-              }}
-            />
-          </TouchableOpacity>
-          <Pressable style={styles.floatingIcon} onPress={toggleMenu}>
-            <Animated.Image
-              source={require('../assets/addIcon.png')}
-              style={[
-                {
-                  width: 25,
-                  height: 25,
-                  transform: [
-                    {
-                      scale: animationValue.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [1, 1.2],
-                      }),
-                    },
-                    {
-                      rotate: animationValue.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: ['0deg', '45deg'],
-                      }),
-                    },
-                  ],
+                isEditable && {
+                  backgroundColor: '#fff',
+                  borderRadius: 5,
+                  borderWidth: 1,
+                  borderColor: '#ccc',
                 },
               ]}
+              editable={isEditable ? true : false}
+              value={title}
+              onChangeText={setTitle}
+              onBlur={() => {
+                setIsEditable(false);
+                handleTitleEdit();
+              }}
             />
           </Pressable>
+          {isEditable ? (
+            <Pressable style={styles.floatingIcon} onPress={toggleAddItemModal}>
+              <Animated.Image
+                source={require('../assets/editItem.png')}
+                style={[
+                  {
+                    width: 25,
+                    height: 25,
+                  },
+                ]}
+              />
+            </Pressable>
+          ) : (
+            <Pressable style={styles.floatingIcon} onPress={toggleAddItemModal}>
+              <Animated.Image
+                source={require('../assets/addIcon.png')}
+                style={[
+                  {
+                    width: 25,
+                    height: 25,
+                  },
+                ]}
+              />
+            </Pressable>
+          )}
         </View>
         {children}
       </View>

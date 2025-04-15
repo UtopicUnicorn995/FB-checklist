@@ -1,63 +1,7 @@
 import {StyleSheet} from 'react-native';
 
 export default StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  checklistContainer: {
-    backgroundColor: '#FFF7E3',
-    flex: 1,
-    width: '100%',
-    paddingTop: 60,
-    paddingBottom: 20,
-    paddingHorizontal: 32,
-    flexDirection: 'column',
-    borderTopRightRadius: 32,
-    gap: 20,
-    position: 'relative',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingBottom: 10,
-    borderBottomWidth: 1.5,
-    borderStyle: 'dashed',
-    borderColor: 'black',
-  },
-  headerFold: {
-    borderRadius: 2,
-    alignSelf: 'center',
-    marginBottom: 16,
-    position: 'absolute',
-    top: 0,
-    right: 0,
-  },
-  headerText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'black',
-  },
-  floatingIcon: {
-    // backgroundColor: '#fff',
-    // padding: 10,
-    // borderRadius: 99,
-    // width: 55,
-    // height: 55,
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // position: 'absolute',
-    // bottom: 32,
-    // right: 32,
-    // elevation: 5,
-    // borderWidth: 1,
-    // borderColor: '#fff',
-    // backgroundColor: '#fff',
-    // alignSelf: 'center',
-    // padding: 10,
-    // borderRadius: 99,
+  checklist:{
+    backgroundColor: '#FFF7E3'
   },
 });

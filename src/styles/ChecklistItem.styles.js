@@ -16,7 +16,6 @@ export default StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     gap: 10,
-    marginBottom: -12,
   },
   editableTextInput: {
     flex: 1,
