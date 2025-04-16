@@ -37,6 +37,37 @@ const Login = () => {
     }
   };
 
+  const loginUser = () => {
+    const db = getDatabase();
+  
+    // Query the database for the username
+    const usersRef = query(ref(db, '/users'), orderByChild('username'), equalTo(credentials.username));
+  
+    onValue(usersRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const users = snapshot.val();
+        const userId = Object.keys(users)[0]; // Get the first matching user
+        const user = users[userId];
+  
+        // Check if the password matches
+        if (user.password === credentials.password) {
+          console.log('Login successful:', user);
+          Alert.alert('Success', 'Login successful!');
+          // Perform further actions, e.g., navigate to another screen
+        } else {
+          console.log('Invalid password');
+          Alert.alert('Error', 'Invalid password');
+        }
+      } else {
+        console.log('User not found');
+        Alert.alert('Error', 'User not found');
+      }
+    }, (error) => {
+      console.error('Error querying database:', error);
+      Alert.alert('Error', 'An error occurred while logging in');
+    });
+  };
+
   console.log('credentials', credentials);
 
   return (
@@ -47,9 +78,10 @@ const Login = () => {
           <Text styles={styles.inputLabel}>Username</Text>
           <View style={styles.guestInput}>
             <TextInput
-            style={{flex: 1}}
+              style={{flex: 1}}
               value={credentials.username}
-              placeholder='Input username'
+              placeholder="Enter your username"
+              placeholderTextColor="#999999"
               onChangeText={text => handleSetCredentials(text, 'username')}
             />
           </View>
@@ -63,7 +95,8 @@ const Login = () => {
             ]}>
             <TextInput
               style={{flex: 1}}
-              placeholder='Input password'
+              placeholder="Enter your password"
+              placeholderTextColor="#999999"
               value={credentials.password}
               secureTextEntry={credentials.showPassword}
               onChangeText={text => handleSetCredentials(text, 'password')}
@@ -76,7 +109,7 @@ const Login = () => {
             />
           </View>
         </View>
-        <Button title="Login" />
+        <Button title="Login" onPress={loginUser}/>
         <Text style={{fontWeight: 'bold', fontSize: 14}}>
           Don't have an account?
         </Text>
