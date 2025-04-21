@@ -1,34 +1,40 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, TextInput, Alert, KeyboardAvoidingView} from 'react-native';
 import {
-  getDatabase,
-  ref,
-  set,
-  push,
-  onValue,
-  query,
-  orderByChild,
-  equalTo,
-  update,
-} from '@react-native-firebase/database';
-import { getAuth } from '@react-native-firebase/auth';
+  View,
+  Text,
+  TextInput,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+} from 'react-native';
+import {getAuth} from '@react-native-firebase/auth';
 import GuestLayout from '../layout/GuestLayout';
 import Button from '../components/Button';
 import styles from '../styles/Login.styles';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
-import {storeUser} from '../config/asyncStorage';
+import {AppContext} from '../context/AppContext';
+import {useContext} from 'react';
+import { useNavigation } from '@react-navigation/native';
 
 const Login = () => {
+  const {navigate} = useNavigation()
+  const {setUser} = useContext(AppContext);
   const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState();
+  const [loading, setLoading] = useState(false);
   const [credentials, setCredentials] = useState({
     email: '',
     password: '',
     showPassword: false,
   });
+  const [keyboardVisible, setKeyboardVisible] = useState(false); // Track keyboard visibility
 
-  function onAuthStateChanged(user) {
-    setUser(user);
+  function onAuthStateChanged(currentUser) {
+    if (currentUser) {
+      setUser(currentUser.uid);
+    } else {
+      setUser(null);
+    }
     if (initializing) setInitializing(false);
   }
 
@@ -37,7 +43,24 @@ const Login = () => {
     return subscriber;
   }, []);
 
-  console.log('you sir', user)
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      },
+    );
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   const handleSetCredentials = (text, key) => {
     if (key === 'showPassword') {
@@ -54,59 +77,35 @@ const Login = () => {
   };
 
   const loginUser = () => {
+    setLoading(true);
     getAuth()
       .signInWithEmailAndPassword(credentials.email, credentials.password)
       .then(userCredential => {
-        console.log('User logged in', userCredential);
+        setLoading(false);
+        console.log('User logged in:', userCredential.user.uid);
+      })
+      .catch(error => {
+        Alert.alert(
+          'Login Failed',
+          'The credentials you have entered is incorrect.',
+          [
+            {
+              text: 'ok',
+              onPress: () => setLoading(false),
+            },
+          ],
+        );
       });
-
-    // const db = getDatabase();
-
-    // const usersRef = query(
-    //   ref(db, '/users'),
-    //   orderByChild('username'),
-    //   equalTo(credentials.username),
-    // );
-
-    // onValue(
-    //   usersRef,
-    //   snapshot => {
-    //     if (snapshot.exists()) {
-    //       const users = snapshot.val();
-    //       const userId = Object.keys(users)[0];
-    //       const user = users[userId];
-
-    //       if (user.password === credentials.password) {
-    //         const {password, ...userWithoutPassword} = user;
-
-    //         Alert.alert('Success', 'Login successful!', [
-    //           {
-    //             text: 'Okay',
-    //             onPress: () => storeUser({userId, ...userWithoutPassword}),
-    //           },
-    //         ]);
-    //       } else {
-    //         console.log('Invalid password');
-    //         Alert.alert('Error', 'Invalid password');
-    //       }
-    //     } else {
-    //       console.log('User not found');
-    //       Alert.alert('Error', 'User not found');
-    //     }
-    //   },
-    //   error => {
-    //     console.error('Error querying database:', error);
-    //     Alert.alert('Error', 'An error occurred while logging in');
-    //   },
-    // );
   };
 
   console.log('credentials', credentials);
 
   return (
     <GuestLayout>
-      <KeyboardAvoidingView style={styles.login}>
-        <Text style={styles.loginHeaderText}>Login Now</Text>
+      <KeyboardAvoidingView
+        style={[styles.login, {paddingVertical: keyboardVisible ? 0 : 60}]}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <Text style={styles.loginHeaderText}>Login</Text>
         <View>
           <Text styles={styles.inputLabel}>Email</Text>
           <View style={styles.guestInput}>
@@ -142,11 +141,11 @@ const Login = () => {
             />
           </View>
         </View>
-        <Button title="Login" onPress={loginUser} />
+        <Button title="Login" onPress={loginUser} isLoading={loading} />
         <Text style={{fontWeight: 'bold', fontSize: 14}}>
           Don't have an account?
         </Text>
-        <Button title="Signup" />
+        <Button title="Signup" onPress={() => navigate('Signup')}/>
       </KeyboardAvoidingView>
     </GuestLayout>
   );

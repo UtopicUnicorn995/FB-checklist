@@ -6,6 +6,7 @@ import ModalView from '../components/ModalView';
 import ChecklistItem from '../components/ChecklistItem';
 import styles from '../styles/Checklist.styles';
 import AppLayout from '../layout/AppLayout';
+import { getAuth } from '@react-native-firebase/auth';
 
 export default function Checklist() {
   const [checklist, setChecklist] = useState([]);
@@ -16,6 +17,10 @@ export default function Checklist() {
   const [title, setTitle] = useState('');
   const [isEditable, setIsEditable] = useState(false);
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
+
+  const auth = getAuth()
+
+  console.log('awwth', auth.currentUser.uid)
 
   const insets = useSafeAreaInsets()
 

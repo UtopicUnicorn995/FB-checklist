@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Pressable as RNPressable, StyleSheet } from 'react-native';
 
-export default function Pressable({ children, style, onPress, scale = 0.98, opacity = 0.8, ...props }) {
+export default function Pressable({ children, style, onPress, scale = 0.995, opacity = 0.8, ...props }) {
   const [pressed, setPressed] = useState(false);
 
   return (
@@ -14,7 +14,7 @@ export default function Pressable({ children, style, onPress, scale = 0.98, opac
         style,
         {
           transform: [{ scale: isPressed || pressed ? scale : 1 }],
-          opacity: isPressed || pressed ? opacity : 1, // Adjust opacity when pressed
+          opacity: isPressed || pressed ? opacity : 1, 
         },
       ]}
     >

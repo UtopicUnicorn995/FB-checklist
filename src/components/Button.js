@@ -1,5 +1,5 @@
-import React from 'react';
-import {StyleSheet, Text} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, Text, ActivityIndicator} from 'react-native';
 import PropTypes from 'prop-types';
 import Pressable from './Pressable';
 
@@ -9,14 +9,24 @@ export default function Button({
   btnStyleProp,
   btnTextStyleProp,
   accessibilityLabel,
+  isLoading,
 }) {
+  const [isPressed, setIsPressed] = useState(false);
+
   return (
     <Pressable
-      style={[styles.btnStyle, btnStyleProp]}
+      style={[
+        styles.btnStyle,
+        btnStyleProp,
+        isPressed && {backgroundColor: '#444'},
+      ]}
+      onPressIn={() => setIsPressed(true)}
+      onPressOut={() => setIsPressed(false)}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel || title}>
       <Text style={[styles.btnText, btnTextStyleProp]}>{title}</Text>
+      {isLoading && <ActivityIndicator color="#ccc" animating={isLoading} />}
     </Pressable>
   );
 }
@@ -27,12 +37,14 @@ Button.propTypes = {
   btnStyleProp: PropTypes.object,
   btnTextStyleProp: PropTypes.object,
   accessibilityLabel: PropTypes.string,
+  isLoading: PropTypes.bool,
 };
 
 Button.defaultProps = {
   btnStyleProp: {},
   btnTextStyleProp: {},
   accessibilityLabel: null,
+  isLoading: false,
 };
 
 const styles = StyleSheet.create({
@@ -44,12 +56,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 99,
+    flexDirection: 'row',
+    gap: 10,
   },
   btnText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
-    textAlignVertical: 'center'
+    textAlignVertical: 'center',
   },
 });
