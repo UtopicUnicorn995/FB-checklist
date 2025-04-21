@@ -12,7 +12,6 @@ export default StyleSheet.create({
     overflow: 'hidden',
   },
   drawerHeader: {
-    marginBottom: 20,
     borderBottomWidth: 1.5,
     borderStyle: 'dashed',
     borderBottomColor: 'black',
@@ -23,8 +22,11 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
+  drawerItemsContainer:{
+    gap: 10
+  },
   drawerItem: {
-    paddingVertical: 15,
+    paddingVertical: 5,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10
@@ -39,4 +41,10 @@ export default StyleSheet.create({
     left: 0,
     bottom: 0,
   },
+  checkListItem:{
+    padding: 5,
+    paddingLeft: 20,
+    borderRadius: 4,
+    // backgroundColor: '#fff'
+  }
 });

@@ -14,6 +14,7 @@ import GuestLayout from '../layout/GuestLayout';
 import Button from '../components/Button';
 import styles from '../styles/Login.styles';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
+import {getDatabase, push, ref, set} from '@react-native-firebase/database';
 
 const Signup = () => {
   const [credentials, setCredentials] = useState({
@@ -26,6 +27,7 @@ const Signup = () => {
     termsAndCondition: false,
   });
   const [keyboardVisible, setKeyboardVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSetCredentials = (text, key) => {
     if (
@@ -46,10 +48,61 @@ const Signup = () => {
   };
 
   const signUpUser = () => {
+    const db = getDatabase();
+    setLoading(true);
+
     getAuth()
       .createUserWithEmailAndPassword(credentials.email, credentials.password)
-      .then(userCredential => {
-        console.log('User signed up:', userCredential);
+      .then(createdUser => {
+        console.log('User signed up:', createdUser);
+        const user = createdUser.user;
+
+        const userRef = ref(db, `/users/${user.uid}`);
+
+        set(userRef, {
+          allowedPages: 3,
+          username: credentials.username,
+          email: credentials.email,
+          subscription: 'free',
+          createdAt: new Date().toISOString(),
+        })
+          .then(() => {
+            console.log('New User created');
+            getAuth()
+              .signInWithEmailAndPassword(
+                credentials.email,
+                credentials.password,
+              )
+              .then(userCredentials => {
+                setLoading(false);
+                console.log('ssucess', userCredentials.user.uid);
+              })
+              .catch(error => {
+                Alert.alert(
+                  'Login Failed',
+                  'The credentials you have entered is incorrect.',
+                  [
+                    {
+                      text: 'ok',
+                      onPress: () => setLoading(false),
+                    },
+                  ],
+                );
+              });
+          })
+          .catch(error => {
+            console.log('errror creating user', error);
+            Alert.alert(
+              'Creating account failed',
+              'Please check your internet or credential used in creating account',
+              [
+                {
+                  text: 'ok',
+                  onPress: () => setLoading(false),
+                },
+              ],
+            );
+          });
       })
       .catch(error => {
         console.error('Error signing up:', error);
@@ -156,7 +209,7 @@ const Signup = () => {
               />
             </View>
           </View>
-          <Button title="Signup" onPress={signUpUser} />
+          <Button title="Signup" onPress={signUpUser} isLoading={loading} />
           <Text style={{fontWeight: 'bold', fontSize: 14}}>
             Already have an account?
           </Text>

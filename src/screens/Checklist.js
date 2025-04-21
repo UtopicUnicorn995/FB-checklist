@@ -1,49 +1,47 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {View, Text, FlatList, Alert} from 'react-native';
 import {getDatabase, ref, push, set} from '@react-native-firebase/database';
 import ModalView from '../components/ModalView';
 import ChecklistItem from '../components/ChecklistItem';
 import styles from '../styles/Checklist.styles';
 import AppLayout from '../layout/AppLayout';
-import { getAuth } from '@react-native-firebase/auth';
+import {AppContext} from '../context/AppContext';
+import {getAuth} from '@react-native-firebase/auth';
 
 export default function Checklist() {
+  const {selectedChecklist} = useContext(AppContext);
   const [checklist, setChecklist] = useState([]);
-  const [selectedChecklist, setSelectedChecklist] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [isEditable, setIsEditable] = useState(false);
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
 
-  const auth = getAuth()
+  const auth = getAuth();
 
-  console.log('awwth', auth.currentUser.uid)
-
-  const insets = useSafeAreaInsets()
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
-    const db = getDatabase();
-    ref(db, '/checklists').on('value', snapshot => {
-      if (snapshot.exists()) {
-        const data = snapshot.val();
-
-        const itemsArray = Object.keys(data).map(key => ({
+    if (selectedChecklist) {
+      if (selectedChecklist?.checklistItems) {
+        const items = Object.keys(selectedChecklist.checklistItems).map((key) => ({
           id: key,
-          ...data[key],
+          ...selectedChecklist.checklistItems[key],
         }));
-        setChecklist(itemsArray);
-        setSelectedChecklist(itemsArray[0]);
-        setTitle(itemsArray[0]?.title || 'My Checklist');
-        setLoading(false);
+        setChecklist(items);
       } else {
-        console.log('No checklist items found');
         setChecklist([]);
       }
-    });
-  }, []);
+      setTitle(selectedChecklist.title); // Only set title if selectedChecklist exists
+    } else {
+      setChecklist([]);
+      setTitle(''); // Reset title if no checklist is selected
+    }
+  }, [selectedChecklist]);
+
+  console.log('selected checklist', selectedChecklist);
 
   const addItem = (title, description) => {
     const db = getDatabase();
@@ -137,39 +135,48 @@ export default function Checklist() {
   };
 
   const handleTitleEdit = () => {
-    if (selectedChecklist?.id) {
-      const db = getDatabase();
-      const checklistRef = ref(db, `/checklists/${selectedChecklist.id}`);
-
-      checklistRef
-        .update({title})
-        .then(() => {
-          console.log(`Checklist ${selectedChecklist.id} updated`);
-          setIsEditable(false);
-        })
-        .catch(error =>
-          console.error('Error updating checklist title:', error.message),
-        );
+    if (!selectedChecklist) {
+      console.error('No checklist selected. Cannot edit title.');
+      return;
     }
+
+    if (!selectedChecklist.id) {
+      console.error('Selected checklist does not have an ID.');
+      return;
+    }
+
+    const db = getDatabase();
+    const checklistRef = ref(db, `/checklists/${selectedChecklist.id}`);
+
+    checklistRef
+      .update({title})
+      .then(() => {
+        console.log(`Checklist ${selectedChecklist.id} updated`);
+        setIsEditable(false);
+      })
+      .catch(error =>
+        console.error('Error updating checklist title:', error.message),
+      );
   };
 
   const toggleAddItemModal = () => {
-    console.log('to');
     setIsAddItemModalOpen(prev => !prev);
   };
 
-  const renderItem = ({item, index}) => (
-    <ChecklistItem
-      item={item}
-      index={index}
-      checkItem={checkItem}
-      editingItem={editingItem}
-      setEditingItem={setEditingItem}
-      editChecklistItem={editChecklistItem}
-      selectedChecklistId={selectedChecklist.id}
-      handleDeleteItem={deleteItem}
-    />
-  );
+  const renderItem = ({item, index}) => {
+    return (
+      <ChecklistItem
+        item={item}
+        index={index}
+        checkItem={checkItem}
+        editingItem={editingItem}
+        setEditingItem={setEditingItem}
+        editChecklistItem={editChecklistItem}
+        selectedChecklistId={selectedChecklist.id}
+        handleDeleteItem={deleteItem}
+      />
+    );
+  };
 
   return (
     <AppLayout

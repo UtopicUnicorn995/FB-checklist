@@ -11,62 +11,79 @@ import {AppContext} from '../context/AppContext';
 const Drawer = createDrawerNavigator();
 
 function DrawerContent({navigation}) {
-  const {logoutUser} = useContext(AppContext);
+  const {logoutUser, userData, userCheckList} = useContext(AppContext);
 
+  console.log('user data and checklist', userData, userCheckList);
   return (
     <View style={styles.drawerContainer}>
-      <View>
+      <View style={{gap: 15}}>
         <View style={styles.drawerHeader}>
           <Text style={styles.drawerTitle}>List it</Text>
         </View>
-        <Pressable
-          style={styles.drawerItem}
-          onPress={() => navigation.navigate('Checklist')}>
-          <Image
-            style={{width: 22, height: 24}}
-            source={require('../assets/menu.png')}
-          />
-          <Text style={styles.drawerItemText}>Checklist</Text>
-        </Pressable>
+        <View style={styles.drawerItemsContainer}>
+          <View
+            style={[
+              styles.drawerItem,
+              {flexDirection: 'column', alignItems: 'left'},
+            ]}
+            onPress={() => navigation.navigate('Checklist')}>
+            <View style={{flexDirection: 'row', gap: 10}}>
+              <Image
+                style={{width: 22, height: 24}}
+                source={require('../assets/menu.png')}
+              />
+              <Text style={styles.drawerItemText}>
+                Personal Checklist ({userCheckList && userCheckList.length}/
+                {userData && userData.allowedPages})
+              </Text>
+            </View>
+            {userCheckList &&
+              userCheckList.map(checklist => (
+                <View style={styles.checkListItem} key={checklist.id}>
+                  <Text>{checklist.title}</Text>
+                </View>
+              ))}
+          </View>
 
-        <Pressable
-          style={styles.drawerItem}
-          onPress={() => console.log('Custom Action')}>
-          <Image
-            style={{width: 20, height: 22}}
-            source={require('../assets/notes.png')}
-          />
-          <Text style={styles.drawerItemText}>Notes</Text>
-        </Pressable>
-        <Pressable
-          style={styles.drawerItem}
-          onPress={() => navigation.navigate('ChecklistDetails')}>
-          <Image
-            style={{width: 27, height: 17}}
-            source={require('../assets/users.png')}
-          />
-          <Text style={styles.drawerItemText}>Collaborators</Text>
-        </Pressable>
+          <Pressable
+            style={styles.drawerItem}
+            onPress={() => console.log('Custom Action')}>
+            <Image
+              style={{width: 20, height: 22}}
+              source={require('../assets/notes.png')}
+            />
+            <Text style={styles.drawerItemText}>Notes</Text>
+          </Pressable>
+          <Pressable
+            style={styles.drawerItem}
+            onPress={() => navigation.navigate('ChecklistDetails')}>
+            <Image
+              style={{width: 27, height: 17}}
+              source={require('../assets/users.png')}
+            />
+            <Text style={styles.drawerItemText}>Collaborators</Text>
+          </Pressable>
 
-        <Pressable
-          style={styles.drawerItem}
-          onPress={() => navigation.navigate('ChecklistDetails')}>
-          <Image
-            style={{width: 23, height: 24}}
-            source={require('../assets/gear.png')}
-          />
-          <Text style={styles.drawerItemText}>Settings</Text>
-        </Pressable>
+          <Pressable
+            style={styles.drawerItem}
+            onPress={() => navigation.navigate('ChecklistDetails')}>
+            <Image
+              style={{width: 23, height: 24}}
+              source={require('../assets/gear.png')}
+            />
+            <Text style={styles.drawerItemText}>Settings</Text>
+          </Pressable>
 
-        <Pressable
-          style={styles.drawerItem}
-          onPress={() => console.log('Custom Action')}>
-          <Image
-            style={{width: 25, height: 20}}
-            source={require('../assets/crown.png')}
-          />
-          <Text style={styles.drawerItemText}>Plan (free)</Text>
-        </Pressable>
+          <Pressable
+            style={styles.drawerItem}
+            onPress={() => console.log('Custom Action')}>
+            <Image
+              style={{width: 25, height: 20}}
+              source={require('../assets/crown.png')}
+            />
+            <Text style={styles.drawerItemText}>Plan (free)</Text>
+          </Pressable>
+        </View>
         <Button onPress={logoutUser} title="Logout" />
       </View>
       <Pressable onPress={navigation.toggleDrawer} style={styles.foldStyle}>

@@ -98,7 +98,6 @@ const Login = () => {
       });
   };
 
-  console.log('credentials', credentials);
 
   return (
     <GuestLayout>
