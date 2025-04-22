@@ -3,7 +3,7 @@ import {View, Text, TextInput, Image, StyleSheet} from 'react-native';
 import Pressable from './Pressable';
 import styles from '../styles/ChecklistItem.styles';
 
-export default function ChecklistItem({
+const ChecklistItem = ({
   item,
   index,
   checkItem,
@@ -12,7 +12,7 @@ export default function ChecklistItem({
   editChecklistItem,
   selectedChecklistId,
   handleDeleteItem,
-}) {
+}) => {
   return (
     <View style={styles.itemContainer}>
       {editingItem?.id === item.id ? (
@@ -75,4 +75,6 @@ export default function ChecklistItem({
       </Pressable>
     </View>
   );
-}
+};
+
+export default React.memo(ChecklistItem);

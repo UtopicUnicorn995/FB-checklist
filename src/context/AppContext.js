@@ -9,6 +9,11 @@ import {
   equalTo,
   get,
 } from '@react-native-firebase/database';
+import {
+  saveSelectedChecklist,
+  getSelectedChecklist,
+  clearSelectedChecklist,
+} from '../utils/asyncStorage';
 
 export const AppContext = createContext();
 
@@ -18,12 +23,66 @@ export function AppProvider({children}) {
   const [userCheckList, setUserCheckList] = useState(null);
   const [selectedChecklist, setSelectedChecklist] = useState(null);
 
+  const [appInitializing, setAppInitializing] = useState(true);
+
   useEffect(() => {
-    if (userCheckList && userCheckList.length > 0) {
-      setSelectedChecklist(userCheckList[0]);
-    } else {
-      setSelectedChecklist(null);
+    const checkUser = async () => {
+      setAppInitializing(true);
+      try {
+        const auth = getAuth();
+        const currentUser = auth.currentUser;
+        setUser(currentUser ? currentUser.uid : null);
+      } catch (error) {
+        console.error('Error checking user:', error);
+      } finally {
+        setAppInitializing(false);
+      }
+    };
+
+    checkUser();
+  }, []);
+
+  useEffect(() => {
+    if (selectedChecklist) {
+      saveSelectedChecklist(selectedChecklist.id);
     }
+  }, [selectedChecklist]);
+
+  useEffect(() => {
+    const loadSelectedChecklist = async () => {
+      try {
+        const savedChecklistId = await getSelectedChecklist();
+        console.log('eye dee', savedChecklistId);
+        if (savedChecklistId && userCheckList) {
+          const savedChecklist = userCheckList.find(
+            checklist => checklist.id === savedChecklistId,
+          );
+          if (savedChecklist) {
+            setSelectedChecklist(savedChecklist);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading selected checklist:', error);
+      }
+    };
+
+    loadSelectedChecklist();
+  }, [userCheckList]);
+
+  useEffect(() => {
+    if (!userCheckList || userCheckList.length === 0) {
+      setSelectedChecklist(null);
+      return;
+    }
+
+    setSelectedChecklist(prev => {
+      if (!prev) {
+        return userCheckList[0];
+      }
+
+      const found = userCheckList.find(c => c.id === prev.id);
+      return found || userCheckList[0];
+    });
   }, [userCheckList]);
 
   useEffect(() => {
@@ -78,18 +137,13 @@ export function AppProvider({children}) {
     signOut(auth)
       .then(() => {
         console.log('User signed out!');
+        selectedChecklist && clearSelectedChecklist(selectedChecklist.id);
         setUser(null);
       })
       .catch(error => {
         console.error('Error logging out:', error);
       });
   };
-
-  // const createChecklist = () => {
-  //   const db = getDatabase()
-
-  //   ref(db, 'checklist')
-  // }
 
   return (
     <AppContext.Provider
@@ -99,7 +153,9 @@ export function AppProvider({children}) {
         logoutUser,
         userData,
         userCheckList,
-        selectedChecklist
+        selectedChecklist,
+        setSelectedChecklist,
+        appInitializing,
       }}>
       {children}
     </AppContext.Provider>

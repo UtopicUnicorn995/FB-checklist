@@ -1,17 +1,29 @@
 import React, {useContext} from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import {View, Text, Image, Pressable} from 'react-native';
+import {View, Text, Image} from 'react-native';
 import Checklist from '../screens/Checklist';
 import ChecklistDetails from '../screens/ChecklistDetails';
 import Login from '../screens/Login';
 import styles from '../styles/CustomDrawer.styles';
 import Button from './Button';
 import {AppContext} from '../context/AppContext';
+import Pressable from './Pressable';
 
 const Drawer = createDrawerNavigator();
 
 function DrawerContent({navigation}) {
-  const {logoutUser, userData, userCheckList} = useContext(AppContext);
+  const {
+    logoutUser,
+    userData,
+    userCheckList,
+    selectedChecklist,
+    setSelectedChecklist,
+  } = useContext(AppContext);
+
+  const handleSelectChecklist = (selected) => {
+    setSelectedChecklist(selected)
+    navigation.toggleDrawer()
+  }
 
   console.log('user data and checklist', userData, userCheckList);
   return (
@@ -39,9 +51,22 @@ function DrawerContent({navigation}) {
             </View>
             {userCheckList &&
               userCheckList.map(checklist => (
-                <View style={styles.checkListItem} key={checklist.id}>
-                  <Text>{checklist.title}</Text>
-                </View>
+                <Pressable
+                  onPress={() => handleSelectChecklist(checklist)}
+                  style={[
+                    styles.checkListItem,
+                    selectedChecklist === checklist && {
+                      backgroundColor: '#EEE9E0',
+                    },
+                  ]}
+                  key={checklist.id}>
+                  <Text
+                    style={
+                      selectedChecklist === checklist && {fontWeight: 'bold'}
+                    }>
+                    {checklist.title}
+                  </Text>
+                </Pressable>
               ))}
           </View>
 
@@ -111,6 +136,7 @@ export default function CustomDrawer() {
           borderBottomLeftRadius: 32,
           marginBottom: 40,
           width: '70%',
+          height: '100%'
         },
         drawerPosition: 'right',
       }}

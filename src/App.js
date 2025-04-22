@@ -8,6 +8,7 @@ import {AppProvider, AppContext} from './context/AppContext';
 import CustomDrawer from './components/CustomDrawer';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {useContext} from 'react';
+import SplashScreen from './screens/SplashScreen';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
@@ -41,8 +42,11 @@ const UserStack = () => {
 };
 
 const AppContent = () => {
-  const {user} = useContext(AppContext);
-  console.log('context user', user);
+  const {user, appInitializing} = useContext(AppContext);
+
+  if (appInitializing) {
+    return <SplashScreen />;
+  }
 
   return (
     <NavigationContainer>
@@ -56,7 +60,7 @@ export default function App() {
     <GestureHandlerRootView style={{flex: 1}}>
       <SafeAreaProvider>
         <AppProvider>
-          <AppContent /> 
+          <AppContent />
         </AppProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

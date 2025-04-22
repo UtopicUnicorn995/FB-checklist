@@ -1,47 +1,45 @@
-import React, {useState, useEffect, useRef, useContext} from 'react';
+import React, {useState, useEffect, useMemo, useContext} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {View, Text, FlatList, Alert} from 'react-native';
-import {getDatabase, ref, push, set} from '@react-native-firebase/database';
+import {
+  getDatabase,
+  ref,
+  push,
+  set,
+  onValue,
+} from '@react-native-firebase/database';
 import ModalView from '../components/ModalView';
 import ChecklistItem from '../components/ChecklistItem';
 import styles from '../styles/Checklist.styles';
 import AppLayout from '../layout/AppLayout';
 import {AppContext} from '../context/AppContext';
-import {getAuth} from '@react-native-firebase/auth';
 
 export default function Checklist() {
   const {selectedChecklist} = useContext(AppContext);
   const [checklist, setChecklist] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [isEditable, setIsEditable] = useState(false);
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
 
-  const auth = getAuth();
-
   const insets = useSafeAreaInsets();
 
-  useEffect(() => {
-    if (selectedChecklist) {
-      if (selectedChecklist?.checklistItems) {
-        const items = Object.keys(selectedChecklist.checklistItems).map((key) => ({
-          id: key,
-          ...selectedChecklist.checklistItems[key],
-        }));
-        setChecklist(items);
-      } else {
-        setChecklist([]);
-      }
-      setTitle(selectedChecklist.title); // Only set title if selectedChecklist exists
-    } else {
-      setChecklist([]);
-      setTitle(''); // Reset title if no checklist is selected
-    }
-  }, [selectedChecklist]);
+  console.log('selected checklist from the checklist', selectedChecklist);
 
-  console.log('selected checklist', selectedChecklist);
+  useEffect(() => {
+    if (!selectedChecklist?.id) return;
+
+    const items = selectedChecklist.checklistItems
+      ? Object.entries(selectedChecklist.checklistItems).map(([id, item]) => ({
+          id,
+          ...item,
+        }))
+      : [];
+
+    setChecklist(items);
+    setTitle(selectedChecklist.title || '');
+  }, [selectedChecklist]);
 
   const addItem = (title, description) => {
     const db = getDatabase();
@@ -59,7 +57,19 @@ export default function Checklist() {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     })
-      .then(() => console.log('Item added successfully!'))
+      .then(() => {
+        setChecklist(prev => [
+          ...prev,
+          {
+            id: newItemRef.key,
+            title,
+            description,
+            checked: false,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          },
+        ]);
+      })
       .catch(error => console.error('Error adding item:', error.message));
   };
 
@@ -92,7 +102,11 @@ export default function Checklist() {
     itemRef
       .update(updatedData)
       .then(() => {
-        console.log(`Item ${itemId} updated successfully!`);
+        setChecklist(prev =>
+          prev.map(item =>
+            item.id === itemId ? {...item, ...updatedData} : item,
+          ),
+        );
         setEditingItem(null);
       })
       .catch(error =>
@@ -122,7 +136,7 @@ export default function Checklist() {
             itemRef
               .remove()
               .then(() => {
-                console.log(`Item ${itemId} deleted successfully!`);
+                setChecklist(prev => prev.filter(item => item.id !== itemId));
                 setEditingItem(null);
               })
               .catch(error =>
@@ -178,6 +192,7 @@ export default function Checklist() {
     );
   };
 
+
   return (
     <AppLayout
       selectedChecklist={selectedChecklist}
@@ -194,14 +209,7 @@ export default function Checklist() {
           <FlatList
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{paddingBottom: insets.bottom}}
-            data={
-              selectedChecklist?.checklistItems
-                ? Object.keys(selectedChecklist.checklistItems).map(key => ({
-                    id: key,
-                    ...selectedChecklist.checklistItems[key],
-                  }))
-                : []
-            }
+            data={checklist.filter(Boolean)}
             renderItem={renderItem}
             keyExtractor={item => item.id}
           />
