@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {StyleSheet, Text, ActivityIndicator} from 'react-native';
 import PropTypes from 'prop-types';
 import Pressable from './Pressable';
+import FAIcon from 'react-native-vector-icons/FontAwesome5';
 
 export default function Button({
   onPress,
@@ -10,6 +11,7 @@ export default function Button({
   btnTextStyleProp,
   accessibilityLabel,
   isLoading,
+  iconName,
 }) {
   const [isPressed, setIsPressed] = useState(false);
 
@@ -18,14 +20,22 @@ export default function Button({
       style={[
         styles.btnStyle,
         btnStyleProp,
-        isPressed && {backgroundColor: '#444'},
+        isPressed && {
+          backgroundColor: iconName ? '#eee' : '#444',
+          borderColor: iconName ? '#eee' : '#444',
+        },
       ]}
       onPressIn={() => setIsPressed(true)}
       onPressOut={() => setIsPressed(false)}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel || title}>
-      <Text style={[styles.btnText, btnTextStyleProp]}>{title}</Text>
+      {iconName ? (
+        <FAIcon name={iconName} size={btnTextStyleProp} />
+      ) : (
+        <Text style={[styles.btnText, btnTextStyleProp]}>{title}</Text>
+      )}
+
       {isLoading && <ActivityIndicator color="#ccc" animating={isLoading} />}
     </Pressable>
   );

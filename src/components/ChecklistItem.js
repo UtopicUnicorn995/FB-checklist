@@ -1,7 +1,8 @@
 import React from 'react';
-import {View, Text, TextInput, Image, StyleSheet} from 'react-native';
+import {View, Text, TextInput, Image} from 'react-native';
 import Pressable from './Pressable';
 import styles from '../styles/ChecklistItem.styles';
+import {useNavigation} from '@react-navigation/native';
 
 const ChecklistItem = ({
   item,
@@ -13,6 +14,12 @@ const ChecklistItem = ({
   selectedChecklistId,
   handleDeleteItem,
 }) => {
+  const {navigate} = useNavigation();
+
+  const openChecklistDetails = () => {
+    navigate('/checklistDetails');
+  };
+
   return (
     <View style={styles.itemContainer}>
       {editingItem?.id === item.id ? (
@@ -38,28 +45,35 @@ const ChecklistItem = ({
           />
         </View>
       ) : (
-        <Pressable
-          style={[styles.itemChecklist, item.checked ? {gap: 10} : {gap: 14}]}
-          onPress={() => checkItem(selectedChecklistId, item.id, item.checked)}>
-          {item.checked ? (
-            <Image
-              source={require('../assets/checkedtrue.png')}
-              style={{width: 24, height: 20}}
-            />
-          ) : (
-            <Image
-              source={require('../assets/checkedfalse.png')}
-              style={{width: 20, height: 20}}
-            />
-          )}
-          <Text
-            style={[
-              styles.itemTitle,
-              item.checked && {textDecorationLine: 'line-through'},
-            ]}>
-            {index + 1}. {item.title}
-          </Text>
-        </Pressable>
+        <View
+          style={[styles.itemChecklist, item.checked ? {gap: 10} : {gap: 14}]}>
+          <Pressable
+            //
+            onPress={() =>
+              checkItem(selectedChecklistId, item.id, item.checked)
+            }>
+            {item.checked ? (
+              <Image
+                source={require('../assets/checkedtrue.png')}
+                style={{width: 24, height: 20}}
+              />
+            ) : (
+              <Image
+                source={require('../assets/checkedfalse.png')}
+                style={{width: 20, height: 20}}
+              />
+            )}
+          </Pressable>
+          <Pressable>
+            <Text
+              style={[
+                styles.itemTitle,
+                item.checked && {textDecorationLine: 'line-through'},
+              ]}>
+              {index + 1}. {item.title}
+            </Text>
+          </Pressable>
+        </View>
       )}
 
       <Pressable

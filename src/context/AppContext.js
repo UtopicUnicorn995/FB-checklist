@@ -7,7 +7,8 @@ import {
   query,
   orderByChild,
   equalTo,
-  get,
+  push,
+  set,
 } from '@react-native-firebase/database';
 import {
   saveSelectedChecklist,
@@ -128,7 +129,28 @@ export function AppProvider({children}) {
     };
   }, [user]);
 
-  console.log('data from the app Context', userData, userCheckList);
+  const createChecklist = checklistTitle => {
+    const db = getDatabase();
+
+    const newChecklistRef = push(ref(db, '/checklists'));
+    const newChecklistId = newChecklistRef.key;
+
+    const newChecklist = {
+      id: newChecklistId,
+      createdBy: user,
+      title: checklistTitle,
+      collaborators: [],
+      checklistItems: {},
+    };
+
+    set(newChecklistRef, newChecklist)
+      .then(() => {
+        setSelectedChecklist(newChecklist);
+        saveSelectedChecklist(newChecklistId);
+        console.log('selected checklist upon creating', newChecklist);
+      })
+      .catch(error => console.error('Error creating checklist:', error));
+  };
 
   const logoutUser = () => {
     const auth = getAuth();
@@ -156,6 +178,7 @@ export function AppProvider({children}) {
         selectedChecklist,
         setSelectedChecklist,
         appInitializing,
+        createChecklist,
       }}>
       {children}
     </AppContext.Provider>

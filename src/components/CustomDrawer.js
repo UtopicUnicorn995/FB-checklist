@@ -1,12 +1,14 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import {View, Text, Image} from 'react-native';
+import {View, Text, Image, TextInput} from 'react-native';
 import Checklist from '../screens/Checklist';
 import ChecklistDetails from '../screens/ChecklistDetails';
 import Login from '../screens/Login';
 import styles from '../styles/CustomDrawer.styles';
 import Button from './Button';
 import {AppContext} from '../context/AppContext';
+import FAIcon from 'react-native-vector-icons/FontAwesome5';
 import Pressable from './Pressable';
 
 const Drawer = createDrawerNavigator();
@@ -18,27 +20,37 @@ function DrawerContent({navigation}) {
     userCheckList,
     selectedChecklist,
     setSelectedChecklist,
+    createChecklist,
   } = useContext(AppContext);
+  const [isAddChecklist, setIsAddChecklist] = useState(false);
+  const [newChecklistTitle, setNewChecklistTitle] = useState('');
 
-  const handleSelectChecklist = (selected) => {
-    setSelectedChecklist(selected)
-    navigation.toggleDrawer()
-  }
+  console.log('newee', newChecklistTitle);
+
+  const handleSelectChecklist = selected => {
+    setSelectedChecklist(selected);
+    navigation.toggleDrawer();
+  };
+
+  const handleAddChecklist = () => {
+    setIsAddChecklist(false);
+    setNewChecklistTitle('');
+    createChecklist(newChecklistTitle);
+  };
 
   console.log('user data and checklist', userData, userCheckList);
   return (
     <View style={styles.drawerContainer}>
       <View style={{gap: 15}}>
         <View style={styles.drawerHeader}>
-          <Text style={styles.drawerTitle}>List it</Text>
+          <Text style={styles.drawerTitle}>App name and Icon</Text>
         </View>
         <View style={styles.drawerItemsContainer}>
           <View
             style={[
               styles.drawerItem,
               {flexDirection: 'column', alignItems: 'left'},
-            ]}
-            onPress={() => navigation.navigate('Checklist')}>
+            ]}>
             <View style={{flexDirection: 'row', gap: 10}}>
               <Image
                 style={{width: 22, height: 24}}
@@ -68,6 +80,56 @@ function DrawerContent({navigation}) {
                   </Text>
                 </Pressable>
               ))}
+            {userCheckList && userCheckList.length < userData.allowedPages ? (
+              isAddChecklist ? (
+                <View style={styles.newChecklistInputContainer}>
+                  <TextInput
+                    style={styles.newChecklistInput}
+                    value={newChecklistTitle}
+                    placeholder="Checklist title"
+                    placeholderTextColor="#aaa"
+                    onChangeText={text => setNewChecklistTitle(text)}
+                  />
+                  <Pressable
+                    onPress={handleAddChecklist}
+                    style={styles.newChecklistBtnContainer}>
+                    <FAIcon
+                      name="plus"
+                      size={20}
+                      color="#464646"
+                      style={{
+                        alignSelf: 'center',
+                      }}
+                    />
+                  </Pressable>
+                </View>
+              ) : (
+                <Button
+                  onPress={() => setIsAddChecklist(true)}
+                  btnStyleProp={{
+                    backgroundColor: 'white',
+                    borderWidth: 1,
+                    borderColor: '#ccc',
+                    padding: 5,
+                    paddingTop: 5,
+                  }}
+                  iconName="plus"
+                  btnTextStyleProp={18}
+                />
+              )
+            ) : (
+              <Button
+                title="Upgrade to add more"
+                btnStyleProp={{
+                  backgroundColor: 'white',
+                  borderWidth: 1,
+                  borderColor: '#ccc',
+                  padding: 5,
+                  paddingTop: 3,
+                }}
+                btnTextStyleProp={{color: '#262626', fontSize: 14}}
+              />
+            )}
           </View>
 
           <Pressable
@@ -122,6 +184,8 @@ function DrawerContent({navigation}) {
 }
 
 export default function CustomDrawer() {
+  const insets = useSafeAreaInsets();
+
   const options = {
     headerShown: false,
   };
@@ -134,9 +198,8 @@ export default function CustomDrawer() {
           backgroundColor: '#FFF7E3',
           borderTopLeftRadius: 0,
           borderBottomLeftRadius: 32,
-          marginBottom: 40,
+          marginBottom: insets.bottom,
           width: '70%',
-          height: '100%'
         },
         drawerPosition: 'right',
       }}
