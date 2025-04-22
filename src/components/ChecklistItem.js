@@ -48,7 +48,6 @@ const ChecklistItem = ({
         <View
           style={[styles.itemChecklist, item.checked ? {gap: 10} : {gap: 14}]}>
           <Pressable
-            //
             onPress={() =>
               checkItem(selectedChecklistId, item.id, item.checked)
             }>

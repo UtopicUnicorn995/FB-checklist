@@ -10,6 +10,7 @@ import Button from './Button';
 import {AppContext} from '../context/AppContext';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
 import Pressable from './Pressable';
+import {useNavigationState} from '@react-navigation/native';
 
 const Drawer = createDrawerNavigator();
 
@@ -27,8 +28,23 @@ function DrawerContent({navigation}) {
 
   console.log('newee', newChecklistTitle);
 
+  const currentScreenName = useNavigationState(state => {
+    const drawerRoute = state.routes[state.index]; // Get the active route of the drawer
+    if (drawerRoute.state) {
+      const activeChildRoute =
+        drawerRoute.state.routes[drawerRoute.state.index];
+      return activeChildRoute.name; // Return the name of the active child route
+    }
+    return drawerRoute.name; // Fallback to the drawer route name
+  });
+
+  console.log('Current Screen Name:', currentScreenName);
+
   const handleSelectChecklist = selected => {
     setSelectedChecklist(selected);
+    if (currentScreenName !== 'Checklist') {
+      navigation.navigate('Checklist');
+    }
     navigation.toggleDrawer();
   };
 
