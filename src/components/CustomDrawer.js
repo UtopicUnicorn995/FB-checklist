@@ -4,13 +4,16 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import {View, Text, Image, TextInput} from 'react-native';
 import Checklist from '../screens/Checklist';
 import ChecklistDetails from '../screens/ChecklistDetails';
-import Login from '../screens/Login';
+import Notes from '../screens/Notes';
 import styles from '../styles/CustomDrawer.styles';
 import Button from './Button';
 import {AppContext} from '../context/AppContext';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
 import Pressable from './Pressable';
 import {useNavigationState} from '@react-navigation/native';
+import Collaborators from '../screens/Collaborators';
+import Settings from '../screens/Settings';
+import Plan from '../screens/Plan';
 
 const Drawer = createDrawerNavigator();
 
@@ -40,14 +43,20 @@ function DrawerContent({navigation}) {
     setSelectedChecklist(selected);
     if (currentScreenName !== 'Checklist') {
       navigation.navigate('Checklist');
+    } else {
+      navigation.toggleDrawer();
     }
-    navigation.toggleDrawer();
   };
 
   const handleAddChecklist = () => {
     setIsAddChecklist(false);
     setNewChecklistTitle('');
     createChecklist(newChecklistTitle);
+  };
+
+  const handleNavigation = location => {
+    setSelectedChecklist(null);
+    navigation.navigate(location);
   };
 
   console.log('user data and checklist', userData, userCheckList);
@@ -73,25 +82,29 @@ function DrawerContent({navigation}) {
                 {userData && userData.allowedPages})
               </Text>
             </View>
-            {userCheckList &&
-              userCheckList.map(checklist => (
-                <Pressable
-                  onPress={() => handleSelectChecklist(checklist)}
-                  style={[
-                    styles.checkListItem,
-                    selectedChecklist === checklist && {
-                      backgroundColor: '#EEE9E0',
-                    },
-                  ]}
-                  key={checklist.id}>
-                  <Text
-                    style={
-                      selectedChecklist === checklist && {fontWeight: 'bold'}
-                    }>
-                    {checklist.title}
-                  </Text>
-                </Pressable>
-              ))}
+            <View style={{gap: 0}}>
+              {userCheckList &&
+                userCheckList.map((checklist, index) => (
+                  <Pressable
+                    onPress={() => handleSelectChecklist(checklist)}
+                    style={[
+                      styles.checkListItem,
+                      selectedChecklist === checklist && {
+                        backgroundColor: '#EEE9E0',
+                      },
+                      index !== userCheckList.length - 1 &&
+                        styles.checkListItemBorder,
+                    ]}
+                    key={checklist.id}>
+                    <Text
+                      style={
+                        selectedChecklist === checklist && {fontWeight: 'bold'}
+                      }>
+                      {checklist.title}
+                    </Text>
+                  </Pressable>
+                ))}
+            </View>
             {userCheckList && userCheckList.length < userData.allowedPages ? (
               isAddChecklist ? (
                 <View style={styles.newChecklistInputContainer}>
@@ -146,7 +159,7 @@ function DrawerContent({navigation}) {
 
           <Pressable
             style={styles.drawerItem}
-            onPress={() => console.log('Custom Action')}>
+            onPress={() => handleNavigation('Notes')}>
             <Image
               style={{width: 20, height: 22}}
               source={require('../assets/notes.png')}
@@ -155,7 +168,7 @@ function DrawerContent({navigation}) {
           </Pressable>
           <Pressable
             style={styles.drawerItem}
-            onPress={() => navigation.navigate('ChecklistDetails')}>
+            onPress={() => handleNavigation('Collaborators')}>
             <Image
               style={{width: 27, height: 17}}
               source={require('../assets/users.png')}
@@ -165,7 +178,7 @@ function DrawerContent({navigation}) {
 
           <Pressable
             style={styles.drawerItem}
-            onPress={() => navigation.navigate('ChecklistDetails')}>
+            onPress={() => handleNavigation('Settings')}>
             <Image
               style={{width: 23, height: 24}}
               source={require('../assets/gear.png')}
@@ -175,7 +188,7 @@ function DrawerContent({navigation}) {
 
           <Pressable
             style={styles.drawerItem}
-            onPress={() => console.log('Custom Action')}>
+            onPress={() => handleNavigation('Plan')}>
             <Image
               style={{width: 25, height: 20}}
               source={require('../assets/crown.png')}
@@ -222,7 +235,14 @@ export default function CustomDrawer() {
         component={ChecklistDetails}
         options={options}
       />
-      <Drawer.Screen name="Login" component={Login} options={options} />
+      <Drawer.Screen name="Notes" component={Notes} options={options} />
+      <Drawer.Screen
+        name="Collaborators"
+        component={Collaborators}
+        options={options}
+      />
+      <Drawer.Screen name="Settings" component={Settings} options={options} />
+      <Drawer.Screen name="Plan" component={Plan} options={options} />
     </Drawer.Navigator>
   );
 }

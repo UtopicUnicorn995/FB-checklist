@@ -7,7 +7,7 @@ export default function ChecklistDetails({route}) {
 
   console.log('eye tem', details);
   return (
-    <AppLayout title={'Checklist details'} detailsScreen>
+    <AppLayout title={'Checklist details'} canBack>
       <ScrollView>
         <View>
           <Text>Description:</Text>

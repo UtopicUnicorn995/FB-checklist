@@ -22,7 +22,8 @@ export default function AppLayout({
   setIsEditable,
   toggleAddItemModal,
   handleTitleEdit,
-  detailsScreen,
+  canBack,
+  handleAdd
 }) {
   const {} = useContext(AppContext);
   const navigation = useNavigation();
@@ -49,7 +50,7 @@ export default function AppLayout({
           </Pressable>
 
           <View style={styles.header}>
-            {!detailsScreen ? (
+            {!canBack ? (
               <Pressable
                 style={{flex: 1}}
                 onPress={() => {
@@ -83,7 +84,7 @@ export default function AppLayout({
                   style={{width: 28, height: 25}}
                 />
               </Pressable>
-            ) : detailsScreen ? (
+            ) : canBack ? (
               <Pressable
                 style={styles.floatingIcon}
                 onPress={() => navigation.goBack()}>

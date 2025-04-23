@@ -42,10 +42,13 @@ export default StyleSheet.create({
     bottom: 0,
   },
   checkListItem: {
-    padding: 5,
+    padding: 10,
     paddingLeft: 20,
-    borderRadius: 4,
-    // backgroundColor: '#fff'
+  },
+  checkListItemBorder: {
+    borderBottomWidth: 0.5,
+    borderStyle: 'dashed',
+    borderColor: '#ccc',
   },
   newChecklistInputContainer: {
     flexDirection: 'row',

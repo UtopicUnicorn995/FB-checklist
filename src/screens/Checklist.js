@@ -183,11 +183,8 @@ export default function Checklist() {
           <FlatList
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{paddingBottom: insets.bottom}}
-            // data={checklist
-            //   .filter(Boolean)
-            //   .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))}
             data={sortedChecklist}
-            renderItem={renderItem}
+            renderItem={selectedChecklist && renderItem}
             keyExtractor={item => item.id}
           />
         ) : (

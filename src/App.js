@@ -3,6 +3,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Checklist from './screens/Checklist';
 import Login from './screens/Login';
 import Signup from './screens/Signup';
+import Notes from './screens/Notes';
 import ChecklistDetails from './screens/ChecklistDetails';
 import {AppProvider, AppContext} from './context/AppContext';
 import CustomDrawer from './components/CustomDrawer';
@@ -11,6 +12,9 @@ import {useContext} from 'react';
 import SplashScreen from './screens/SplashScreen';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Collaborators from './screens/Collaborators';
+import Settings from './screens/Settings';
+import Plan from './screens/Plan';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +41,10 @@ const UserStack = () => {
         component={ChecklistDetails}
         options={options}
       />
+      <Stack.Screen name="Notes" component={Notes} options={options} />
+      <Stack.Screen name="Collaborators" component={Collaborators} options={options} />
+      <Stack.Screen name="Settings" component={Settings} options={options} />
+      <Stack.Screen name="Plan" component={Plan} options={options} />
     </Stack.Navigator>
   );
 };
