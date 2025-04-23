@@ -14,11 +14,13 @@ const ChecklistItem = ({
   selectedChecklistId,
   handleDeleteItem,
 }) => {
-  const {navigate} = useNavigation();
+  const navigation = useNavigation();
 
   const openChecklistDetails = () => {
-    navigate('/checklistDetails');
+    navigation.navigate('ChecklistDetails', {item});
   };
+
+  console.log('huhu', item)
 
   return (
     <View style={styles.itemContainer}>
@@ -63,7 +65,7 @@ const ChecklistItem = ({
               />
             )}
           </Pressable>
-          <Pressable>
+          <Pressable onPress={openChecklistDetails}>
             <Text
               style={[
                 styles.itemTitle,

@@ -7,6 +7,7 @@ import {
   Easing,
   Image,
   StatusBar,
+  Text,
 } from 'react-native';
 import Pressable from '../components/Pressable';
 import {AppContext} from '../context/AppContext';
@@ -21,6 +22,7 @@ export default function AppLayout({
   setIsEditable,
   toggleAddItemModal,
   handleTitleEdit,
+  detailsScreen,
 }) {
   const {} = useContext(AppContext);
   const navigation = useNavigation();
@@ -47,32 +49,55 @@ export default function AppLayout({
           </Pressable>
 
           <View style={styles.header}>
-            <Pressable
-              style={{flex: 1}}
-              onPress={() => {
-                if (handleTitleEdit) setIsEditable(true);
-              }}>
-              <TextInput
-                style={[
-                  styles.headerText,
-                  isEditable && {
-                    backgroundColor: '#fff',
-                    borderRadius: 5,
-                    borderWidth: 1,
-                    borderColor: '#ccc',
-                  },
-                ]}
-                editable={isEditable}
-                value={title}
-                onChangeText={setTitle}
-              />
-            </Pressable>
+            {!detailsScreen ? (
+              <Pressable
+                style={{flex: 1}}
+                onPress={() => {
+                  if (handleTitleEdit) setIsEditable(true);
+                }}>
+                <TextInput
+                  style={[
+                    styles.headerText,
+                    isEditable && {
+                      backgroundColor: '#fff',
+                      borderRadius: 5,
+                      borderWidth: 1,
+                      borderColor: '#ccc',
+                    },
+                  ]}
+                  editable={isEditable}
+                  value={title}
+                  onChangeText={setTitle}
+                />
+              </Pressable>
+            ) : (
+              <Text style={[styles.headerText, {flex: 1, paddingVertical: 10}]}>
+                {title}
+              </Text>
+            )}
 
             {isEditable ? (
               <Pressable style={styles.floatingIcon} onPress={handleTitleEdit}>
                 <Animated.Image
                   source={require('../assets/editItem.png')}
                   style={{width: 28, height: 25}}
+                />
+              </Pressable>
+            ) : detailsScreen ? (
+              <Pressable
+                style={styles.floatingIcon}
+                onPress={() => navigation.goBack()}>
+                <Animated.Image
+                  source={require('../assets/addIcon.png')}
+                  style={{
+                    width: 25,
+                    height: 25,
+                    transform: [
+                      {
+                        rotate: '45deg',
+                      },
+                    ],
+                  }}
                 />
               </Pressable>
             ) : (

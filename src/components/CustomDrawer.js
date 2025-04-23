@@ -26,19 +26,15 @@ function DrawerContent({navigation}) {
   const [isAddChecklist, setIsAddChecklist] = useState(false);
   const [newChecklistTitle, setNewChecklistTitle] = useState('');
 
-  console.log('newee', newChecklistTitle);
-
   const currentScreenName = useNavigationState(state => {
-    const drawerRoute = state.routes[state.index]; // Get the active route of the drawer
+    const drawerRoute = state.routes[state.index];
     if (drawerRoute.state) {
       const activeChildRoute =
         drawerRoute.state.routes[drawerRoute.state.index];
-      return activeChildRoute.name; // Return the name of the active child route
+      return activeChildRoute.name;
     }
-    return drawerRoute.name; // Fallback to the drawer route name
+    return drawerRoute.name;
   });
-
-  console.log('Current Screen Name:', currentScreenName);
 
   const handleSelectChecklist = selected => {
     setSelectedChecklist(selected);

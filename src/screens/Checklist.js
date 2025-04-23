@@ -2,26 +2,27 @@ import React, {useState, useEffect, useMemo, useContext} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {View, Text, FlatList, Alert} from 'react-native';
 import {
-  getDatabase,
-  ref,
-  push,
-  set,
-  onValue,
-} from '@react-native-firebase/database';
+  addChecklistItem,
+  updateChecklistItem,
+  deleteChecklistItem,
+} from '../utils/firebaseServices';
 import ModalView from '../components/ModalView';
 import ChecklistItem from '../components/ChecklistItem';
 import styles from '../styles/Checklist.styles';
 import AppLayout from '../layout/AppLayout';
 import {AppContext} from '../context/AppContext';
+import {sortChecklist} from '../utils/utilsFunc';
 
 export default function Checklist() {
-  const {selectedChecklist} = useContext(AppContext);
+  const {selectedChecklist, userData} = useContext(AppContext);
   const [checklist, setChecklist] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [title, setTitle] = useState('');
   const [isEditable, setIsEditable] = useState(false);
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
+  const [sortBy, setSortBy] = useState('createdAt');
+  const [sortOrder, setSortOrder] = useState('desc');
 
   const insets = useSafeAreaInsets();
 
@@ -41,113 +42,87 @@ export default function Checklist() {
     setTitle(selectedChecklist.title || '');
   }, [selectedChecklist]);
 
-  const addItem = (title, description) => {
-    const db = getDatabase();
+  const sortedChecklist = useMemo(() => {
+    return sortChecklist(checklist, sortBy, sortOrder);
+  }, [checklist, sortBy, sortOrder]);
 
-    const checklistRef = ref(
-      db,
-      `/checklists/${selectedChecklist.id}/checklistItems`,
-    );
-    const newItemRef = push(checklistRef);
+  const toggleSortOrder = () => {
+    setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
+  };
 
-    set(newItemRef, {
-      title: title,
-      description: description,
+  const changeSortBy = newSortBy => {
+    setSortBy(newSortBy);
+  };
+
+  const addItem = async (title, description) => {
+    const itemData = {
+      title,
+      description,
       checked: false,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-    })
-      .then(() => {
-        setChecklist(prev => [
-          ...prev,
-          {
-            id: newItemRef.key,
-            title,
-            description,
-            checked: false,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          },
-        ]);
-      })
-      .catch(error => console.error('Error adding item:', error.message));
+    };
+
+    try {
+      const newItem = await addChecklistItem(selectedChecklist.id, itemData);
+      setChecklist(prev => [...prev, newItem]);
+    } catch (error) {
+      console.error('Error adding item:', error.message);
+    }
   };
 
-  const checkItem = (checklistId, itemId, check) => {
-    const db = getDatabase();
-    const itemRef = ref(
-      db,
-      `/checklists/${checklistId}/checklistItems/${itemId}`,
-    );
+  const checkItem = async (checklistId, itemId, check) => {
+    const updatedData = {
+      checked: !check,
+      updatedAt: new Date().toISOString(),
+      checkedBy: !check ? userData.username : null,
+    };
 
-    const updatedCheckedValue = !check;
-    itemRef
-      .update({
-        checked: updatedCheckedValue,
+    try {
+      await updateChecklistItem(checklistId, itemId, updatedData);
+      console.log(`Item ${itemId} updated successfully!`);
+    } catch (error) {
+      console.error(`Error updating item ${itemId}:`, error.message);
+    }
+  };
+
+  const editChecklistItem = async (checklistId, itemId, updatedData) => {
+    try {
+      await updateChecklistItem(checklistId, itemId, {
+        ...updatedData,
         updatedAt: new Date().toISOString(),
-      })
-      .then(() => console.log(`Item ${itemId} updated successfully!`))
-      .catch(error =>
-        console.error(`Error updating item ${itemId}:`, error.message),
-      );
+      });
+      console.log(`Item ${itemId} updated successfully!`);
+    } catch (error) {
+      console.error(`Error updating item ${itemId}:`, error.message);
+    }
   };
-
-  const editChecklistItem = (checklistId, itemId, updatedData) => {
-    const db = getDatabase();
-    const itemRef = ref(
-      db,
-      `/checklists/${checklistId}/checklistItems/${itemId}`,
-    );
-
-    itemRef
-      .update(updatedData)
-      .then(() => {
-        setChecklist(prev =>
-          prev.map(item =>
-            item.id === itemId ? {...item, ...updatedData} : item,
-          ),
-        );
-        setEditingItem(null);
-      })
-      .catch(error =>
-        console.error(`Error updating item ${itemId}:`, error.message),
-      );
-  };
-
-  const deleteItem = (checklistId, itemId) => {
-    const db = getDatabase();
-    const itemRef = ref(
-      db,
-      `/checklists/${checklistId}/checklistItems/${itemId}`,
-    );
-
+  const deleteItem = async (checklistId, itemId) => {
     Alert.alert(
-      'Delete checklist item?',
-      'Are you sure you want to delete this item? This action can’t be undone.',
+      'Delete Item',
+      'Are you sure you want to delete this item?',
       [
         {
           text: 'Cancel',
-          onPress: () => setEditingItem(null),
           style: 'cancel',
         },
         {
-          text: 'Okay',
-          onPress: () => {
-            itemRef
-              .remove()
-              .then(() => {
-                setChecklist(prev => prev.filter(item => item.id !== itemId));
-                setEditingItem(null);
-              })
-              .catch(error =>
-                console.error(`Error deleting item ${itemId}:`, error.message),
-              );
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await deleteChecklistItem(checklistId, itemId);
+              setChecklist(prev => prev.filter(item => item.id !== itemId));
+              console.log(`Item ${itemId} deleted successfully!`);
+            } catch (error) {
+              console.error(`Error deleting item ${itemId}:`, error.message);
+            }
           },
         },
       ],
+      {cancelable: true},
     );
   };
-
   const handleTitleEdit = () => {
     if (!selectedChecklist) {
       console.error('No checklist selected. Cannot edit title.');
@@ -192,7 +167,6 @@ export default function Checklist() {
     );
   };
 
-
   return (
     <AppLayout
       selectedChecklist={selectedChecklist}
@@ -209,7 +183,10 @@ export default function Checklist() {
           <FlatList
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{paddingBottom: insets.bottom}}
-            data={checklist.filter(Boolean)}
+            // data={checklist
+            //   .filter(Boolean)
+            //   .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))}
+            data={sortedChecklist}
             renderItem={renderItem}
             keyExtractor={item => item.id}
           />
