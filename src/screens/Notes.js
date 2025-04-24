@@ -8,17 +8,9 @@ import {AppContext} from '../context/AppContext';
 
 const rand = () => Math.floor(Math.random() * 256);
 
-const seedData = Array(20)
-  .fill(null)
-  .map((_, i) => ({
-    id: i.toString(),
-    color: `rgb(${rand()}, ${rand()}, ${rand()})`,
-    height: Math.max(60, Math.floor(Math.random() * 100)),
-  }));
-
 const Notes = () => {
   const [loadingNotes, setLoadingNotes] = useState(false);
-  const [data, setData] = useState(seedData);
+  const [data, setData] = useState([]);
   const {userData} = useContext(AppContext);
 
   const handleReorder = ({from, to}) => {
@@ -26,16 +18,17 @@ const Notes = () => {
   };
 
   const handleCreateNotes = async (title, description) => {
+    setLoadingNotes(true);
     try {
       const newNote = await createNoteWithOrder(
         title,
         description,
         userData.id,
       );
+      setLoadingNotes(false);
       setData(prevData => [...prevData, newNote]);
     } catch (error) {
       console.error('Error in handleCreateNotes:', error.message);
-      // Optionally show an error message to the user
     }
   };
 
