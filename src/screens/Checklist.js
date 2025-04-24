@@ -5,8 +5,9 @@ import {
   addChecklistItem,
   updateChecklistItem,
   deleteChecklistItem,
+  editChecklistTitle,
 } from '../utils/firebaseServices';
-import ModalView from '../components/ModalView';
+
 import ChecklistItem from '../components/ChecklistItem';
 import styles from '../styles/Checklist.styles';
 import AppLayout from '../layout/AppLayout';
@@ -20,7 +21,7 @@ export default function Checklist() {
   const [editingItem, setEditingItem] = useState(null);
   const [title, setTitle] = useState('');
   const [isEditable, setIsEditable] = useState(false);
-  const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
+
   const [sortBy, setSortBy] = useState('createdAt');
   const [sortOrder, setSortOrder] = useState('desc');
 
@@ -123,7 +124,7 @@ export default function Checklist() {
       {cancelable: true},
     );
   };
-  const handleTitleEdit = () => {
+  const handleTitleEdit = async () => {
     if (!selectedChecklist) {
       console.error('No checklist selected. Cannot edit title.');
       return;
@@ -134,22 +135,16 @@ export default function Checklist() {
       return;
     }
 
-    const db = getDatabase();
-    const checklistRef = ref(db, `/checklists/${selectedChecklist.id}`);
-
-    checklistRef
-      .update({title})
-      .then(() => {
-        console.log(`Checklist ${selectedChecklist.id} updated`);
-        setIsEditable(false);
-      })
-      .catch(error =>
-        console.error('Error updating checklist title:', error.message),
+    try {
+      console.log('tryung');
+      await editChecklistTitle(selectedChecklist.id, title);
+      setIsEditable(false);
+    } catch (error) {
+      console.error(
+        `Error changing title ${title}, ${selectedChecklist.id}`,
+        error,
       );
-  };
-
-  const toggleAddItemModal = () => {
-    setIsAddItemModalOpen(prev => !prev);
+    }
   };
 
   const renderItem = ({item, index}) => {
@@ -175,7 +170,7 @@ export default function Checklist() {
       isEditable={isEditable}
       setIsEditable={setIsEditable}
       handleTitleEdit={handleTitleEdit}
-      toggleAddItemModal={toggleAddItemModal}>
+      onAddItem={{func: addItem, type: 'checklist'}}>
       <View style={styles.checklist}>
         {loading ? (
           <Text>Loading...</Text>
@@ -191,11 +186,6 @@ export default function Checklist() {
           <Text style={styles.noItemsText}>No checklist items found.</Text>
         )}
       </View>
-      <ModalView
-        openMenu={isAddItemModalOpen}
-        setModalMenu={toggleAddItemModal}
-        handleAddItem={addItem}
-      />
     </AppLayout>
   );
 }

@@ -10,73 +10,83 @@ import {
   Keyboard,
 } from 'react-native';
 import Pressable from './Pressable';
+import {capitalize} from '../utils/utilsFunc';
 
 export default function ModalView({openMenu, setModalMenu, handleAddItem}) {
-  const [itemDetails, setItemDetails] = useState({title: '', description: ''});
+  const [itemDetails, setItemDetails] = useState({
+    title: 'q',
+    description: 'asd',
+  });
+
+  const {type, func} = handleAddItem;
+
+  console.log('heheh', type, func);
 
   const handleItemDetails = (text, key) => {
     setItemDetails(prev => ({...prev, [key]: text}));
   };
 
   const handleModalMenu = () => {
-    console.log('toogling the menu')
+    console.log('toogling the menu');
     setModalMenu();
     setItemDetails({title: '', description: ''});
   };
 
   const saveAddItem = () => {
-    handleAddItem(itemDetails.title, itemDetails.description);
+    func(itemDetails.title, itemDetails.description);
     setItemDetails({title: '', description: ''});
   };
 
   return (
-    <Modal animationType="slide" transparent={true} visible={openMenu}>
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss()
-          handleModalMenu()
-        }}>
-        <View style={styles.overlay}>
-          <TouchableWithoutFeedback>
-            <View style={styles.modalView}>
-              <Pressable
-                style={styles.closeIconContainer}
-                onPress={handleModalMenu}>
-                <Image
-                  source={require('../assets/addIcon.png')}
-                  style={styles.closeIcon}
-                />
-              </Pressable>
-              <View style={styles.modalItems}>
-                <Text style={styles.modalTitle}>Add Item</Text>
-                <View style={styles.inputGroup}>
-                  <Text>Item title:</Text>
-                  <TextInput
-                    value={itemDetails.title}
-                    style={styles.inputText}
-                    onChangeText={text => handleItemDetails(text, 'title')}
+    <View pointerEvents="box-none">
+      <Modal animationType="slide" transparent={true} visible={openMenu}>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            Keyboard.dismiss();
+            handleModalMenu();
+          }}>
+          <View style={styles.overlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalView}>
+                <Pressable
+                  style={styles.closeIconContainer}
+                  onPress={handleModalMenu}>
+                  <Image
+                    source={require('../assets/addIcon.png')}
+                    style={styles.closeIcon}
                   />
-                </View>
-                <View style={styles.inputGroup}>
-                  <Text>Item description:</Text>
-                  <TextInput
-                    value={itemDetails.description}
-                    style={[styles.inputText, {height: 60}]}
-                    onChangeText={text =>
-                      handleItemDetails(text, 'description')
-                    }
-                    multiline
-                  />
-                </View>
-                <Pressable style={styles.addButton} onPress={saveAddItem}>
-                  <Text style={{color: '#fff'}}>Add item</Text>
                 </Pressable>
+                <View style={styles.modalItems}>
+                  <Text style={styles.modalTitle}>Add {type}</Text>
+                  <View style={styles.inputGroup}>
+                    <Text>{capitalize(type)} title:</Text>
+                    <TextInput
+                      value={itemDetails.title}
+                      style={styles.inputText}
+                      onChangeText={text => handleItemDetails(text, 'title')}
+                    />
+                  </View>
+                  <View style={styles.inputGroup}>
+                    <Text>{capitalize(type)} description:</Text>
+                    <TextInput
+                      value={itemDetails.description}
+                      style={[styles.inputText, {height: 60}]}
+                      onChangeText={text =>
+                        handleItemDetails(text, 'description')
+                      }
+                      multiline
+                    />
+                  </View>
+                  <Pressable style={styles.addButton} onPress={saveAddItem}>
+                    <Text style={{color: '#fff'}}>Save</Text>
+                  </Pressable>
+                </View>
               </View>
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
-      </TouchableWithoutFeedback>
-    </Modal>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+    </View>
   );
 }
 
@@ -145,6 +155,7 @@ const styles = StyleSheet.create({
     padding: 10,
     top: 10,
     right: 10,
+    zIndex: 10
   },
   closeIcon: {
     width: 20,

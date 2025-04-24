@@ -1,7 +1,16 @@
-import {getDatabase, ref, push, set, update, remove} from '@react-native-firebase/database';
+import {
+  getDatabase,
+  ref,
+  push,
+  set,
+  update,
+  remove,
+  get
+} from '@react-native-firebase/database';
 
 export const addChecklistItem = async (checklistId, itemData) => {
   const db = getDatabase();
+
   const checklistRef = ref(db, `/checklists/${checklistId}/checklistItems`);
   const newItemRef = push(checklistRef);
   await set(newItemRef, itemData);
@@ -10,12 +19,75 @@ export const addChecklistItem = async (checklistId, itemData) => {
 
 export const updateChecklistItem = async (checklistId, itemId, updatedData) => {
   const db = getDatabase();
-  const itemRef = ref(db, `/checklists/${checklistId}/checklistItems/${itemId}`);
+
+  const itemRef = ref(
+    db,
+    `/checklists/${checklistId}/checklistItems/${itemId}`,
+  );
   await update(itemRef, updatedData);
 };
 
 export const deleteChecklistItem = async (checklistId, itemId) => {
   const db = getDatabase();
-  const itemRef = ref(db, `/checklists/${checklistId}/checklistItems/${itemId}`);
+
+  const itemRef = ref(
+    db,
+    `/checklists/${checklistId}/checklistItems/${itemId}`,
+  );
   await remove(itemRef);
+};
+
+export const editChecklistTitle = async (checklistId, updatedTitle) => {
+  const db = getDatabase();
+
+  const checklistRef = ref(db, `/checklists/${checklistId}`);
+  await update(checklistRef, {title: updatedTitle});
+};
+
+// export const getNotes = async userId => {
+//   const db = getDatabase();
+
+//   const notesRef = ref(db, `/notes`);
+// };
+
+export const createNoteWithOrder = async (title, description, userId) => {
+  const db = getDatabase();
+  const notesRef = ref(db, '/notes');
+
+  try {
+    // Fetch existing notes
+    const snapshot = await get(notesRef);
+
+    let existingOrders = [];
+    if (snapshot.exists()) {
+      const notes = snapshot.val();
+      existingOrders = Object.values(notes).map(note => note.order);
+    }
+
+    // Find the next available order
+    const maxOrder = Math.max(0, ...existingOrders);
+    const missingOrder = Array.from({length: maxOrder}, (_, i) => i + 1).find(
+      order => !existingOrders.includes(order)
+    );
+    const nextOrder = missingOrder || maxOrder + 1;
+
+    // Create the new note
+    const data = {
+      title,
+      description,
+      createdBy: userId,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      // order: nextOrder,
+    };
+
+    const newNotesRef = push(notesRef);
+    await set(newNotesRef, data);
+
+    console.log('Note created successfully:', {id: 'asd', ...data});
+    return {id: newNotesRef.key, ...data};
+  } catch (error) {
+    console.error('Error creating note with order:', error.message);
+    throw error; // Re-throw the error to handle it in the calling function
+  }
 };

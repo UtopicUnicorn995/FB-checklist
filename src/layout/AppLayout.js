@@ -13,6 +13,7 @@ import Pressable from '../components/Pressable';
 import {AppContext} from '../context/AppContext';
 import styles from '../styles/AppLayout.styles';
 import {useNavigation} from '@react-navigation/native';
+import ModalView from '../components/ModalView';
 
 export default function AppLayout({
   children,
@@ -20,14 +21,18 @@ export default function AppLayout({
   setTitle,
   isEditable,
   setIsEditable,
-  toggleAddItemModal,
   handleTitleEdit,
   canBack,
-  handleAdd
+  onAddItem,
 }) {
   const {} = useContext(AppContext);
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
+  const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
+
+  const toggleAddItemModal = () => {
+    setIsAddItemModalOpen(prev => !prev);
+  };
 
   return (
     <SafeAreaView
@@ -56,20 +61,26 @@ export default function AppLayout({
                 onPress={() => {
                   if (handleTitleEdit) setIsEditable(true);
                 }}>
-                <TextInput
-                  style={[
-                    styles.headerText,
-                    isEditable && {
-                      backgroundColor: '#fff',
-                      borderRadius: 5,
-                      borderWidth: 1,
-                      borderColor: '#ccc',
-                    },
-                  ]}
-                  editable={isEditable}
-                  value={title}
-                  onChangeText={setTitle}
-                />
+                {isEditable ? (
+                  <TextInput
+                    style={[
+                      styles.headerText,
+                      isEditable && {
+                        backgroundColor: '#fff',
+                        borderRadius: 5,
+                        borderWidth: 1,
+                        borderColor: '#ccc',
+                      },
+                    ]}
+                    editable={isEditable}
+                    value={title}
+                    onChangeText={setTitle}
+                  />
+                ) : (
+                  <Text style={[styles.headerText, {paddingVertical: 10}]}>
+                    {title}
+                  </Text>
+                )}
               </Pressable>
             ) : (
               <Text style={[styles.headerText, {flex: 1, paddingVertical: 10}]}>
@@ -115,6 +126,11 @@ export default function AppLayout({
 
           {children}
         </View>
+        <ModalView
+          openMenu={isAddItemModalOpen}
+          setModalMenu={toggleAddItemModal}
+          handleAddItem={onAddItem}
+        />
       </View>
     </SafeAreaView>
   );
