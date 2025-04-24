@@ -1,18 +1,22 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {StyleSheet, ActivityIndicator, View, Text} from 'react-native';
 import ReorderableList, {reorderItems} from 'react-native-reorderable-list';
 import AppLayout from '../layout/AppLayout';
 import NoteItem from '../components/NoteItem';
 import {createNoteWithOrder} from '../utils/firebaseServices';
 import {AppContext} from '../context/AppContext';
-
-const rand = () => Math.floor(Math.random() * 256);
+import { getNotes } from '../utils/firebaseServices';
 
 const Notes = () => {
   const [loadingNotes, setLoadingNotes] = useState(false);
   const [data, setData] = useState([]);
-  const {userData} = useContext(AppContext);
+  const {user} = useContext(AppContext);
 
+  useEffect(() => {
+    getNotes(user)
+  },[])
+
+  console.log('daaaata', data)
   const handleReorder = ({from, to}) => {
     setData(value => reorderItems(value, from, to));
   };
@@ -23,8 +27,9 @@ const Notes = () => {
       const newNote = await createNoteWithOrder(
         title,
         description,
-        userData.id,
+        user,
       );
+      console.log('notee', newNote)
       setLoadingNotes(false);
       setData(prevData => [...prevData, newNote]);
     } catch (error) {

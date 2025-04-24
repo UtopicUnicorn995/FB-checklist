@@ -14,8 +14,8 @@ import {capitalize} from '../utils/utilsFunc';
 
 export default function ModalView({openMenu, setModalMenu, handleAddItem}) {
   const [itemDetails, setItemDetails] = useState({
-    title: 'q',
-    description: 'asd',
+    title: '',
+    description: '',
   });
 
   const {type, func} = handleAddItem;

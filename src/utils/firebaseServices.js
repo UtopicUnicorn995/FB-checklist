@@ -5,7 +5,10 @@ import {
   set,
   update,
   remove,
-  get
+  get,
+  query,
+  orderByChild,
+  equalTo
 } from '@react-native-firebase/database';
 
 export const addChecklistItem = async (checklistId, itemData) => {
@@ -44,11 +47,37 @@ export const editChecklistTitle = async (checklistId, updatedTitle) => {
   await update(checklistRef, {title: updatedTitle});
 };
 
-// export const getNotes = async userId => {
-//   const db = getDatabase();
+export const getNotes = async userId => {
+  const db = getDatabase();
 
-//   const notesRef = ref(db, `/notes`);
-// };
+  try {
+    // Create a query to fetch notes created by the user
+    const notesQuery = query(
+      ref(db, `/notes`),
+      orderByChild('createdBy'),
+      equalTo(userId)
+    );
+
+    // Execute the query
+    const snapshot = await get(notesQuery);
+
+    if (snapshot.exists()) {
+      // Convert the snapshot into an array of notes
+      const notes = Object.entries(snapshot.val()).map(([id, note]) => ({
+        id,
+        ...note,
+      }));
+      console.log('Fetched notes:', notes);
+      return notes;
+    } else {
+      console.log('No notes found for user:', userId);
+      return [];
+    }
+  } catch (error) {
+    console.error('Error fetching notes:', error.message);
+    throw error; // Re-throw the error to handle it in the calling function
+  }
+};
 
 export const createNoteWithOrder = async (title, description, userId) => {
   const db = getDatabase();
@@ -84,7 +113,7 @@ export const createNoteWithOrder = async (title, description, userId) => {
     const newNotesRef = push(notesRef);
     await set(newNotesRef, data);
 
-    console.log('Note created successfully:', {id: 'asd', ...data});
+    console.log('Note created successfully:', {userId});
     return {id: newNotesRef.key, ...data};
   } catch (error) {
     console.error('Error creating note with order:', error.message);
