@@ -17,7 +17,7 @@ const Notes = () => {
       setLoadingNotes(true);
       try {
         const notes = await getNotes(user);
-        setData(notes); 
+        setData(notes);
       } catch (error) {
         console.error('Error fetching notes:', error.message);
       } finally {
@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
   listContainer: {
     gap: 10,
     padding: 10,
+    height: '100%',
   },
 });
 
