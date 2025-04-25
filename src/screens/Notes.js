@@ -5,7 +5,7 @@ import AppLayout from '../layout/AppLayout';
 import NoteItem from '../components/NoteItem';
 import {createNoteWithOrder} from '../utils/firebaseServices';
 import {AppContext} from '../context/AppContext';
-import { getNotes } from '../utils/firebaseServices';
+import {getNotes} from '../utils/firebaseServices';
 
 const Notes = () => {
   const [loadingNotes, setLoadingNotes] = useState(false);
@@ -13,10 +13,21 @@ const Notes = () => {
   const {user} = useContext(AppContext);
 
   useEffect(() => {
-    getNotes(user)
-  },[])
+    const fetchNotes = async () => {
+      setLoadingNotes(true);
+      try {
+        const notes = await getNotes(user);
+        setData(notes); 
+      } catch (error) {
+        console.error('Error fetching notes:', error.message);
+      } finally {
+        setLoadingNotes(false); // Hide loading indicator
+      }
+    };
 
-  console.log('daaaata', data)
+    fetchNotes();
+  }, [user]);
+  console.log('daaaata', data);
   const handleReorder = ({from, to}) => {
     setData(value => reorderItems(value, from, to));
   };
@@ -24,12 +35,8 @@ const Notes = () => {
   const handleCreateNotes = async (title, description) => {
     setLoadingNotes(true);
     try {
-      const newNote = await createNoteWithOrder(
-        title,
-        description,
-        user,
-      );
-      console.log('notee', newNote)
+      const newNote = await createNoteWithOrder(title, description, user);
+      console.log('notee', newNote);
       setLoadingNotes(false);
       setData(prevData => [...prevData, newNote]);
     } catch (error) {

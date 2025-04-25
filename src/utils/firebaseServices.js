@@ -51,18 +51,17 @@ export const getNotes = async userId => {
   const db = getDatabase();
 
   try {
-    // Create a query to fetch notes created by the user
+   
     const notesQuery = query(
       ref(db, `/notes`),
       orderByChild('createdBy'),
       equalTo(userId)
     );
 
-    // Execute the query
+
     const snapshot = await get(notesQuery);
 
     if (snapshot.exists()) {
-      // Convert the snapshot into an array of notes
       const notes = Object.entries(snapshot.val()).map(([id, note]) => ({
         id,
         ...note,
@@ -75,7 +74,7 @@ export const getNotes = async userId => {
     }
   } catch (error) {
     console.error('Error fetching notes:', error.message);
-    throw error; // Re-throw the error to handle it in the calling function
+    throw error; 
   }
 };
 
