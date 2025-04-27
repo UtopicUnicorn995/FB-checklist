@@ -17,7 +17,7 @@ const ChecklistItem = ({
   const navigation = useNavigation();
 
   const openChecklistDetails = () => {
-    navigation.navigate('ChecklistDetails', {item});
+    navigation.navigate('ChecklistDetails', {item, checkItem, selectedChecklistId});
   };
 
   console.log('huhu', item)

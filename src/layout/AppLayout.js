@@ -24,6 +24,7 @@ export default function AppLayout({
   handleTitleEdit,
   canBack,
   onAddItem,
+  isDetails,
 }) {
   const {} = useContext(AppContext);
   const navigation = useNavigation();
@@ -126,11 +127,13 @@ export default function AppLayout({
 
           {children}
         </View>
-        <ModalView
-          openMenu={isAddItemModalOpen}
-          setModalMenu={toggleAddItemModal}
-          handleAddItem={onAddItem}
-        />
+        {!canBack && (
+          <ModalView
+            openMenu={isAddItemModalOpen}
+            setModalMenu={toggleAddItemModal}
+            handleAddItem={onAddItem}
+          />
+        )}
       </View>
     </SafeAreaView>
   );

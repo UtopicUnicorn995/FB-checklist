@@ -20,7 +20,6 @@ export default function ModalView({openMenu, setModalMenu, handleAddItem}) {
 
   const {type, func} = handleAddItem;
 
-  console.log('heheh', type, func);
 
   const handleItemDetails = (text, key) => {
     setItemDetails(prev => ({...prev, [key]: text}));

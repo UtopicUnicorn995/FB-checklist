@@ -19,8 +19,8 @@ const NoteItem = memo(({content}) => {
   return (
     <Pressable style={[styles.card]} onLongPress={drag}>
       <View style={[GlobalStyles.flexRow]}>
-        <Text style={[styles.noteTitleText]}>{content.title}</Text>
-        <Text style={[styles.noteDateText]}>
+        <Text style={[GlobalStyles.textPrimary]}>{content.title}</Text>
+        <Text style={[GlobalStyles.textSecondary]}>
           (
           {convertDate(
             content.updatedAt,

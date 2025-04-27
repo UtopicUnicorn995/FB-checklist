@@ -4,7 +4,7 @@ const GlobalStyles = StyleSheet.create({
   flexRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5
+    gap: 5,
   },
   flexColumn: {
     flexDirection: 'column',
@@ -14,6 +14,9 @@ const GlobalStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
+  },
+  gap: {
+    gap: 10,
   },
   center: {
     justifyContent: 'center',
@@ -28,6 +31,12 @@ const GlobalStyles = StyleSheet.create({
   padding: {
     padding: 10,
   },
+  paddingVertical: {
+    paddingVertical: 10,
+  },
+  paddingHorizontal: {
+    paddingHorizontal: 10,
+  },
   margin: {
     margin: 10,
   },
@@ -38,10 +47,13 @@ const GlobalStyles = StyleSheet.create({
     fontWeight: 'bold',
   },
   textPrimary: {
-    color: '#007bff',
+    color: '#262626',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   textSecondary: {
     color: '#6c757d',
+    fontSize: 14,
   },
   shadow: {
     shadowColor: '#000',

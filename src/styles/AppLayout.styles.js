@@ -38,7 +38,7 @@ export default StyleSheet.create({
     borderColor: 'black',
   },
   headerText: {
-    fontSize: 20,
+    fontSize: 32,
     fontWeight: 'bold',
     color: 'black',
 

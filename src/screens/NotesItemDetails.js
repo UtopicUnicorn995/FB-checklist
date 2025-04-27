@@ -1,6 +1,7 @@
 import {View, Text, ScrollView} from 'react-native';
 import AppLayout from '../layout/AppLayout';
 import {convertDate} from '../utils/utilsFunc';
+import GlobalStyles from '../styles/GlobalStyles.';
 
 export default function NotesItemDetails({route}) {
   const details = route.params.item;

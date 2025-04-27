@@ -79,9 +79,11 @@ export default function Checklist() {
       checkedBy: !check ? userData.username : null,
     };
 
+    console.log('userrrdata', userData.username, userData, updatedData);
+
     try {
       await updateChecklistItem(checklistId, itemId, updatedData);
-      console.log(`Item ${itemId} updated successfully!`);
+      console.log(`Item ${itemId} updated successfully!`, updatedData);
     } catch (error) {
       console.error(`Error updating item ${itemId}:`, error.message);
     }
@@ -93,7 +95,7 @@ export default function Checklist() {
         ...updatedData,
         updatedAt: new Date().toISOString(),
       });
-      console.log(`Item ${itemId} updated successfully!`);
+      console.log(`Item ${itemId} updated successfully!`, updatedData);
     } catch (error) {
       console.error(`Error updating item ${itemId}:`, error.message);
     }
