@@ -1,6 +1,10 @@
 import {StyleSheet} from 'react-native';
 
 const GlobalStyles = StyleSheet.create({
+  flex: {
+    flex: 1,
+    width: '100%',
+  },
   flexRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -49,7 +53,6 @@ const GlobalStyles = StyleSheet.create({
   textPrimary: {
     color: '#262626',
     fontSize: 18,
-    fontWeight: 'bold',
   },
   textSecondary: {
     color: '#6c757d',
@@ -61,6 +64,12 @@ const GlobalStyles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+  },
+  textInput: {
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ccc',
   },
 });
 

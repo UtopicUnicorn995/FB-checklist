@@ -5,7 +5,7 @@ import {
   addChecklistItem,
   updateChecklistItem,
   deleteChecklistItem,
-  editChecklistTitle,
+  checkListEdit,
 } from '../utils/firebaseServices';
 
 import ChecklistItem from '../components/ChecklistItem';
@@ -139,7 +139,7 @@ export default function Checklist() {
 
     try {
       console.log('tryung');
-      await editChecklistTitle(selectedChecklist.id, title);
+      await checkListEdit(selectedChecklist.id, {title: title});
       setIsEditable(false);
     } catch (error) {
       console.error(
