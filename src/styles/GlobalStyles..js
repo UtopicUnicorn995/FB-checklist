@@ -56,7 +56,7 @@ const GlobalStyles = StyleSheet.create({
   },
   textSecondary: {
     color: '#6c757d',
-    fontSize: 14,
+    fontSize: 16,
   },
   shadow: {
     shadowColor: '#000',

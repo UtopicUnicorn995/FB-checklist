@@ -10,6 +10,7 @@ import CustomDrawer from './components/CustomDrawer';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {useContext} from 'react';
 import SplashScreen from './screens/SplashScreen';
+import {ChecklistProvider} from './context/ChecklistContext';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Collaborators from './screens/Collaborators';
@@ -42,7 +43,11 @@ const UserStack = () => {
         options={options}
       />
       <Stack.Screen name="Notes" component={Notes} options={options} />
-      <Stack.Screen name="Collaborators" component={Collaborators} options={options} />
+      <Stack.Screen
+        name="Collaborators"
+        component={Collaborators}
+        options={options}
+      />
       <Stack.Screen name="Settings" component={Settings} options={options} />
       <Stack.Screen name="Plan" component={Plan} options={options} />
     </Stack.Navigator>
@@ -67,9 +72,11 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <SafeAreaProvider>
-        <AppProvider>
-          <AppContent />
-        </AppProvider>
+        <ChecklistProvider>
+          <AppProvider>
+            <AppContent />
+          </AppProvider>
+        </ChecklistProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

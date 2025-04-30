@@ -52,20 +52,6 @@ export const checkListEdit = async (checklistId, updates) => {
   await update(checklistRef, payload);
 };
 
-export const checklistItemEdit = async (checklistId, itemId, updates) => {
-  const db = getDatabase();
-
-  const payload = {
-    ...updates,
-    updatedAt: new Date().toISOString(),
-  };
-
-  const checklistItemRef = ref(
-    db,
-    `/checklists/${checklistId}/checklistItems/${itemId}`,
-  );
-  await update(checklistItemRef, payload);
-};
 
 export const getNotes = async userId => {
   const db = getDatabase();

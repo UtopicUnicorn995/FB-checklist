@@ -1,4 +1,4 @@
-import React, {createContext, useState, useEffect} from 'react';
+import React, {createContext, useState, useEffect, useContext} from 'react';
 import {getAuth, signOut} from '@react-native-firebase/auth';
 import {
   getDatabase,
@@ -10,20 +10,15 @@ import {
   push,
   set,
 } from '@react-native-firebase/database';
-import {
-  saveSelectedChecklist,
-  getSelectedChecklist,
-  clearSelectedChecklist,
-} from '../utils/asyncStorage';
+import {clearSelectedChecklist} from '../utils/asyncStorage';
+import {ChecklistContext} from './ChecklistContext';
 
 export const AppContext = createContext();
 
 export function AppProvider({children}) {
+  const {setUserCheckList, selectedChecklist} = useContext(ChecklistContext);
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
-  const [userCheckList, setUserCheckList] = useState(null);
-  const [selectedChecklist, setSelectedChecklist] = useState(null);
-
   const [appInitializing, setAppInitializing] = useState(true);
 
   useEffect(() => {
@@ -42,49 +37,6 @@ export function AppProvider({children}) {
 
     checkUser();
   }, []);
-
-  useEffect(() => {
-    if (selectedChecklist) {
-      saveSelectedChecklist(selectedChecklist.id);
-    }
-  }, [selectedChecklist]);
-
-  useEffect(() => {
-    const loadSelectedChecklist = async () => {
-      try {
-        const savedChecklistId = await getSelectedChecklist();
-        console.log('eye dee', savedChecklistId);
-        if (savedChecklistId && userCheckList) {
-          const savedChecklist = userCheckList.find(
-            checklist => checklist.id === savedChecklistId,
-          );
-          if (savedChecklist) {
-            setSelectedChecklist(savedChecklist);
-          }
-        }
-      } catch (error) {
-        console.error('Error loading selected checklist:', error);
-      }
-    };
-
-    loadSelectedChecklist();
-  }, [userCheckList]);
-
-  useEffect(() => {
-    if (!userCheckList || userCheckList.length === 0) {
-      setSelectedChecklist(null);
-      return;
-    }
-
-    setSelectedChecklist(prev => {
-      if (!prev) {
-        return userCheckList[0];
-      }
-
-      const found = userCheckList.find(c => c.id === prev.id);
-      return found || userCheckList[0];
-    });
-  }, [userCheckList]);
 
   useEffect(() => {
     if (!user) {
@@ -129,29 +81,6 @@ export function AppProvider({children}) {
     };
   }, [user]);
 
-  const createChecklist = checklistTitle => {
-    const db = getDatabase();
-
-    const newChecklistRef = push(ref(db, '/checklists'));
-    const newChecklistId = newChecklistRef.key;
-
-    const newChecklist = {
-      id: newChecklistId,
-      createdBy: user,
-      title: checklistTitle,
-      collaborators: [],
-      checklistItems: {},
-    };
-
-    set(newChecklistRef, newChecklist)
-      .then(() => {
-        setSelectedChecklist(newChecklist);
-        saveSelectedChecklist(newChecklistId);
-        console.log('selected checklist upon creating', newChecklist);
-      })
-      .catch(error => console.error('Error creating checklist:', error));
-  };
-
   const logoutUser = () => {
     const auth = getAuth();
     console.log('Logging out user:', user);
@@ -174,11 +103,7 @@ export function AppProvider({children}) {
         setUser,
         logoutUser,
         userData,
-        userCheckList,
-        selectedChecklist,
-        setSelectedChecklist,
         appInitializing,
-        createChecklist,
       }}>
       {children}
     </AppContext.Provider>

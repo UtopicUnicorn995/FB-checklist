@@ -12,10 +12,12 @@ import ChecklistItem from '../components/ChecklistItem';
 import styles from '../styles/Checklist.styles';
 import AppLayout from '../layout/AppLayout';
 import {AppContext} from '../context/AppContext';
+import {ChecklistContext} from '../context/ChecklistContext';
 import {sortChecklist} from '../utils/utilsFunc';
 
 export default function Checklist() {
-  const {selectedChecklist, userData} = useContext(AppContext);
+  const {userData} = useContext(AppContext);
+  const {selectedChecklist} = useContext(ChecklistContext);
   const [checklist, setChecklist] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editingItem, setEditingItem] = useState(null);

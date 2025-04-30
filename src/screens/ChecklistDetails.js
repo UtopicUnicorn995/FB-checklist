@@ -8,7 +8,7 @@ import styles from '../styles/ChecklistItem.styles';
 import {AppContext} from '../context/AppContext';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import FAIcon5 from 'react-native-vector-icons/FontAwesome5';
-import {checklistItemEdit} from '../utils/firebaseServices';
+import {updateChecklistItem} from '../utils/firebaseServices';
 
 export default function ChecklistDetails({route}) {
   const {userData} = useContext(AppContext);
@@ -52,10 +52,10 @@ export default function ChecklistDetails({route}) {
     try {
       Keyboard.dismiss();
       if (editedDescription !== item.description) {
-        await checklistItemEdit(selectedChecklistId, item.id, {
+        await updateChecklistItem(selectedChecklistId, item.id, {
           description: editedDescription,
+          updatedAt: new Date().toISOString(),
         });
-
         setItem(prevItem => ({
           ...prevItem,
           description: editedDescription,

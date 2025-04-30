@@ -8,6 +8,7 @@ import Notes from '../screens/Notes';
 import styles from '../styles/CustomDrawer.styles';
 import Button from './Button';
 import {AppContext} from '../context/AppContext';
+import {ChecklistContext} from '../context/ChecklistContext';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
 import Pressable from './Pressable';
 import {useNavigationState} from '@react-navigation/native';
@@ -18,14 +19,13 @@ import Plan from '../screens/Plan';
 const Drawer = createDrawerNavigator();
 
 function DrawerContent({navigation}) {
+  const {logoutUser, userData} = useContext(AppContext);
   const {
-    logoutUser,
-    userData,
     userCheckList,
     selectedChecklist,
     setSelectedChecklist,
     createChecklist,
-  } = useContext(AppContext);
+  } = useContext(ChecklistContext);
   const [isAddChecklist, setIsAddChecklist] = useState(false);
   const [newChecklistTitle, setNewChecklistTitle] = useState('');
 
