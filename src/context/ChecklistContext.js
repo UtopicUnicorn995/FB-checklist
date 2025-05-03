@@ -74,7 +74,7 @@ export const ChecklistProvider = ({children}) => {
       createdBy: user,
       title: checklistTitle,
       collaborators: [],
-      checklistItems: {},
+      checklistItems: [],
     };
 
     set(newChecklistRef, newChecklist)

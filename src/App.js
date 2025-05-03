@@ -5,6 +5,7 @@ import Login from './screens/Login';
 import Signup from './screens/Signup';
 import Notes from './screens/Notes';
 import ChecklistDetails from './screens/ChecklistDetails';
+import NotesItemDetails from './screens/NotesItemDetails';
 import {AppProvider, AppContext} from './context/AppContext';
 import CustomDrawer from './components/CustomDrawer';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -43,6 +44,11 @@ const UserStack = () => {
         options={options}
       />
       <Stack.Screen name="Notes" component={Notes} options={options} />
+      <Stack.Screen
+        name="NotesItemDetails"
+        component={NotesItemDetails}
+        options={options}
+      />
       <Stack.Screen
         name="Collaborators"
         component={Collaborators}

@@ -52,7 +52,6 @@ export const checkListEdit = async (checklistId, updates) => {
   await update(checklistRef, payload);
 };
 
-
 export const getNotes = async userId => {
   const db = getDatabase();
 
@@ -70,10 +69,8 @@ export const getNotes = async userId => {
         id,
         ...note,
       }));
-      console.log('Fetched notes:', notes);
       return notes;
     } else {
-      console.log('No notes found for user:', userId);
       return [];
     }
   } catch (error) {
