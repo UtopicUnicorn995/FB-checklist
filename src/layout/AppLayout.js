@@ -14,6 +14,7 @@ import {AppContext} from '../context/AppContext';
 import styles from '../styles/AppLayout.styles';
 import {useNavigation} from '@react-navigation/native';
 import ModalView from '../components/ModalView';
+import FAIcon from 'react-native-vector-icons/FontAwesome';
 
 export default function AppLayout({
   children,
@@ -91,10 +92,7 @@ export default function AppLayout({
 
             {isEditable ? (
               <Pressable style={styles.floatingIcon} onPress={handleTitleEdit}>
-                <Animated.Image
-                  source={require('../assets/editItem.png')}
-                  style={{width: 28, height: 25}}
-                />
+                <FAIcon name="floppy-o" size={32} />
               </Pressable>
             ) : canBack ? (
               <Pressable

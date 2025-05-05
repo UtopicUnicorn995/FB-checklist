@@ -116,3 +116,10 @@ export const createNoteWithOrder = async (title, description, userId) => {
     throw error;
   }
 };
+
+export const updateNotes = async(updatedNotes, notesId) => {
+  const db = getDatabase()
+
+  const notesRef = ref(db, `/notes/${notesId}`)
+  await update(notesRef, updatedNotes)
+}

@@ -87,17 +87,17 @@ export const ChecklistProvider = ({children}) => {
   };
 
   const checkItem = async (checklistId, itemId, check) => {
-    const updatedData = {
+    const payload = {
       checked: !check,
       updatedAt: new Date().toISOString(),
       checkedBy: !check ? userData.username : null,
     };
 
-    console.log('userrrdata', userData.username, userData, updatedData);
+    console.log('userrrdata', userData.username, userData, payload);
 
     try {
-      await updateChecklistItem(checklistId, itemId, updatedData);
-      console.log(`Item ${itemId} updated successfully!`, updatedData);
+      await updateChecklistItem(checklistId, itemId, payload);
+      console.log(`Item ${itemId} updated successfully!`, payload);
     } catch (error) {
       console.error(`Error updating item ${itemId}:`, error.message);
     }

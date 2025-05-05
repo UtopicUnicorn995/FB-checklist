@@ -8,7 +8,7 @@ const GlobalStyles = StyleSheet.create({
   flexRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    gap: 10,
   },
   flexColumn: {
     flexDirection: 'column',

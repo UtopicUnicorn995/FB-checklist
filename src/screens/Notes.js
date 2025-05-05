@@ -5,6 +5,14 @@ import AppLayout from '../layout/AppLayout';
 import NoteItem from '../components/NoteItem';
 import {createNoteWithOrder} from '../utils/firebaseServices';
 import {AppContext} from '../context/AppContext';
+import {
+  getDatabase,
+  ref,
+  query,
+  orderByChild,
+  equalTo,
+  onValue,
+} from '@react-native-firebase/database';
 import {getNotes} from '../utils/firebaseServices';
 
 const Notes = () => {
@@ -14,20 +22,38 @@ const Notes = () => {
 
   useEffect(() => {
     const fetchNotes = async () => {
+      if (!user) return;
+
       setLoadingNotes(true);
       try {
-        const notes = await getNotes(user);
-        setData(notes);
+        const db = getDatabase();
+        const notesRef = query(
+          ref(db, '/notes'),
+          orderByChild('createdBy'),
+          equalTo(user),
+        );
+
+        onValue(notesRef, snapshot => {
+          if (snapshot.exists()) {
+            const notes = Object.entries(snapshot.val()).map(([id, note]) => ({
+              id,
+              ...note,
+            }));
+            setData(notes);
+          } else {
+            setData([]);
+          }
+        });
       } catch (error) {
         console.error('Error fetching notes:', error.message);
       } finally {
-        setLoadingNotes(false); // Hide loading indicator
+        setLoadingNotes(false);
       }
     };
 
     fetchNotes();
   }, [user]);
-  console.log('daaaata', data);
+
   const handleReorder = ({from, to}) => {
     setData(value => reorderItems(value, from, to));
   };
