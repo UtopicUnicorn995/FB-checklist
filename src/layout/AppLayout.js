@@ -1,4 +1,4 @@
-import {useState, useRef, useContext} from 'react';
+import {useState, useRef, useContext, useEffect} from 'react';
 import {useSafeAreaInsets, SafeAreaView} from 'react-native-safe-area-context';
 import {
   View,
@@ -15,6 +15,8 @@ import styles from '../styles/AppLayout.styles';
 import {useNavigation} from '@react-navigation/native';
 import ModalView from '../components/ModalView';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
+import {sendNotificationToBackend} from '../utils/sendNotificationToBackend';
+import messaging from '@react-native-firebase/messaging';
 
 export default function AppLayout({
   children,
@@ -32,9 +34,20 @@ export default function AppLayout({
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
+  const [deviceToken, setDeviceToken] = useState(
+    'e8AjNxiKQbGYSxuQ00yMTZ:APA91bHfRuRg19QrZn3haoxdzZqEAR0vW9Y9h_irKcOIDu9h7ap_jY710bU0WpkpQ886oZQC0o2xQUx1q9lBQe19EO5CHgc75BEhvGLLI1ePzlmKhREpeZs',
+  );
 
   const toggleAddItemModal = () => {
     setIsAddItemModalOpen(prev => !prev);
+  };
+
+  const testNotification = async () => {
+    const title = 'sample Title'
+    const body = 'booooddyy'
+    const data = 'sample data'
+    
+    await sendNotificationToBackend(deviceToken, title, body, data);
   };
 
   return (
@@ -116,7 +129,8 @@ export default function AppLayout({
               !noModalScreen && (
                 <Pressable
                   style={styles.floatingIcon}
-                  onPress={toggleAddItemModal}>
+                  //onPress={toggleAddItemModal}>
+                  onPress={testNotification}>
                   <Animated.Image
                     source={require('../assets/addIcon.png')}
                     style={{width: 25, height: 25}}
