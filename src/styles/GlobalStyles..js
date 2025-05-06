@@ -4,6 +4,7 @@ const GlobalStyles = StyleSheet.create({
   flex: {
     flex: 1,
     width: '100%',
+    // flexShrink: 0,
   },
   flexRow: {
     flexDirection: 'row',
@@ -55,7 +56,7 @@ const GlobalStyles = StyleSheet.create({
     fontSize: 18,
   },
   textSecondary: {
-    color: '#6c757d',
+    color: '#484D52',
     fontSize: 16,
   },
   shadow: {

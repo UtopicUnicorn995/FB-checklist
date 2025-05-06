@@ -15,6 +15,7 @@ import Button from '../components/Button';
 import styles from '../styles/Login.styles';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
 import {getDatabase, push, ref, set} from '@react-native-firebase/database';
+import {useNavigation} from '@react-navigation/native';
 
 const Signup = () => {
   const [credentials, setCredentials] = useState({
@@ -28,6 +29,7 @@ const Signup = () => {
   });
   const [keyboardVisible, setKeyboardVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigation();
 
   const handleSetCredentials = (text, key) => {
     if (
@@ -182,7 +184,7 @@ const Signup = () => {
                 onPress={() => handleSetCredentials('', 'showPassword')}
                 size={25}
                 color="#262626"
-                name={credentials.showPassword ? 'eye-slash' : 'eye'}
+                name={credentials.showPassword ? 'eye' : 'eye-slash'}
               />
             </View>
           </View>
@@ -205,7 +207,7 @@ const Signup = () => {
                 onPress={() => handleSetCredentials('', 'showPassword2')}
                 size={25}
                 color="#262626"
-                name={credentials.showPassword2 ? 'eye-slash' : 'eye'}
+                name={credentials.showPassword2 ? 'eye' : 'eye-slash'}
               />
             </View>
           </View>
@@ -213,7 +215,7 @@ const Signup = () => {
           <Text style={{fontWeight: 'bold', fontSize: 14}}>
             Already have an account?
           </Text>
-          <Button title="Login" />
+          <Button onPress={() => navigate.goBack()} title="Login" />
         </ScrollView>
       </KeyboardAvoidingView>
     </GuestLayout>

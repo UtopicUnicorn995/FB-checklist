@@ -111,6 +111,7 @@ const Login = () => {
             <TextInput
               style={{flex: 1}}
               value={credentials.email}
+              textContentType='emailAddress'
               placeholder="Enter your email"
               placeholderTextColor="#999999"
               onChangeText={text => handleSetCredentials(text, 'email')}

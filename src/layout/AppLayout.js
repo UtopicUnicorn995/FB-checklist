@@ -24,6 +24,7 @@ export default function AppLayout({
   setIsEditable,
   handleTitleEdit,
   canBack,
+  noModalScreen,
   onAddItem,
   isDetails,
 }) {
@@ -112,20 +113,22 @@ export default function AppLayout({
                 />
               </Pressable>
             ) : (
-              <Pressable
-                style={styles.floatingIcon}
-                onPress={toggleAddItemModal}>
-                <Animated.Image
-                  source={require('../assets/addIcon.png')}
-                  style={{width: 25, height: 25}}
-                />
-              </Pressable>
+              !noModalScreen && (
+                <Pressable
+                  style={styles.floatingIcon}
+                  onPress={toggleAddItemModal}>
+                  <Animated.Image
+                    source={require('../assets/addIcon.png')}
+                    style={{width: 25, height: 25}}
+                  />
+                </Pressable>
+              )
             )}
           </View>
 
           {children}
         </View>
-        {!canBack && (
+        {!canBack && !noModalScreen && (
           <ModalView
             openMenu={isAddItemModalOpen}
             setModalMenu={toggleAddItemModal}
