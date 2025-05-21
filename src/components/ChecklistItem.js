@@ -20,8 +20,6 @@ const ChecklistItem = ({
     navigation.navigate('ChecklistDetails', {item, checkItem, selectedChecklistId});
   };
 
-  console.log('huhu', item)
-
   return (
     <View style={styles.itemContainer}>
       {editingItem?.id === item.id ? (

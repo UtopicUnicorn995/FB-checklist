@@ -29,8 +29,6 @@ export default function Checklist() {
 
   const insets = useSafeAreaInsets();
 
-  console.log('selected checklist from the checklist', selectedChecklist);
-
   useEffect(() => {
     if (!selectedChecklist?.id) return;
 
@@ -67,8 +65,8 @@ export default function Checklist() {
     };
 
     try {
-      const newItem = await addChecklistItem(selectedChecklist.id, itemData);
-      setChecklist(prev => [...prev, newItem]);
+      await addChecklistItem(selectedChecklist.id, itemData);
+      // setChecklist(prev => [...prev, newItem]);
     } catch (error) {
       console.error('Error adding item:', error.message);
     }
@@ -80,12 +78,8 @@ export default function Checklist() {
       updatedAt: new Date().toISOString(),
       checkedBy: !check ? userData.username : null,
     };
-
-    console.log('userrrdata', userData.username, userData, updatedData);
-
     try {
       await updateChecklistItem(checklistId, itemId, updatedData);
-      console.log(`Item ${itemId} updated successfully!`, updatedData);
     } catch (error) {
       console.error(`Error updating item ${itemId}:`, error.message);
     }
@@ -97,7 +91,6 @@ export default function Checklist() {
         ...updatedData,
         updatedAt: new Date().toISOString(),
       });
-      console.log(`Item ${itemId} updated successfully!`, updatedData);
     } catch (error) {
       console.error(`Error updating item ${itemId}:`, error.message);
     }
@@ -118,7 +111,6 @@ export default function Checklist() {
             try {
               await deleteChecklistItem(checklistId, itemId);
               setChecklist(prev => prev.filter(item => item.id !== itemId));
-              console.log(`Item ${itemId} deleted successfully!`);
             } catch (error) {
               console.error(`Error deleting item ${itemId}:`, error.message);
             }
@@ -140,7 +132,6 @@ export default function Checklist() {
     }
 
     try {
-      console.log('tryung');
       await checkListEdit(selectedChecklist.id, {title: title});
       setIsEditable(false);
     } catch (error) {

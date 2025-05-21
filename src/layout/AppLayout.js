@@ -129,8 +129,8 @@ export default function AppLayout({
               !noModalScreen && (
                 <Pressable
                   style={styles.floatingIcon}
-                  //onPress={toggleAddItemModal}>
-                  onPress={testNotification}>
+                  onPress={toggleAddItemModal}>
+                  {/* onPress={testNotification}> */}
                   <Animated.Image
                     source={require('../assets/addIcon.png')}
                     style={{width: 25, height: 25}}

@@ -14,6 +14,11 @@ import messaging from '@react-native-firebase/messaging';
 import App from './src/App';
 import {name as appName} from './app.json';
 import {PermissionsAndroid} from 'react-native';
+import database from '@react-native-firebase/database';
+
+database().setPersistenceEnabled(true);
+
+// database().setPersistenceEnabled(true);
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
@@ -36,6 +41,5 @@ messaging()
   .then(token => {
     console.log('FCM Token:', token);
   });
-
 
 AppRegistry.registerComponent(appName, () => App);

@@ -5,7 +5,6 @@ const SELECTED_CHECKLIST_KEY = 'selectedChecklistId';
 export const saveSelectedChecklist = async checklistId => {
   try {
     await AsyncStorage.setItem(SELECTED_CHECKLIST_KEY, checklistId);
-    console.log('Selected checklist saved locally');
   } catch (error) {
     console.error('Error saving selected checklist:', error);
   }
@@ -24,7 +23,6 @@ export const getSelectedChecklist = async () => {
 export const clearSelectedChecklist = async () => {
   try {
     await AsyncStorage.removeItem(SELECTED_CHECKLIST_KEY);
-    console.log('Selected checklist cleared from local storage');
   } catch (error) {
     console.error('Error clearing selected checklist:', error);
   }
