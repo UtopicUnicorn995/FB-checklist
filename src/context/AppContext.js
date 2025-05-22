@@ -61,6 +61,8 @@ export function AppProvider({children}) {
     );
 
     const unsubscribeChecklist = onValue(checklistQuery, snapshot => {
+
+      console.log('snaapp', snapshot.val())
       if (snapshot.exists()) {
         const data = snapshot.val();
         const checklistArray = Object.entries(data).map(([key, value]) => ({

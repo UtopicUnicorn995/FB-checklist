@@ -12,6 +12,33 @@ import {
   onValue,
 } from '@react-native-firebase/database';
 
+export const createChecklist = async (
+  userId,
+  checklistTitle,
+  setSelectedChecklist,
+  saveSelectedChecklist,
+) => {
+  const db = getDatabase();
+
+  const newChecklistRef = push(ref(db, '/checklists'));
+  const newChecklistId = newChecklistRef.key;
+
+  const newChecklist = {
+    id: newChecklistId,
+    createdBy: userId,
+    title: checklistTitle,
+    collaborators: [],
+    checklistItems: [],
+  };
+
+  await set(newChecklistRef, newChecklist)
+    .then(() => {
+      saveSelectedChecklist(newChecklist.id);
+      setSelectedChecklist(newChecklist);
+    })
+    .catch(error => console.error('Error creating new checklist', error));
+};
+
 export const getChecklist = async (userId, callback) => {
   const db = getDatabase();
 
@@ -66,6 +93,7 @@ export const updateChecklistItem = async (checklistId, itemId, updatedData) => {
     db,
     `/checklists/${checklistId}/checklistItems/${itemId}`,
   );
+
   await update(itemRef, updatedData);
 };
 

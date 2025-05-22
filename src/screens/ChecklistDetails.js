@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   View,
   Text,
@@ -17,88 +17,90 @@ import {AppContext} from '../context/AppContext';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import FAIcon5 from 'react-native-vector-icons/FontAwesome5';
 import {updateChecklistItem} from '../utils/firebaseServices';
+import {ChecklistContext} from '../context/ChecklistContext';
+import {useNavigation} from '@react-navigation/native';
 
 export default function ChecklistDetails({route}) {
   const {userData} = useContext(AppContext);
-  const {checkItem, selectedChecklistId, initialItem} = route.params;
+  const {selectedChecklist} = useContext(ChecklistContext);
+  const {selectedChecklistId, itemId} = route.params;
+  const navigation = useNavigation();
 
-  const [item, setItem] = useState(initialItem);
+  // Convert checklistItems to array if needed
+  const checklistItemsArray = Array.isArray(selectedChecklist?.checklistItems)
+    ? selectedChecklist.checklistItems
+    : selectedChecklist?.checklistItems
+    ? Object.entries(selectedChecklist.checklistItems).map(([id, item]) => ({
+        id,
+        ...item,
+      }))
+    : [];
+
+  const item = checklistItemsArray.find(i => i.id === itemId);
+
+  // Local state only for editing description
   const [editedDescription, setEditedDescription] = useState(
-    initialItem.description || '',
+    item?.description || '',
   );
   const [editDetails, setEditDetails] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log('ussssz', item, initialItem);
+  // Update editedDescription if item changes (e.g., after real-time update)
+  React.useEffect(() => {
+    setEditedDescription(item?.description || '');
+  }, [item?.description]);
 
-  useEffect(() =>{
-    setItem(initialItem)
-  }, [initialItem])
+  if (!item) {
+    return (
+      <AppLayout handleBack={navigation.goBack} title="Checklist Item">
+        <View style={{padding: 20}}>
+          <Text>Item not found.</Text>
+        </View>
+      </AppLayout>
+    );
+  }
 
-  // const handleCheckItem = async () => {
-  //   try {
-  //     const newCheckedState = !item.checked;
-  // Optimistic rendering
-  //     setItem(prev => ({
-  //       ...prev,
-  //       checked: newCheckedState,
-  //       checkedBy: item.checked ? null : userData?.username,
-  //       updatedAt: new Date().toISOString(),
-  //     }));
-
-  //     await updateChecklistItem(selectedChecklistId, item.id, {
-  //       checked: newCheckedState,
-  //       checkedBy: item.checked ? null : userData?.username,
-  //       updatedAt: new Date().toISOString(),
-  //     });
-
-  //     if (checkItem) checkItem(selectedChecklistId, item.id, newCheckedState);
-  //   } catch (error) {
-  //     console.error('Error checking item:', error.message);
-  //   }
-  // };
-
-  //const handleCheckItem = async () => {
-    //try {
-      //await updateChecklistItem(selectedChecklistId, initialItem.id, {
-        //checked: !initialItem.checked,
-        //checkedBy: initialItem.checked ? null : userData?.username,
-        //updatedAt: new Date().toISOString(),
-      //});
-      //if (checkItem)
-        //checkItem(selectedChecklistId, initialItem.id, !initialItem.checked);
-    //} catch (error) {
-      //console.error('Error checking item:', error.message);
-    //}
-  //};
+  const handleCheckItem = async () => {
+    try {
+      setIsLoading(true);
+      await updateChecklistItem(selectedChecklistId, item.id, {
+        checked: !item.checked,
+        checkedBy: item.checked ? null : userData?.username,
+        updatedAt: new Date().toISOString(),
+      });
+      setIsLoading(false);
+      // No local setItem needed; context will update and re-render
+    } catch (error) {
+      setIsLoading(false);
+      console.error('Error checking item:', error.message);
+    }
+  };
 
   const handleEditDescription = async () => {
     try {
       Keyboard.dismiss();
-
       if (editedDescription !== item.description) {
-        const updatedAt = new Date().toISOString();
-
-        await updateChecklistItem(selectedChecklistId, itemId, {
+        setIsLoading(true);
+        await updateChecklistItem(selectedChecklistId, item.id, {
           description: editedDescription,
-          updatedAt,
+          updatedAt: new Date().toISOString(),
         });
-
-        setItem(prev => ({
-          ...prev,
-          description: editedDescription,
-          updatedAt,
-        }));
+        setIsLoading(false);
       }
-
       setEditDetails(false);
     } catch (error) {
+      setIsLoading(false);
       console.error('Error editing description:', error.message);
     }
   };
 
+  const handleBack = () => {
+    setEditDetails(false);
+    navigation.goBack();
+  };
+
   return (
-    <AppLayout canBack title={initialItem?.title || 'Checklist Item'}>
+    <AppLayout handleBack={handleBack} title={item?.title || 'Checklist Item'}>
       <ScrollView>
         {isLoading ? (
           <ActivityIndicator size="large" style={{marginTop: 20}} />
@@ -126,11 +128,11 @@ export default function ChecklistDetails({route}) {
                 style={GlobalStyles.textInput}
                 multiline={true}
                 value={editedDescription}
-                onChangeText={setEditedDescription}
+                onChangeText={text => setEditedDescription(text)}
               />
             ) : (
               <Text style={GlobalStyles.textSecondary}>
-                {initialItem.description || 'No description'}
+                {item.description || 'No description'}
               </Text>
             )}
 
@@ -139,15 +141,15 @@ export default function ChecklistDetails({route}) {
               style={[styles.itemChecklist, {gap: 10}]}>
               <Text style={GlobalStyles.textPrimary}>Task status:</Text>
               <View
-                style={[styles.itemChecklist, {gap: initialItem.checked ? 10 : 14}]}>
+                style={[styles.itemChecklist, {gap: item.checked ? 10 : 14}]}>
                 <Image
                   source={
-                    initialItem.checked
+                    item.checked
                       ? require('../assets/checkedtrue.png')
                       : require('../assets/checkedfalse.png')
                   }
                   style={
-                    initialItem.checked
+                    item.checked
                       ? {width: 24, height: 20}
                       : {width: 20, height: 20}
                   }
@@ -155,7 +157,7 @@ export default function ChecklistDetails({route}) {
               </View>
             </Pressable>
 
-            {initialItem.checkedBy && (
+            {item.checkedBy && (
               <>
                 <View
                   style={[

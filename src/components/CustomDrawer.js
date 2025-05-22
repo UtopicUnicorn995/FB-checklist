@@ -24,7 +24,7 @@ function DrawerContent({navigation}) {
     userCheckList,
     selectedChecklist,
     setSelectedChecklist,
-    createChecklist,
+    handleCreateChecklist,
   } = useContext(ChecklistContext);
   const [isAddChecklist, setIsAddChecklist] = useState(false);
   const [newChecklistTitle, setNewChecklistTitle] = useState('');
@@ -51,7 +51,7 @@ function DrawerContent({navigation}) {
   const handleAddChecklist = () => {
     setIsAddChecklist(false);
     setNewChecklistTitle('');
-    createChecklist(newChecklistTitle);
+    handleCreateChecklist(newChecklistTitle);
   };
 
   const handleNavigation = location => {
@@ -104,7 +104,7 @@ function DrawerContent({navigation}) {
                   </Pressable>
                 ))}
             </View>
-            {userCheckList && userCheckList.length < userData.allowedPages ? (
+            {/* {userCheckList && userCheckList.length < userData.allowedPages ? (
               isAddChecklist ? (
                 <View style={styles.newChecklistInputContainer}>
                   <TextInput
@@ -153,7 +153,7 @@ function DrawerContent({navigation}) {
                 }}
                 btnTextStyleProp={{color: '#262626', fontSize: 14}}
               />
-            )}
+            )} */}
           </View>
 
           <Pressable

@@ -66,7 +66,6 @@ export default function Checklist() {
 
     try {
       await addChecklistItem(selectedChecklist.id, itemData);
-      // setChecklist(prev => [...prev, newItem]);
     } catch (error) {
       console.error('Error adding item:', error.message);
     }

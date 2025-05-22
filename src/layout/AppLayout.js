@@ -25,7 +25,7 @@ export default function AppLayout({
   isEditable,
   setIsEditable,
   handleTitleEdit,
-  canBack,
+  handleBack,
   noModalScreen,
   onAddItem,
   isDetails,
@@ -71,7 +71,7 @@ export default function AppLayout({
           </Pressable>
 
           <View style={styles.header}>
-            {!canBack ? (
+            {!handleBack ? (
               <Pressable
                 style={{flex: 1}}
                 onPress={() => {
@@ -108,10 +108,10 @@ export default function AppLayout({
               <Pressable style={styles.floatingIcon} onPress={handleTitleEdit}>
                 <FAIcon name="floppy-o" size={32} />
               </Pressable>
-            ) : canBack ? (
+            ) : handleBack ? (
               <Pressable
                 style={styles.floatingIcon}
-                onPress={() => navigation.goBack()}>
+                onPress={handleBack}>
                 <Animated.Image
                   source={require('../assets/addIcon.png')}
                   style={{
@@ -142,7 +142,7 @@ export default function AppLayout({
 
           {children}
         </View>
-        {!canBack && !noModalScreen && (
+        {!handleBack && !noModalScreen && (
           <ModalView
             openMenu={isAddItemModalOpen}
             setModalMenu={toggleAddItemModal}
