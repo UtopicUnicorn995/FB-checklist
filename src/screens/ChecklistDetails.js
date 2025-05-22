@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {
   View,
   Text,
@@ -31,10 +31,14 @@ export default function ChecklistDetails({route}) {
 
   console.log('ussssz', item, initialItem);
 
+  useEffect(() =>{
+    setItem(initialItem)
+  }, [initialItem])
+
   // const handleCheckItem = async () => {
   //   try {
   //     const newCheckedState = !item.checked;
-
+  // Optimistic rendering
   //     setItem(prev => ({
   //       ...prev,
   //       checked: newCheckedState,
@@ -54,19 +58,19 @@ export default function ChecklistDetails({route}) {
   //   }
   // };
 
-  const handleCheckItem = async () => {
-    try {
-      await updateChecklistItem(selectedChecklistId, initialItem.id, {
-        checked: !initialItem.checked,
-        checkedBy: initialItem.checked ? null : userData?.username,
-        updatedAt: new Date().toISOString(),
-      });
-      if (checkItem)
-        checkItem(selectedChecklistId, initialItem.id, !initialItem.checked);
-    } catch (error) {
-      console.error('Error checking item:', error.message);
-    }
-  };
+  //const handleCheckItem = async () => {
+    //try {
+      //await updateChecklistItem(selectedChecklistId, initialItem.id, {
+        //checked: !initialItem.checked,
+        //checkedBy: initialItem.checked ? null : userData?.username,
+        //updatedAt: new Date().toISOString(),
+      //});
+      //if (checkItem)
+        //checkItem(selectedChecklistId, initialItem.id, !initialItem.checked);
+    //} catch (error) {
+      //console.error('Error checking item:', error.message);
+    //}
+  //};
 
   const handleEditDescription = async () => {
     try {
