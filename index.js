@@ -8,6 +8,8 @@ if (process.env.NODE_ENV === 'production') {
   console.warn = () => {};
 }
 
+
+
 import 'react-native-gesture-handler';
 import {AppRegistry} from 'react-native';
 import messaging from '@react-native-firebase/messaging';
@@ -19,6 +21,7 @@ import database from '@react-native-firebase/database';
 database().setPersistenceEnabled(true);
 
 // database().setPersistenceEnabled(true);
+globalThis.RNFB_MODULAR_DEPRECATION_STRICT_MODE === true;
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {

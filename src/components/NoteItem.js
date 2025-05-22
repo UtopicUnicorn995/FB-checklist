@@ -10,8 +10,6 @@ const NoteItem = memo(({content}) => {
   const drag = useReorderableDrag();
   const navigation = useNavigation();
 
-  console.log('contentntnt', content);
-
   const openNoteItemDetails = () => {
     navigation.navigate('NotesItemDetails', {item: content});
   };

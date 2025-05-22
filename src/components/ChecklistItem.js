@@ -17,7 +17,11 @@ const ChecklistItem = ({
   const navigation = useNavigation();
 
   const openChecklistDetails = () => {
-    navigation.navigate('ChecklistDetails', {item, checkItem, selectedChecklistId});
+    navigation.navigate('ChecklistDetails', {
+      initialItem: item,
+      checkItem,
+      selectedChecklistId,
+    });
   };
 
   return (

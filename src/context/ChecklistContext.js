@@ -12,13 +12,6 @@ export const ChecklistProvider = ({children}) => {
   const [userCheckList, setUserCheckList] = useState(null);
   const [selectedChecklist, setSelectedChecklist] = useState(null);
 
-  console.log(
-    'user checklist and selected checklists',
-    selectedChecklistId,
-    userCheckList,
-    selectedChecklist,
-  );
-
   useEffect(() => {
     if (selectedChecklist) {
       saveSelectedChecklist(selectedChecklist.id);
@@ -29,12 +22,10 @@ export const ChecklistProvider = ({children}) => {
     const loadSelectedChecklist = async () => {
       try {
         const savedChecklistId = await getSelectedChecklist();
-        console.log('eye dee', savedChecklistId);
         if (savedChecklistId && userCheckList) {
           const savedChecklist = userCheckList.find(
             checklist => checklist.id === savedChecklistId,
           );
-          console.log('saved checklists', savedChecklist)
           if (savedChecklist) {
             setSelectedChecklist(savedChecklist);
           }

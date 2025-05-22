@@ -9,7 +9,46 @@ import {
   query,
   orderByChild,
   equalTo,
+  onValue,
 } from '@react-native-firebase/database';
+
+export const getChecklist = async (userId, callback) => {
+  const db = getDatabase();
+
+  const checklistRef = query(
+    ref(db, `/checklists`).orderByChild('createdBy'),
+    equalTo(userId),
+  );
+
+  onValue(checklistRef, snapshot => {
+    if (snapshot.exists()) {
+      const checklist = Object.entries(snapshot.val()).map(
+        ([id, checklist]) => ({
+          id,
+          ...checklist,
+        }),
+      );
+      callback(checklist);
+    } else {
+      callback([]);
+    }
+  });
+};
+
+export const getChecklistItem = async (checkItemId, selectedChecklistId) => {
+  const db = getDatabase();
+  const itemRef = ref(
+    db,
+    `/checklists/${selectedChecklistId}/checklistItems/${checkItemId}`,
+  );
+  const snapshot = await get(itemRef);
+
+  if (snapshot.exists()) {
+    return {id: checkItemId, ...snapshot.val()};
+  } else {
+    return null;
+  }
+};
 
 export const addChecklistItem = async (checklistId, itemData) => {
   const db = getDatabase();
@@ -79,47 +118,27 @@ export const getNotes = async userId => {
   }
 };
 
-export const createNoteWithOrder = async (title, description, userId) => {
+export const createNote = async itemData => {
   const db = getDatabase();
   const notesRef = ref(db, '/notes');
 
   try {
-    const snapshot = await get(notesRef);
-
-    let existingOrders = [];
-    if (snapshot.exists()) {
-      const notes = snapshot.val();
-      existingOrders = Object.values(notes).map(note => note.order);
-    }
-
-    const maxOrder = Math.max(0, ...existingOrders);
-    const missingOrder = Array.from({length: maxOrder}, (_, i) => i + 1).find(
-      order => !existingOrders.includes(order),
-    );
-    const nextOrder = missingOrder || maxOrder + 1;
-
-    const data = {
-      title,
-      description,
-      createdBy: userId,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
     const newNotesRef = push(notesRef);
-    await set(newNotesRef, data);
+    await set(newNotesRef, itemData);
 
-    console.log('Note created successfully:', {userId});
-    return {id: newNotesRef.key, ...data};
+    console.log('Note created successfully:', {itemData});
+    return {id: newNotesRef.key, ...itemData};
   } catch (error) {
-    console.error('Error creating note with order:', error.message);
+    console.error('Error creating note:', error.message, {itemData});
     throw error;
   }
 };
 
-export const updateNotes = async(updatedNotes, notesId) => {
-  const db = getDatabase()
+export const updateNotes = async (updatedNotes, notesId) => {
+  const db = getDatabase();
 
-  const notesRef = ref(db, `/notes/${notesId}`)
-  await update(notesRef, updatedNotes)
-}
+  console.log('edited');
+  const notesRef = ref(db, `/notes/${notesId}`);
+  console.log('edited2');
+  await update(notesRef, updatedNotes);
+};

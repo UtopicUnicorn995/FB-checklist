@@ -7,8 +7,6 @@ import {
   query,
   orderByChild,
   equalTo,
-  push,
-  set,
 } from '@react-native-firebase/database';
 import {clearSelectedChecklist} from '../utils/asyncStorage';
 import {ChecklistContext} from './ChecklistContext';
@@ -69,6 +67,7 @@ export function AppProvider({children}) {
           id: key,
           ...value,
         }));
+
         setUserCheckList(checklistArray);
       } else {
         setUserCheckList([]);
@@ -76,8 +75,8 @@ export function AppProvider({children}) {
     });
 
     return () => {
-      unsubscribeUser();
       unsubscribeChecklist();
+      unsubscribeUser();
     };
   }, [user]);
 

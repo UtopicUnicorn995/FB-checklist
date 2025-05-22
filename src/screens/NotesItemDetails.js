@@ -24,93 +24,95 @@ export default function NotesItemDetails({route}) {
   });
 
   const handleEditDescription = async () => {
+    const payload = {
+      title: editDetails.title,
+      description: editDetails.description,
+      updatedAt: new Date().toISOString(),
+    };
+
+    setEditDetails(prev => ({
+      ...prev,
+      state: false,
+    }));
+
     try {
-      // if (editDetails.description !== details.description) {
-        const payload = {
-          title: editDetails.title,
-          description: editDetails.description,
-          updatedAt: new Date().toISOString(),
-        };
-        await updateNotes(payload, details.id);
-        setEditDetails(prev => ({
-          ...prev,
-          state: false,
-        }));
-      // }
+      await updateNotes(payload, details.id);
+      console.log('Updated successfully');
     } catch (error) {
+      setEditDetails(prev => ({
+        ...prev,
+        state: true,
+      }));
+
       Alert.alert(
-        'Updated failed',
-        'Sorry you have failed on updating notes. Please try again later.',
+        'Update failed',
+        'Sorry, updating notes failed. Please try again later.',
       );
-      console.error('errror', error);
+      console.error('Update error:', error);
     }
   };
 
   console.log('detaillsss', details);
 
   return (
-
-      <AppLayout title={details.title} canBack>
-        <ScrollView keyboardShouldPersistTaps='handled'>
-          <View style={GlobalStyles.gap}>
-            <View style={GlobalStyles.flexRow}>
-              <Text style={GlobalStyles.textPrimary}>Description:</Text>
-              {editDetails.state ? (
-                <FAIcon
-                  onPress={handleEditDescription}
-                  name="floppy-o"
-                  size={22}
-                />
-              ) : (
-                <FAIcon5
-                  onPress={() =>
-                    setEditDetails(prev => ({...prev, state: true}))
-                  }
-                  name="edit"
-                  size={22}
-                />
-              )}
-            </View>
+    <AppLayout title={details.title} canBack>
+      <ScrollView keyboardShouldPersistTaps="handled">
+        <View style={GlobalStyles.gap}>
+          <View style={GlobalStyles.flexRow}>
+            <Text style={GlobalStyles.textPrimary}>Description:</Text>
             {editDetails.state ? (
-              <TextInput
-                style={GlobalStyles.textInput}
-                multiline={true}
-                value={editDetails.description}
-                onChangeText={text =>
-                  setEditDetails(prev => ({...prev, description: text}))
-                }
+              <FAIcon
+                onPress={handleEditDescription}
+                name="floppy-o"
+                size={22}
               />
             ) : (
-              <Text style={GlobalStyles.textSecondary}>
-                {editDetails.description}
-              </Text>
+              <FAIcon5
+                onPress={() => setEditDetails(prev => ({...prev, state: true}))}
+                name="edit"
+                size={22}
+              />
             )}
           </View>
-
-          <View
-            style={[
-              GlobalStyles.flexRow,
-              GlobalStyles.gap,
-              GlobalStyles.paddingVertical,
-            ]}>
-            <Text style={GlobalStyles.textPrimary}>Created date:</Text>
-            <Text style={GlobalStyles.textPrimary}>
-              {convertDate(details.createdAt, `{month} {day}, {year}`)}
+          {editDetails.state ? (
+            <TextInput
+              style={GlobalStyles.textInput}
+              multiline={true}
+              value={editDetails.description}
+              onChangeText={text =>
+                setEditDetails(prev => ({...prev, description: text}))
+              }
+            />
+          ) : (
+            <Text style={GlobalStyles.textSecondary}>
+              {editDetails.description}
             </Text>
-          </View>
-          <View
-            style={[
-              GlobalStyles.flexRow,
-              GlobalStyles.gap,
-              GlobalStyles.paddingVertical,
-            ]}>
-            <Text style={GlobalStyles.textPrimary}>Last modified:</Text>
-            <Text style={GlobalStyles.textPrimary}>
-              {convertDate(details.updatedAt, `{month} {day}, {year}`)}
-            </Text>
-          </View>
-        </ScrollView>
-      </AppLayout>
+          )}
+        </View>
 
+        <View
+          style={[
+            GlobalStyles.flexRow,
+            GlobalStyles.gap,
+            GlobalStyles.paddingVertical,
+          ]}>
+          <Text style={GlobalStyles.textPrimary}>Created date:</Text>
+          <Text style={GlobalStyles.textPrimary}>
+            {convertDate(details.createdAt, `{month} {day}, {year}`)}
+          </Text>
+        </View>
+        <View
+          style={[
+            GlobalStyles.flexRow,
+            GlobalStyles.gap,
+            GlobalStyles.paddingVertical,
+          ]}>
+          <Text style={GlobalStyles.textPrimary}>Last modified:</Text>
+          <Text style={GlobalStyles.textPrimary}>
+            {convertDate(details.updatedAt, `{month} {day}, {year}`)}
+          </Text>
+        </View>
+      </ScrollView>
+    </AppLayout>
   );
 }

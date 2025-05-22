@@ -59,7 +59,6 @@ function DrawerContent({navigation}) {
     navigation.navigate(location);
   };
 
-  console.log('user data and checklist', userData, userCheckList);
   return (
     <View style={styles.drawerContainer}>
       <View style={{gap: 15}}>

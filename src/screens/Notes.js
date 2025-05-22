@@ -3,7 +3,7 @@ import {StyleSheet, ActivityIndicator, View, Text} from 'react-native';
 import ReorderableList, {reorderItems} from 'react-native-reorderable-list';
 import AppLayout from '../layout/AppLayout';
 import NoteItem from '../components/NoteItem';
-import {createNoteWithOrder} from '../utils/firebaseServices';
+import {createNote} from '../utils/firebaseServices';
 import {AppContext} from '../context/AppContext';
 import {
   getDatabase,
@@ -59,12 +59,16 @@ const Notes = () => {
   };
 
   const handleCreateNotes = async (title, description) => {
-    setLoadingNotes(true);
     try {
-      const newNote = await createNoteWithOrder(title, description, user);
-      console.log('notee', newNote);
-      setLoadingNotes(false);
-      setData(prevData => [...prevData, newNote]);
+      const itemData = {
+        title,
+        description,
+        createdBy: user,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      await createNote(itemData);
     } catch (error) {
       console.error('Error in handleCreateNotes:', error.message);
     }

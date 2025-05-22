@@ -1,5 +1,13 @@
-import React, {useEffect, useState, useContext} from 'react';
-import {View, Text, ScrollView, Image, TextInput, Keyboard} from 'react-native';
+import React, {useState, useContext} from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  TextInput,
+  Keyboard,
+  ActivityIndicator,
+} from 'react-native';
 import AppLayout from '../layout/AppLayout';
 import {convertDate} from '../utils/utilsFunc';
 import GlobalStyles from '../styles/GlobalStyles.';
@@ -12,37 +20,49 @@ import {updateChecklistItem} from '../utils/firebaseServices';
 
 export default function ChecklistDetails({route}) {
   const {userData} = useContext(AppContext);
-  const {item: initialItem, checkItem, selectedChecklistId} = route.params;
+  const {checkItem, selectedChecklistId, initialItem} = route.params;
 
   const [item, setItem] = useState(initialItem);
-  const [editDetails, setEditDetails] = useState(false);
   const [editedDescription, setEditedDescription] = useState(
-    initialItem.description,
+    initialItem.description || '',
   );
+  const [editDetails, setEditDetails] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  console.log(
-    'route paramms',
-    route.params,
-    item,
-    checkItem,
-    selectedChecklistId,
-  );
+  console.log('ussssz', item, initialItem);
 
-  useEffect(() => {
-    setItem(initialItem);
-    setEditedDescription(initialItem.description);
-  }, [initialItem]);
+  // const handleCheckItem = async () => {
+  //   try {
+  //     const newCheckedState = !item.checked;
+
+  //     setItem(prev => ({
+  //       ...prev,
+  //       checked: newCheckedState,
+  //       checkedBy: item.checked ? null : userData?.username,
+  //       updatedAt: new Date().toISOString(),
+  //     }));
+
+  //     await updateChecklistItem(selectedChecklistId, item.id, {
+  //       checked: newCheckedState,
+  //       checkedBy: item.checked ? null : userData?.username,
+  //       updatedAt: new Date().toISOString(),
+  //     });
+
+  //     if (checkItem) checkItem(selectedChecklistId, item.id, newCheckedState);
+  //   } catch (error) {
+  //     console.error('Error checking item:', error.message);
+  //   }
+  // };
 
   const handleCheckItem = async () => {
     try {
-      await checkItem(selectedChecklistId, item.id, item.checked);
-
-      setItem(prevItem => ({
-        ...prevItem,
-        checked: !prevItem.checked,
+      await updateChecklistItem(selectedChecklistId, initialItem.id, {
+        checked: !initialItem.checked,
+        checkedBy: initialItem.checked ? null : userData?.username,
         updatedAt: new Date().toISOString(),
-        checkedBy: !prevItem.checked ? userData.username : null,
-      }));
+      });
+      if (checkItem)
+        checkItem(selectedChecklistId, initialItem.id, !initialItem.checked);
     } catch (error) {
       console.error('Error checking item:', error.message);
     }
@@ -51,17 +71,22 @@ export default function ChecklistDetails({route}) {
   const handleEditDescription = async () => {
     try {
       Keyboard.dismiss();
+
       if (editedDescription !== item.description) {
-        await updateChecklistItem(selectedChecklistId, item.id, {
+        const updatedAt = new Date().toISOString();
+
+        await updateChecklistItem(selectedChecklistId, itemId, {
           description: editedDescription,
-          updatedAt: new Date().toISOString(),
+          updatedAt,
         });
-        setItem(prevItem => ({
-          ...prevItem,
+
+        setItem(prev => ({
+          ...prev,
           description: editedDescription,
-          updatedAt: new Date().toISOString(),
+          updatedAt,
         }));
       }
+
       setEditDetails(false);
     } catch (error) {
       console.error('Error editing description:', error.message);
@@ -69,88 +94,94 @@ export default function ChecklistDetails({route}) {
   };
 
   return (
-    <AppLayout canBack title={item.title}>
+    <AppLayout canBack title={initialItem?.title || 'Checklist Item'}>
       <ScrollView>
-        <View style={[GlobalStyles.gap, GlobalStyles.paddingVertical]}>
-          <View style={[GlobalStyles.gap, GlobalStyles.flexRow]}>
-            <Text style={GlobalStyles.textPrimary}>Description:</Text>
+        {isLoading ? (
+          <ActivityIndicator size="large" style={{marginTop: 20}} />
+        ) : (
+          <View style={[GlobalStyles.gap, GlobalStyles.paddingVertical]}>
+            <View style={[GlobalStyles.gap, GlobalStyles.flexRow]}>
+              <Text style={GlobalStyles.textPrimary}>Description:</Text>
+              {editDetails ? (
+                <FAIcon
+                  onPress={handleEditDescription}
+                  name="floppy-o"
+                  size={22}
+                />
+              ) : (
+                <FAIcon5
+                  onPress={() => setEditDetails(true)}
+                  name="edit"
+                  size={22}
+                />
+              )}
+            </View>
+
             {editDetails ? (
-              <FAIcon
-                onPress={handleEditDescription}
-                name="floppy-o"
-                size={22}
+              <TextInput
+                style={GlobalStyles.textInput}
+                multiline={true}
+                value={editedDescription}
+                onChangeText={setEditedDescription}
               />
             ) : (
-              <FAIcon5
-                onPress={() => setEditDetails(true)}
-                name="edit"
-                size={22}
-              />
-            )}
-          </View>
-
-          {editDetails ? (
-            <TextInput
-              style={GlobalStyles.textInput}
-              multiline={true}
-              value={editedDescription}
-              onChangeText={text => setEditedDescription(text)}
-            />
-          ) : (
-            <Text style={GlobalStyles.textSecondary}>
-              {item.description || 'No description'}
-            </Text>
-          )}
-        </View>
-
-        <Pressable
-          onPress={handleCheckItem}
-          style={[styles.itemChecklist, {gap: 10}]}>
-          <Text style={GlobalStyles.textPrimary}>Task status:</Text>
-          <View style={[styles.itemChecklist, {gap: item.checked ? 10 : 14}]}>
-            {item.checked ? (
-              <Image
-                source={require('../assets/checkedtrue.png')}
-                style={{width: 24, height: 20}}
-              />
-            ) : (
-              <Image
-                source={require('../assets/checkedfalse.png')}
-                style={{width: 20, height: 20}}
-              />
-            )}
-          </View>
-        </Pressable>
-
-        {item.checkedBy && (
-          <>
-            <View
-              style={[
-                GlobalStyles.gap,
-                GlobalStyles.paddingVertical,
-                GlobalStyles.flexRow,
-                GlobalStyles.flex,
-                {flexWrap: 'wrap'},
-              ]}>
-              <Text style={GlobalStyles.textPrimary}>Checked date:</Text>
-              <Text style={[GlobalStyles.textPrimary, {flexWrap: 'wrap'}]}>
-                {convertDate(
-                  item.updatedAt,
-                  `{month} {day}, {year} {hour}:{minute} {ampm}`,
-                )}
+              <Text style={GlobalStyles.textSecondary}>
+                {initialItem.description || 'No description'}
               </Text>
-            </View>
+            )}
 
-            <View
-              style={[
-                GlobalStyles.gap,
-                GlobalStyles.paddingVertical,
-                GlobalStyles.flexRow,
-              ]}>
-              <Text style={GlobalStyles.textPrimary}>Checked by:</Text>
-              <Text style={GlobalStyles.textPrimary}>{item.checkedBy}</Text>
-            </View>
-          </>
+            <Pressable
+              onPress={handleCheckItem}
+              style={[styles.itemChecklist, {gap: 10}]}>
+              <Text style={GlobalStyles.textPrimary}>Task status:</Text>
+              <View
+                style={[styles.itemChecklist, {gap: initialItem.checked ? 10 : 14}]}>
+                <Image
+                  source={
+                    initialItem.checked
+                      ? require('../assets/checkedtrue.png')
+                      : require('../assets/checkedfalse.png')
+                  }
+                  style={
+                    initialItem.checked
+                      ? {width: 24, height: 20}
+                      : {width: 20, height: 20}
+                  }
+                />
+              </View>
+            </Pressable>
+
+            {initialItem.checkedBy && (
+              <>
+                <View
+                  style={[
+                    GlobalStyles.gap,
+                    GlobalStyles.paddingVertical,
+                    GlobalStyles.flexRow,
+                    GlobalStyles.flex,
+                    {flexWrap: 'wrap'},
+                  ]}>
+                  <Text style={GlobalStyles.textPrimary}>Checked date:</Text>
+                  <Text style={[GlobalStyles.textPrimary, {flexWrap: 'wrap'}]}>
+                    {convertDate(
+                      item.updatedAt,
+                      `{month} {day}, {year} {hour}:{minute} {ampm}`,
+                    )}
+                  </Text>
+                </View>
+
+                <View
+                  style={[
+                    GlobalStyles.gap,
+                    GlobalStyles.paddingVertical,
+                    GlobalStyles.flexRow,
+                  ]}>
+                  <Text style={GlobalStyles.textPrimary}>Checked by:</Text>
+                  <Text style={GlobalStyles.textPrimary}>{item.checkedBy}</Text>
+                </View>
+              </>
+            )}
+          </View>
         )}
       </ScrollView>
     </AppLayout>
