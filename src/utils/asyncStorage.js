@@ -2,9 +2,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SELECTED_CHECKLIST_KEY = 'selectedChecklistId';
 
-export const saveSelectedChecklist = async checklistId => {
+export const saveSelectedChecklist = async checklist => {
   try {
-    await AsyncStorage.setItem(SELECTED_CHECKLIST_KEY, checklistId);
+    console.log('aaasyng', checklist);
+    await AsyncStorage.setItem(
+      SELECTED_CHECKLIST_KEY,
+      JSON.stringify(checklist),
+    );
   } catch (error) {
     console.error('Error saving selected checklist:', error);
   }
@@ -13,7 +17,7 @@ export const saveSelectedChecklist = async checklistId => {
 export const getSelectedChecklist = async () => {
   try {
     const checklistId = await AsyncStorage.getItem(SELECTED_CHECKLIST_KEY);
-    return checklistId;
+    return JSON.parse(checklistId);
   } catch (error) {
     console.error('Error retrieving selected checklist:', error);
     return null;

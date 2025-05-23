@@ -16,7 +16,7 @@ import {ChecklistContext} from '../context/ChecklistContext';
 import {sortChecklist} from '../utils/utilsFunc';
 
 export default function Checklist() {
-  const {userData} = useContext(AppContext);
+  const {user} = useContext(AppContext);
   const {selectedChecklist} = useContext(ChecklistContext);
   const [checklist, setChecklist] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -47,14 +47,6 @@ export default function Checklist() {
     return sortChecklist(checklist, sortBy, sortOrder);
   }, [checklist, sortBy, sortOrder]);
 
-  const toggleSortOrder = () => {
-    setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
-  };
-
-  const changeSortBy = newSortBy => {
-    setSortBy(newSortBy);
-  };
-
   const addItem = async (title, description) => {
     const itemData = {
       title,
@@ -72,11 +64,14 @@ export default function Checklist() {
   };
 
   const checkItem = async (checklistId, itemId, check) => {
+    console.log('hoy', checklistId, itemId, check);
     const updatedData = {
       checked: !check,
       updatedAt: new Date().toISOString(),
-      checkedBy: !check ? userData.username : null,
+      checkedBy: !check ? user.username : null,
     };
+
+    console.log('uppddd', updatedData);
     try {
       await updateChecklistItem(checklistId, itemId, updatedData);
     } catch (error) {

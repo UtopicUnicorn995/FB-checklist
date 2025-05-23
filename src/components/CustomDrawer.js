@@ -15,11 +15,12 @@ import {useNavigationState} from '@react-navigation/native';
 import Collaborators from '../screens/Collaborators';
 import Settings from '../screens/Settings';
 import Plan from '../screens/Plan';
+import { getLoggedUser } from '../utils/firebaseServices';
 
 const Drawer = createDrawerNavigator();
 
 function DrawerContent({navigation}) {
-  const {logoutUser, userData} = useContext(AppContext);
+  const {logoutUser, user} = useContext(AppContext);
   const {
     userCheckList,
     selectedChecklist,
@@ -77,8 +78,9 @@ function DrawerContent({navigation}) {
                 source={require('../assets/menu.png')}
               />
               <Text style={styles.drawerItemText}>
+                {console.log('pages', user)}
                 Personal Checklist ({userCheckList && userCheckList.length}/
-                {userData && userData.allowedPages})
+                {user && user.allowedPages})
               </Text>
             </View>
             <View style={{gap: 0}}>
@@ -104,7 +106,7 @@ function DrawerContent({navigation}) {
                   </Pressable>
                 ))}
             </View>
-            {/* {userCheckList && userCheckList.length < userData.allowedPages ? (
+            {userCheckList && userCheckList.length < user.allowedPages ? (
               isAddChecklist ? (
                 <View style={styles.newChecklistInputContainer}>
                   <TextInput
@@ -153,7 +155,7 @@ function DrawerContent({navigation}) {
                 }}
                 btnTextStyleProp={{color: '#262626', fontSize: 14}}
               />
-            )} */}
+            )}
           </View>
 
           <Pressable

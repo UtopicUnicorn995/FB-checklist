@@ -63,6 +63,8 @@ const UserStack = () => {
 const AppContent = () => {
   const {user, appInitializing} = useContext(AppContext);
 
+  console.log('userss', user)
+
   if (appInitializing) {
     return <SplashScreen />;
   }
@@ -78,11 +80,11 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <SafeAreaProvider>
-        <ChecklistProvider>
-          <AppProvider>
+        <AppProvider>
+          <ChecklistProvider>
             <AppContent />
-          </AppProvider>
-        </ChecklistProvider>
+          </ChecklistProvider>
+        </AppProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

@@ -12,6 +12,18 @@ import {
   onValue,
 } from '@react-native-firebase/database';
 
+export const getLoggedUser = async userId => {
+  const db = getDatabase();
+  const userRef = ref(db, `/users/${userId}`);
+  const snapshot = await get(userRef);
+  if (snapshot.exists()) {
+    const userData = snapshot.val();
+    const withIdUserData = {id: userId, ...userData};
+    return withIdUserData;
+  }
+  return null;
+};
+
 export const createChecklist = async (
   userId,
   checklistTitle,
@@ -33,7 +45,7 @@ export const createChecklist = async (
 
   await set(newChecklistRef, newChecklist)
     .then(() => {
-      saveSelectedChecklist(newChecklist.id);
+      saveSelectedChecklist(newChecklist);
       setSelectedChecklist(newChecklist);
     })
     .catch(error => console.error('Error creating new checklist', error));
@@ -153,20 +165,14 @@ export const createNote = async itemData => {
   try {
     const newNotesRef = push(notesRef);
     await set(newNotesRef, itemData);
-
-    console.log('Note created successfully:', {itemData});
     return {id: newNotesRef.key, ...itemData};
   } catch (error) {
-    console.error('Error creating note:', error.message, {itemData});
     throw error;
   }
 };
 
 export const updateNotes = async (updatedNotes, notesId) => {
   const db = getDatabase();
-
-  console.log('edited');
   const notesRef = ref(db, `/notes/${notesId}`);
-  console.log('edited2');
   await update(notesRef, updatedNotes);
 };

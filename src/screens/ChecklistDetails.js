@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {
   View,
   Text,
@@ -23,10 +23,9 @@ import {useNavigation} from '@react-navigation/native';
 export default function ChecklistDetails({route}) {
   const {userData} = useContext(AppContext);
   const {selectedChecklist} = useContext(ChecklistContext);
-  const {selectedChecklistId, itemId} = route.params;
+  const {selectedChecklistId, initialItem} = route.params;
   const navigation = useNavigation();
 
-  // Convert checklistItems to array if needed
   const checklistItemsArray = Array.isArray(selectedChecklist?.checklistItems)
     ? selectedChecklist.checklistItems
     : selectedChecklist?.checklistItems
@@ -36,17 +35,15 @@ export default function ChecklistDetails({route}) {
       }))
     : [];
 
-  const item = checklistItemsArray.find(i => i.id === itemId);
+  const item = checklistItemsArray.find(i => i.id === initialItem.id);
 
-  // Local state only for editing description
   const [editedDescription, setEditedDescription] = useState(
     item?.description || '',
   );
   const [editDetails, setEditDetails] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Update editedDescription if item changes (e.g., after real-time update)
-  React.useEffect(() => {
+  useEffect(() => {
     setEditedDescription(item?.description || '');
   }, [item?.description]);
 
@@ -69,7 +66,6 @@ export default function ChecklistDetails({route}) {
         updatedAt: new Date().toISOString(),
       });
       setIsLoading(false);
-      // No local setItem needed; context will update and re-render
     } catch (error) {
       setIsLoading(false);
       console.error('Error checking item:', error.message);

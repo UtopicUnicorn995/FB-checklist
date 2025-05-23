@@ -15,10 +15,11 @@ import styles from '../styles/Login.styles';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
 import {AppContext} from '../context/AppContext';
 import {useContext} from 'react';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import {getLoggedUser} from '../utils/firebaseServices';
 
 const Login = () => {
-  const {navigate} = useNavigation()
+  const {navigate} = useNavigation();
   const {setUser} = useContext(AppContext);
   const [initializing, setInitializing] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -27,16 +28,17 @@ const Login = () => {
     password: '',
     showPassword: false,
   });
-  const [keyboardVisible, setKeyboardVisible] = useState(false); // Track keyboard visibility
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
 
-  function onAuthStateChanged(currentUser) {
+  const onAuthStateChanged = async currentUser => {
     if (currentUser) {
-      setUser(currentUser.uid);
+      const userData = await getLoggedUser(currentUser.uid);
+      setUser(userData);
     } else {
       setUser(null);
     }
     if (initializing) setInitializing(false);
-  }
+  };
 
   useEffect(() => {
     const subscriber = getAuth().onAuthStateChanged(onAuthStateChanged);
@@ -82,7 +84,7 @@ const Login = () => {
       .signInWithEmailAndPassword(credentials.email, credentials.password)
       .then(userCredential => {
         setLoading(false);
-        console.log('User logged in:', userCredential.user.uid);
+        console.log('User logged in:', userCredential.currentUser);
       })
       .catch(error => {
         Alert.alert(
@@ -98,7 +100,6 @@ const Login = () => {
       });
   };
 
-
   return (
     <GuestLayout>
       <KeyboardAvoidingView
@@ -111,7 +112,7 @@ const Login = () => {
             <TextInput
               style={{flex: 1}}
               value={credentials.email}
-              textContentType='emailAddress'
+              textContentType="emailAddress"
               placeholder="Enter your email"
               placeholderTextColor="#999999"
               onChangeText={text => handleSetCredentials(text, 'email')}
@@ -145,7 +146,7 @@ const Login = () => {
         <Text style={{fontWeight: 'bold', fontSize: 14}}>
           Don't have an account?
         </Text>
-        <Button title="Signup" onPress={() => navigate('Signup')}/>
+        <Button title="Signup" onPress={() => navigate('Signup')} />
       </KeyboardAvoidingView>
     </GuestLayout>
   );

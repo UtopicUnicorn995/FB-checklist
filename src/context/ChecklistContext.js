@@ -1,4 +1,4 @@
-import {createContext, useEffect, useState} from 'react';
+import {createContext, useEffect, useState, useContext} from 'react';
 import {updateChecklistItem, createChecklist} from '../utils/firebaseServices';
 import {
   saveSelectedChecklist,
@@ -13,29 +13,34 @@ import {
   equalTo,
   onValue,
 } from '@react-native-firebase/database';
+import {AppContext} from './AppContext';
 
 export const ChecklistContext = createContext();
 
 export const ChecklistProvider = ({children}) => {
-  const auth = getAuth();
-  const currentUser = auth.currentUser;
+  const {user} = useContext(AppContext);
   const [selectedChecklistId, setSelectedChecklistId] = useState(null);
   const [userCheckList, setUserCheckList] = useState(null);
+  const [collaboratorsChecklist, setCollaboratorsChecklist] = useState(null);
   const [selectedChecklist, setSelectedChecklist] = useState(null);
 
   useEffect(() => {
-    if (!currentUser.uid) {
+    if (!user) {
       setUserCheckList([]);
       setSelectedChecklist(null);
+      setCollaboratorsChecklist(null);
       return;
     }
+
     const db = getDatabase();
-    const checklistQuery = query(
-      ref(db, '/checklists'),
+    const userChecklistQuery = query(
+      ref(db, `/checklists/`),
       orderByChild('createdBy'),
-      equalTo(currentUser.uid),
+      equalTo(user.id),
     );
-    const unsubscribe = onValue(checklistQuery, snapshot => {
+
+    const unsubscribe = onValue(userChecklistQuery, snapshot => {
+      console.log('aaaaaa', snapshot.exists());
       if (snapshot.exists()) {
         const data = snapshot.val();
         const checklistArray = Object.entries(data).map(([id, value]) => ({
@@ -43,7 +48,7 @@ export const ChecklistProvider = ({children}) => {
           ...value,
         }));
         setUserCheckList(checklistArray);
-        // Optionally auto-select the first checklist if none selected
+        console.log('sleee', selectedChecklist, checklistArray)
         if (!selectedChecklist && checklistArray.length > 0) {
           setSelectedChecklist(checklistArray[0]);
         }
@@ -53,11 +58,11 @@ export const ChecklistProvider = ({children}) => {
       }
     });
     return () => unsubscribe();
-  }, [currentUser.uid]);
+  }, [user]);
 
   useEffect(() => {
     if (selectedChecklist) {
-      saveSelectedChecklist(selectedChecklist.id);
+      saveSelectedChecklist(selectedChecklist);
     }
   }, [selectedChecklist]);
 
@@ -89,7 +94,7 @@ export const ChecklistProvider = ({children}) => {
     setSelectedChecklist(prev => {
       if (!prev) return userCheckList[0];
       const found = userCheckList.find(c => c.id === prev.id);
-      console.log('foound', found)
+      console.log('foound', found);
       return found || userCheckList[0];
     });
   }, [userCheckList]);
