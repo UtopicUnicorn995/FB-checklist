@@ -78,7 +78,6 @@ function DrawerContent({navigation}) {
                 source={require('../assets/menu.png')}
               />
               <Text style={styles.drawerItemText}>
-                {console.log('pages', user)}
                 Personal Checklist ({userCheckList && userCheckList.length}/
                 {user && user.allowedPages})
               </Text>

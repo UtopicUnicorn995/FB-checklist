@@ -126,9 +126,10 @@ export default function Checklist() {
     }
 
     try {
-      await checkListEdit(selectedChecklist.id, {title: title});
       setIsEditable(false);
+      await checkListEdit(selectedChecklist.id, {title: title});
     } catch (error) {
+      setIsEditable(true);
       console.error(
         `Error changing title ${title}, ${selectedChecklist.id}`,
         error,

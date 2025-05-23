@@ -40,7 +40,6 @@ export const ChecklistProvider = ({children}) => {
     );
 
     const unsubscribe = onValue(userChecklistQuery, snapshot => {
-      console.log('aaaaaa', snapshot.exists());
       if (snapshot.exists()) {
         const data = snapshot.val();
         const checklistArray = Object.entries(data).map(([id, value]) => ({
@@ -48,10 +47,6 @@ export const ChecklistProvider = ({children}) => {
           ...value,
         }));
         setUserCheckList(checklistArray);
-        console.log('sleee', selectedChecklist, checklistArray)
-        if (!selectedChecklist && checklistArray.length > 0) {
-          setSelectedChecklist(checklistArray[0]);
-        }
       } else {
         setUserCheckList([]);
         setSelectedChecklist(null);
@@ -70,9 +65,11 @@ export const ChecklistProvider = ({children}) => {
     const loadSelectedChecklist = async () => {
       try {
         const savedChecklistId = await getSelectedChecklist();
+        console.log('help', savedChecklistId);
         if (savedChecklistId && userCheckList) {
           const savedChecklist = userCheckList.find(
-            checklist => checklist.id === savedChecklistId,
+            checklist =>
+              checklist.id.toString() === savedChecklistId.id.toString(),
           );
           if (savedChecklist) {
             setSelectedChecklist(savedChecklist);
@@ -84,7 +81,10 @@ export const ChecklistProvider = ({children}) => {
     };
 
     loadSelectedChecklist();
+    console.log('help2 ', selectedChecklist);
   }, [userCheckList]);
+
+  console.log('help3 ', selectedChecklist);
 
   useEffect(() => {
     if (!userCheckList || !userCheckList.length) {

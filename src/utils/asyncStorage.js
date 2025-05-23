@@ -4,7 +4,6 @@ const SELECTED_CHECKLIST_KEY = 'selectedChecklistId';
 
 export const saveSelectedChecklist = async checklist => {
   try {
-    console.log('aaasyng', checklist);
     await AsyncStorage.setItem(
       SELECTED_CHECKLIST_KEY,
       JSON.stringify(checklist),

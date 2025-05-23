@@ -43,10 +43,10 @@ export default function AppLayout({
   };
 
   const testNotification = async () => {
-    const title = 'sample Title'
-    const body = 'booooddyy'
-    const data = 'sample data'
-    
+    const title = 'sample Title';
+    const body = 'booooddyy';
+    const data = 'sample data';
+
     await sendNotificationToBackend(deviceToken, title, body, data);
   };
 
@@ -109,9 +109,7 @@ export default function AppLayout({
                 <FAIcon name="floppy-o" size={32} />
               </Pressable>
             ) : handleBack ? (
-              <Pressable
-                style={styles.floatingIcon}
-                onPress={handleBack}>
+              <Pressable style={styles.floatingIcon} onPress={handleBack}>
                 <Animated.Image
                   source={require('../assets/addIcon.png')}
                   style={{
