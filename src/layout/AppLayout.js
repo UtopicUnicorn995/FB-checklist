@@ -38,7 +38,6 @@ export default function AppLayout({
     'e8AjNxiKQbGYSxuQ00yMTZ:APA91bHfRuRg19QrZn3haoxdzZqEAR0vW9Y9h_irKcOIDu9h7ap_jY710bU0WpkpQ886oZQC0o2xQUx1q9lBQe19EO5CHgc75BEhvGLLI1ePzlmKhREpeZs',
   );
 
-
   const toggleAddItemModal = () => {
     setIsAddItemModalOpen(prev => !prev);
   };

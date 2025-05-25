@@ -5,8 +5,6 @@ import {
   ScrollView,
   TextInput,
   Alert,
-  Keyboard,
-  TouchableWithoutFeedback,
 } from 'react-native';
 import AppLayout from '../layout/AppLayout';
 import {convertDate} from '../utils/utilsFunc';

@@ -101,12 +101,16 @@ export const addChecklistItem = async (checklistId, itemData) => {
 export const updateChecklistItem = async (checklistId, itemId, updatedData) => {
   const db = getDatabase();
 
-  const itemRef = ref(
-    db,
-    `/checklists/${checklistId}/checklistItems/${itemId}`,
-  );
+  try {
+    const itemRef = ref(
+      db,
+      `/checklists/${checklistId}/checklistItems/${itemId}`,
+    );
 
-  await update(itemRef, updatedData);
+    await update(itemRef, updatedData);
+  } catch (error) {
+    console.error('Error updating checklist', error);
+  }
 };
 
 export const deleteChecklistItem = async (checklistId, itemId) => {

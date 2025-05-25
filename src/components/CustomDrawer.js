@@ -5,6 +5,7 @@ import {View, Text, Image, TextInput} from 'react-native';
 import Checklist from '../screens/Checklist';
 import ChecklistDetails from '../screens/ChecklistDetails';
 import Notes from '../screens/Notes';
+import NotesItemDetails from '../screens/NotesItemDetails';
 import styles from '../styles/CustomDrawer.styles';
 import Button from './Button';
 import {UserContext} from '../context/UserContext';
@@ -15,7 +16,6 @@ import {useNavigationState} from '@react-navigation/native';
 import Collaborators from '../screens/Collaborators';
 import Settings from '../screens/Settings';
 import Plan from '../screens/Plan';
-import { getLoggedUser } from '../utils/firebaseServices';
 
 const Drawer = createDrawerNavigator();
 
@@ -56,7 +56,6 @@ function DrawerContent({navigation}) {
   };
 
   const handleNavigation = location => {
-    setSelectedChecklist(null);
     navigation.navigate(location);
   };
 
@@ -158,7 +157,14 @@ function DrawerContent({navigation}) {
           </View>
 
           <Pressable
-            style={styles.drawerItem}
+            style={[
+              styles.drawerItem,
+              (currentScreenName === 'Notes' ||
+                currentScreenName === 'NotesItemDetails') && {
+                backgroundColor: '#EEE9E0',
+                paddingHorizontal: 5,
+              },
+            ]}
             onPress={() => handleNavigation('Notes')}>
             <Image
               style={{width: 20, height: 22}}
@@ -167,7 +173,13 @@ function DrawerContent({navigation}) {
             <Text style={styles.drawerItemText}>Notes</Text>
           </Pressable>
           <Pressable
-            style={styles.drawerItem}
+            style={[
+              styles.drawerItem,
+              currentScreenName === 'Collaborators' && {
+                backgroundColor: '#EEE9E0',
+                paddingHorizontal: 5,
+              },
+            ]}
             onPress={() => handleNavigation('Collaborators')}>
             <Image
               style={{width: 27, height: 17}}
@@ -177,7 +189,13 @@ function DrawerContent({navigation}) {
           </Pressable>
 
           <Pressable
-            style={styles.drawerItem}
+            style={[
+              styles.drawerItem,
+              currentScreenName === 'Settings' && {
+                backgroundColor: '#EEE9E0',
+                paddingHorizontal: 5,
+              },
+            ]}
             onPress={() => handleNavigation('Settings')}>
             <Image
               style={{width: 23, height: 24}}
@@ -236,6 +254,11 @@ export default function CustomDrawer() {
         options={options}
       />
       <Drawer.Screen name="Notes" component={Notes} options={options} />
+      <Drawer.Screen
+        name="NotesItemDetails"
+        component={NotesItemDetails}
+        options={options}
+      />
       <Drawer.Screen
         name="Collaborators"
         component={Collaborators}
