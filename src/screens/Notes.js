@@ -1,6 +1,6 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {StyleSheet, ActivityIndicator, View, Text} from 'react-native';
-import ReorderableList, {reorderItems} from 'react-native-reorderable-list';
+import {StyleSheet, ActivityIndicator, View, FlatList} from 'react-native';
+// import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import AppLayout from '../layout/AppLayout';
 import NoteItem from '../components/NoteItem';
 import {createNote} from '../utils/firebaseServices';
@@ -10,21 +10,16 @@ import {AppContext} from '../context/AppContext';
 const Notes = () => {
   const {userNotes} = useContext(AppContext);
   const [loadingNotes, setLoadingNotes] = useState(false);
-  const [data, setData] = useState([]);
   const {user} = useContext(UserContext);
 
-  console.log('nottt', userNotes);
-
-  const handleReorder = ({from, to}) => {
-    setData(value => reorderItems(value, from, to));
-  };
+  // const insets = useSafeAreaInsets();
 
   const handleCreateNotes = async (title, description) => {
     try {
       const itemData = {
         title,
         description,
-        createdBy: user,
+        createdBy: user.id,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
@@ -41,18 +36,17 @@ const Notes = () => {
     <AppLayout
       title="Notes"
       onAddItem={{func: handleCreateNotes, type: 'note'}}>
-      <View>
+      <View style={{flex: 1}}>
         {loadingNotes ? (
           <View style={{flex: 1, paddingTop: 40, alignContent: 'center'}}>
             <ActivityIndicator size="large" />
           </View>
         ) : (
-          <ReorderableList
+          <FlatList
             data={userNotes}
-            onReorder={handleReorder}
             renderItem={renderItem}
             keyExtractor={item => item.id}
-            contentContainerStyle={styles.listContainer}
+            contentContainerStyle={[styles.listContainer]}
             showsVerticalScrollIndicator={false}
           />
         )}
@@ -64,8 +58,6 @@ const Notes = () => {
 const styles = StyleSheet.create({
   listContainer: {
     gap: 10,
-    padding: 10,
-    height: '100%',
   },
 });
 

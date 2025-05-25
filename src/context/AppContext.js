@@ -42,7 +42,6 @@ export const AppProvider = ({children}) => {
     fetchChecklist();
   }, [user]);
 
-  console.log('fetched items', userNotes, userCheckList);
 
   useEffect(() => {
     if (selectedChecklist) {

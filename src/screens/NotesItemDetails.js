@@ -63,8 +63,6 @@ export default function NotesItemDetails({route}) {
     navigation.goBack();
   };
 
-  console.log('detaillsss', details);
-
   return (
     <AppLayout title={details.title} handleBack={handleBack}>
       <ScrollView keyboardShouldPersistTaps="handled">

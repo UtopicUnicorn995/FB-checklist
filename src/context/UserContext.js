@@ -9,9 +9,6 @@ export function UserProvider({children}) {
   const [user, setUser] = useState(null);
   const [appInitializing, setAppInitializing] = useState(true);
   const auth = getAuth();
-  const currentUser = auth.currentUser;
-
-  console.log('currentz', currentUser);
 
   useEffect(() => {
     setAppInitializing(true);

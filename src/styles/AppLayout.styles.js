@@ -11,8 +11,6 @@ export default StyleSheet.create({
     backgroundColor: '#FFF7E3',
     flex: 1,
     width: '100%',
-    paddingTop: 40,
-    paddingBottom: 20,
     paddingHorizontal: 32,
     flexDirection: 'column',
     borderTopRightRadius: 32,

@@ -63,7 +63,6 @@ const UserStack = () => {
 const AppContent = () => {
   const {user, appInitializing} = useContext(UserContext);
 
-  console.log('userss', user);
 
   if (appInitializing) {
     return <SplashScreen />;

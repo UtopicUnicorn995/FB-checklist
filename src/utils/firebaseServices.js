@@ -143,7 +143,6 @@ export const getNotes = async (userId, callback) => {
 
     onValue(notesQuery, snapshot => {
       if (snapshot.exists()) {
-        console.log('ss', snapshot.val());
         const notes = Object.entries(snapshot.val()).map(([id, note]) => ({
           id,
           ...note,
@@ -165,7 +164,7 @@ export const createNote = async itemData => {
 
   try {
     const newNotesRef = push(notesRef);
-    console.log('neeee', newNotesRef);
+    console.log('neeee', newNotesRef, itemData);
     await set(newNotesRef, itemData);
     return {id: newNotesRef.key, ...itemData};
   } catch (error) {

@@ -161,13 +161,13 @@ export default function Checklist() {
       setIsEditable={setIsEditable}
       handleTitleEdit={handleTitleEdit}
       onAddItem={{func: addItem, type: 'checklist'}}>
-      <View style={styles.checklist}>
+      <View style={{flex: 1, overflow: 'hidden'}}>
         {loading ? (
           <Text>Loading...</Text>
         ) : checklist.length > 0 ? (
           <FlatList
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{paddingBottom: insets.bottom}}
+            contentContainerStyle={{paddingBottom: insets.bottom, gap: 10}}
             data={sortedChecklist}
             renderItem={selectedChecklist && renderItem}
             keyExtractor={item => item.id}

@@ -1,13 +1,11 @@
 import React, {memo} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {Pressable, Text, StyleSheet, View} from 'react-native';
-import {useReorderableDrag} from 'react-native-reorderable-list';
 import {convertDate} from '../utils/utilsFunc';
 import GlobalStyles from '../styles/GlobalStyles.';
 import styles from '../styles/NoteItem.styles';
 
 const NoteItem = memo(({content}) => {
-  const drag = useReorderableDrag();
   const navigation = useNavigation();
 
   const openNoteItemDetails = () => {
@@ -17,7 +15,6 @@ const NoteItem = memo(({content}) => {
   return (
     <Pressable
       style={[styles.card]}
-      onLongPress={drag}
       onPress={openNoteItemDetails}>
       <View style={[GlobalStyles.flexRow]}>
         <Text style={[GlobalStyles.textPrimary]}>{content.title}</Text>
