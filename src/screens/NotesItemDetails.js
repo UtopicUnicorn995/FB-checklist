@@ -14,6 +14,7 @@ import GlobalStyles from '../styles/GlobalStyles.';
 import FAIcon5 from 'react-native-vector-icons/FontAwesome5';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import {updateNotes} from '../utils/firebaseServices';
+import {useNavigation} from '@react-navigation/native';
 
 export default function NotesItemDetails({route}) {
   const details = route.params.item;
@@ -22,6 +23,8 @@ export default function NotesItemDetails({route}) {
     title: details.title,
     description: details.description,
   });
+
+  const navigation = useNavigation();
 
   const handleEditDescription = async () => {
     const payload = {
@@ -52,10 +55,18 @@ export default function NotesItemDetails({route}) {
     }
   };
 
+  const handleBack = () => {
+    setEditDetails(prev => ({
+      ...prev,
+      state: false,
+    }));
+    navigation.goBack();
+  };
+
   console.log('detaillsss', details);
 
   return (
-    <AppLayout title={details.title} canBack>
+    <AppLayout title={details.title} handleBack={handleBack}>
       <ScrollView keyboardShouldPersistTaps="handled">
         <View style={GlobalStyles.gap}>
           <View style={GlobalStyles.flexRow}>

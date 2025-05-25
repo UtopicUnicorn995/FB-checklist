@@ -6,12 +6,12 @@ import Signup from './screens/Signup';
 import Notes from './screens/Notes';
 import ChecklistDetails from './screens/ChecklistDetails';
 import NotesItemDetails from './screens/NotesItemDetails';
-import {AppProvider, AppContext} from './context/AppContext';
+import {UserProvider, UserContext} from './context/UserContext';
 import CustomDrawer from './components/CustomDrawer';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {useContext} from 'react';
 import SplashScreen from './screens/SplashScreen';
-import {ChecklistProvider} from './context/ChecklistContext';
+import {AppProvider} from './context/AppContext';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Collaborators from './screens/Collaborators';
@@ -61,9 +61,9 @@ const UserStack = () => {
 };
 
 const AppContent = () => {
-  const {user, appInitializing} = useContext(AppContext);
+  const {user, appInitializing} = useContext(UserContext);
 
-  console.log('userss', user)
+  console.log('userss', user);
 
   if (appInitializing) {
     return <SplashScreen />;
@@ -80,11 +80,11 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <SafeAreaProvider>
-        <AppProvider>
-          <ChecklistProvider>
+        <UserProvider>
+          <AppProvider>
             <AppContent />
-          </ChecklistProvider>
-        </AppProvider>
+          </AppProvider>
+        </UserProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

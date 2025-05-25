@@ -13,16 +13,16 @@ import {convertDate} from '../utils/utilsFunc';
 import GlobalStyles from '../styles/GlobalStyles.';
 import Pressable from '../components/Pressable';
 import styles from '../styles/ChecklistItem.styles';
-import {AppContext} from '../context/AppContext';
+import {UserContext} from '../context/UserContext';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import FAIcon5 from 'react-native-vector-icons/FontAwesome5';
 import {updateChecklistItem} from '../utils/firebaseServices';
-import {ChecklistContext} from '../context/ChecklistContext';
+import {AppContext} from '../context/AppContext';
 import {useNavigation} from '@react-navigation/native';
 
 export default function ChecklistDetails({route}) {
-  const {userData} = useContext(AppContext);
-  const {selectedChecklist} = useContext(ChecklistContext);
+  const {userData} = useContext(UserContext);
+  const {selectedChecklist} = useContext(AppContext);
   const {selectedChecklistId, initialItem} = route.params;
   const navigation = useNavigation();
 

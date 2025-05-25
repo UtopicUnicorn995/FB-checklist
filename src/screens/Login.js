@@ -13,14 +13,14 @@ import GuestLayout from '../layout/GuestLayout';
 import Button from '../components/Button';
 import styles from '../styles/Login.styles';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
-import {AppContext} from '../context/AppContext';
+import {UserContext} from '../context/UserContext';
 import {useContext} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {getLoggedUser} from '../utils/firebaseServices';
 
 const Login = () => {
   const {navigate} = useNavigation();
-  const {setUser} = useContext(AppContext);
+  const {setUser} = useContext(UserContext);
   const [initializing, setInitializing] = useState(true);
   const [loading, setLoading] = useState(false);
   const [credentials, setCredentials] = useState({

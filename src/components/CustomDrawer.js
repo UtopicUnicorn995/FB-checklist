@@ -7,8 +7,8 @@ import ChecklistDetails from '../screens/ChecklistDetails';
 import Notes from '../screens/Notes';
 import styles from '../styles/CustomDrawer.styles';
 import Button from './Button';
+import {UserContext} from '../context/UserContext';
 import {AppContext} from '../context/AppContext';
-import {ChecklistContext} from '../context/ChecklistContext';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
 import Pressable from './Pressable';
 import {useNavigationState} from '@react-navigation/native';
@@ -20,13 +20,13 @@ import { getLoggedUser } from '../utils/firebaseServices';
 const Drawer = createDrawerNavigator();
 
 function DrawerContent({navigation}) {
-  const {logoutUser, user} = useContext(AppContext);
+  const {logoutUser, user} = useContext(UserContext);
   const {
     userCheckList,
     selectedChecklist,
     setSelectedChecklist,
     handleCreateChecklist,
-  } = useContext(ChecklistContext);
+  } = useContext(AppContext);
   const [isAddChecklist, setIsAddChecklist] = useState(false);
   const [newChecklistTitle, setNewChecklistTitle] = useState('');
 

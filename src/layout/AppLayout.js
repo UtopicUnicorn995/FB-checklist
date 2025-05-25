@@ -10,7 +10,7 @@ import {
   Text,
 } from 'react-native';
 import Pressable from '../components/Pressable';
-import {AppContext} from '../context/AppContext';
+import {UserContext} from '../context/UserContext';
 import styles from '../styles/AppLayout.styles';
 import {useNavigation} from '@react-navigation/native';
 import ModalView from '../components/ModalView';
@@ -30,13 +30,15 @@ export default function AppLayout({
   onAddItem,
   isDetails,
 }) {
-  const {} = useContext(AppContext);
+  const {} = useContext(UserContext);
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
   const [deviceToken, setDeviceToken] = useState(
     'e8AjNxiKQbGYSxuQ00yMTZ:APA91bHfRuRg19QrZn3haoxdzZqEAR0vW9Y9h_irKcOIDu9h7ap_jY710bU0WpkpQ886oZQC0o2xQUx1q9lBQe19EO5CHgc75BEhvGLLI1ePzlmKhREpeZs',
   );
+
+  console.log('status', isEditable, noModalScreen)
 
   const toggleAddItemModal = () => {
     setIsAddItemModalOpen(prev => !prev);

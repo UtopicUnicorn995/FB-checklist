@@ -18,7 +18,7 @@ export default function ModalView({openMenu, setModalMenu, handleAddItem}) {
     description: '',
   });
 
-  const {type, func} = handleAddItem;
+  const {type, func} = handleAddItem
 
 
   const handleItemDetails = (text, key) => {

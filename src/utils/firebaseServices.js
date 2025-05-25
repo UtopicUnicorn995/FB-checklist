@@ -131,7 +131,7 @@ export const checkListEdit = async (checklistId, updates) => {
   await update(checklistRef, payload);
 };
 
-export const getNotes = async userId => {
+export const getNotes = async (userId, callback) => {
   const db = getDatabase();
 
   try {
@@ -141,17 +141,18 @@ export const getNotes = async userId => {
       equalTo(userId),
     );
 
-    const snapshot = await get(notesQuery);
-
-    if (snapshot.exists()) {
-      const notes = Object.entries(snapshot.val()).map(([id, note]) => ({
-        id,
-        ...note,
-      }));
-      return notes;
-    } else {
-      return [];
-    }
+    onValue(notesQuery, snapshot => {
+      if (snapshot.exists()) {
+        console.log('ss', snapshot.val());
+        const notes = Object.entries(snapshot.val()).map(([id, note]) => ({
+          id,
+          ...note,
+        }));
+        callback(notes);
+      } else {
+        callback([]);
+      }
+    });
   } catch (error) {
     console.error('Error fetching notes:', error.message);
     throw error;
@@ -164,6 +165,7 @@ export const createNote = async itemData => {
 
   try {
     const newNotesRef = push(notesRef);
+    console.log('neeee', newNotesRef);
     await set(newNotesRef, itemData);
     return {id: newNotesRef.key, ...itemData};
   } catch (error) {
@@ -172,6 +174,7 @@ export const createNote = async itemData => {
 };
 
 export const updateNotes = async (updatedNotes, notesId) => {
+  console.log('notes value', updatedNotes, notesId);
   const db = getDatabase();
   const notesRef = ref(db, `/notes/${notesId}`);
   await update(notesRef, updatedNotes);

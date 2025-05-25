@@ -4,55 +4,16 @@ import ReorderableList, {reorderItems} from 'react-native-reorderable-list';
 import AppLayout from '../layout/AppLayout';
 import NoteItem from '../components/NoteItem';
 import {createNote} from '../utils/firebaseServices';
+import {UserContext} from '../context/UserContext';
 import {AppContext} from '../context/AppContext';
-import {
-  getDatabase,
-  ref,
-  query,
-  orderByChild,
-  equalTo,
-  onValue,
-} from '@react-native-firebase/database';
-import {getNotes} from '../utils/firebaseServices';
 
 const Notes = () => {
+  const {userNotes} = useContext(AppContext);
   const [loadingNotes, setLoadingNotes] = useState(false);
   const [data, setData] = useState([]);
-  const {user} = useContext(AppContext);
+  const {user} = useContext(UserContext);
 
-  useEffect(() => {
-    const fetchNotes = async () => {
-      if (!user) return;
-
-      setLoadingNotes(true);
-      try {
-        const db = getDatabase();
-        const notesRef = query(
-          ref(db, '/notes'),
-          orderByChild('createdBy'),
-          equalTo(user),
-        );
-
-        onValue(notesRef, snapshot => {
-          if (snapshot.exists()) {
-            const notes = Object.entries(snapshot.val()).map(([id, note]) => ({
-              id,
-              ...note,
-            }));
-            setData(notes);
-          } else {
-            setData([]);
-          }
-        });
-      } catch (error) {
-        console.error('Error fetching notes:', error.message);
-      } finally {
-        setLoadingNotes(false);
-      }
-    };
-
-    fetchNotes();
-  }, [user]);
+  console.log('nottt', userNotes);
 
   const handleReorder = ({from, to}) => {
     setData(value => reorderItems(value, from, to));
@@ -87,7 +48,7 @@ const Notes = () => {
           </View>
         ) : (
           <ReorderableList
-            data={data}
+            data={userNotes}
             onReorder={handleReorder}
             renderItem={renderItem}
             keyExtractor={item => item.id}
