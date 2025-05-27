@@ -172,7 +172,7 @@ function DrawerContent({navigation}) {
             />
             <Text style={styles.drawerItemText}>Notes</Text>
           </Pressable>
-          <Pressable
+          {/* <Pressable
             style={[
               styles.drawerItem,
               currentScreenName === 'Collaborators' && {
@@ -186,7 +186,7 @@ function DrawerContent({navigation}) {
               source={require('../assets/users.png')}
             />
             <Text style={styles.drawerItemText}>Collaborators</Text>
-          </Pressable>
+          </Pressable> */}
 
           <Pressable
             style={[
@@ -204,7 +204,7 @@ function DrawerContent({navigation}) {
             <Text style={styles.drawerItemText}>Settings</Text>
           </Pressable>
 
-          <Pressable
+          {/* <Pressable
             style={styles.drawerItem}
             onPress={() => handleNavigation('Plan')}>
             <Image
@@ -212,7 +212,7 @@ function DrawerContent({navigation}) {
               source={require('../assets/crown.png')}
             />
             <Text style={styles.drawerItemText}>Plan (free)</Text>
-          </Pressable>
+          </Pressable> */}
         </View>
         <Button onPress={logoutUser} title="Logout" />
       </View>

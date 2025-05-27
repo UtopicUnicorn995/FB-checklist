@@ -108,28 +108,14 @@ const Signup = () => {
       })
       .catch(error => {
         console.error('Error signing up:', error);
-        Alert.alert('Signup Failed', error.message);
+        Alert.alert('Signup Failed', 'An unknown error occured', [
+          {
+            text: 'ok',
+            onPress: () => setLoading(false),
+          },
+        ]);
       });
   };
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setKeyboardVisible(true);
-      },
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setKeyboardVisible(false);
-      },
-    );
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
 
   return (
     <GuestLayout>

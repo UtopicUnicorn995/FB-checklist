@@ -14,6 +14,10 @@ import {
 } from '@react-native-firebase/database';
 import {getStorage} from '@react-native-firebase/storage';
 
+
+
+
+
 export const getLoggedUser = async userId => {
   const db = getDatabase();
   const userRef = ref(db, `/users/${userId}`);

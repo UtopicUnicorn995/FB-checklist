@@ -1,28 +1,31 @@
 import React, {useState, useEffect, useMemo, useContext} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {View, Text, FlatList, Alert} from 'react-native';
+import {View, Text, FlatList, Alert, TextInput} from 'react-native';
 import {
   addChecklistItem,
   updateChecklistItem,
   deleteChecklistItem,
   checkListEdit,
 } from '../utils/firebaseServices';
-
+import FAIcon from 'react-native-vector-icons/FontAwesome5';
 import ChecklistItem from '../components/ChecklistItem';
 import styles from '../styles/Checklist.styles';
 import AppLayout from '../layout/AppLayout';
 import {UserContext} from '../context/UserContext';
 import {AppContext} from '../context/AppContext';
 import {sortChecklist} from '../utils/utilsFunc';
+import Pressable from '../components/Pressable';
 
 export default function Checklist() {
   const {user} = useContext(UserContext);
   const {selectedChecklist} = useContext(AppContext);
-  const [checklist, setChecklist] = useState([]);
+  const [checklistItems, setChecklistItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [title, setTitle] = useState('');
   const [isEditable, setIsEditable] = useState(false);
+
+  const [isAddNewChecklist, setIsAddNewChecklist] = useState(false);
 
   const [sortBy, setSortBy] = useState('createdAt');
   const [sortOrder, setSortOrder] = useState('desc');
@@ -39,13 +42,13 @@ export default function Checklist() {
         }))
       : [];
 
-    setChecklist(items);
+    setChecklistItems(items);
     setTitle(selectedChecklist.title || '');
   }, [selectedChecklist]);
 
   const sortedChecklist = useMemo(() => {
-    return sortChecklist(checklist, sortBy, sortOrder);
-  }, [checklist, sortBy, sortOrder]);
+    return sortChecklist(checklistItems, sortBy, sortOrder);
+  }, [checklistItems, sortBy, sortOrder]);
 
   const addItem = async (title, description) => {
     const itemData = {
@@ -164,7 +167,7 @@ export default function Checklist() {
       <View style={{flex: 1, overflow: 'hidden'}}>
         {loading ? (
           <Text>Loading...</Text>
-        ) : checklist.length > 0 ? (
+        ) : checklistItems.length > 0 ? (
           <FlatList
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{paddingBottom: insets.bottom, gap: 10}}
@@ -173,7 +176,27 @@ export default function Checklist() {
             keyExtractor={item => item.id}
           />
         ) : (
-          <Text style={styles.noItemsText}>No checklist items found.</Text>
+          <View>
+            <Text style={styles.noItemsText}>
+              No Checklist found. Create your first checklist Item.
+            </Text>
+            {isAddNewChecklist ? (
+              <View>
+                <TextInput
+                  style={styles.newChecklistInput}
+                  placeholder="Checklist title"
+                />
+                <FAIcon name="save" size={24} />
+              </View>
+            ) : (
+              <Pressable
+                style={styles.createChecklist}
+                onPress={() => setIsAddNewChecklist(true)}>
+                <FAIcon name="plus" color="#262626" size={24} />
+                <Text style={styles.noItemsText}>Create checklist</Text>
+              </Pressable>
+            )}
+          </View>
         )}
       </View>
     </AppLayout>

@@ -30,7 +30,6 @@ export default function AppLayout({
   onAddItem,
   isDetails,
 }) {
-  const {} = useContext(UserContext);
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
@@ -137,7 +136,6 @@ export default function AppLayout({
               )
             )}
           </View>
-
           {children}
         </View>
         {!handleBack && !noModalScreen && (

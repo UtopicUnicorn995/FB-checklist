@@ -68,4 +68,7 @@ export default StyleSheet.create({
     height: 70,
     width: 70,
   },
+  checklistItemImgContainer: {
+    gap: 10
+  }
 });

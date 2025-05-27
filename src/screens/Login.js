@@ -87,16 +87,33 @@ const Login = () => {
         console.log('User logged in:', userCredential.currentUser);
       })
       .catch(error => {
-        Alert.alert(
-          'Login Failed',
-          'The credentials you have entered is incorrect.',
-          [
+        console.log('errror code', error.code);
+        if (error.code === 'auth/network-request-failed') {
+          Alert.alert('Login Failed', 'Please connect to the internet.', [
             {
               text: 'ok',
               onPress: () => setLoading(false),
             },
-          ],
-        );
+          ]);
+        } else if (error.code === 'auth/invalid-credential') {
+          Alert.alert(
+            'Login Failed',
+            'The credentials you have entered is incorrect.',
+            [
+              {
+                text: 'ok',
+                onPress: () => setLoading(false),
+              },
+            ],
+          );
+        } else {
+          Alert.alert('Login Failed', 'An unknown error occured.', [
+            {
+              text: 'ok',
+              onPress: () => setLoading(false),
+            },
+          ]);
+        }
       });
   };
 

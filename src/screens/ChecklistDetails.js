@@ -174,27 +174,34 @@ export default function ChecklistDetails({route}) {
                 {item.description || 'No description'}
               </Text>
             )}
-            <View style={styles.galleryContainer}>
-              {item.images &&
-                Object.values(item.images).map((image, idx) => (
-                  <Pressable
-                    onPress={() => {
-                      setSelectedImageIndex(idx);
-                      setImageViewerVisible(true);
-                    }}
-                    key={image.imageId || idx}>
-                    <ImageBackground
-                      source={{uri: image.url}}
-                      resizeMode="cover"
-                      style={styles.imageBackground}
-                    />
+            <View style={styles.checklistItemImgContainer}>
+              <Text style={GlobalStyles.textPrimary}>Photos:</Text>
+              <View style={styles.galleryContainer}>
+                {item.images &&
+                  Object.values(item.images).map((image, idx) => (
+                    <Pressable
+                      style={{
+                        borderRadius: 8,
+                        overflow: 'hidden',
+                      }}
+                      onPress={() => {
+                        setSelectedImageIndex(idx);
+                        setImageViewerVisible(true);
+                      }}
+                      key={image.imageId || idx}>
+                      <ImageBackground
+                        source={{uri: image.url}}
+                        resizeMode="cover"
+                        style={styles.imageBackground}
+                      />
+                    </Pressable>
+                  ))}
+                {(!item.images || Object.values(item.images).length < 2) && (
+                  <Pressable onPress={launchedImage} style={styles.addImgBtn}>
+                    <FAIcon5 size={30} color={'#262626'} name="plus" />
                   </Pressable>
-                ))}
-              {(!item.images || Object.values(item.images).length < 2) && (
-                <Pressable onPress={launchedImage} style={styles.addImgBtn}>
-                  <FAIcon5 size={30} color={'#262626'} name="plus" />
-                </Pressable>
-              )}
+                )}
+              </View>
             </View>
 
             <Pressable

@@ -10,9 +10,6 @@ import {
   getSelectedChecklist,
 } from '../utils/asyncStorage';
 import {UserContext} from './UserContext';
-import { utils } from '@react-native-firebase/app';
-import { getStorage } from '@react-native-firebase/storage';
-import storage from '@react-native-firebase/storage';
 
 export const AppContext = createContext();
 
@@ -23,11 +20,6 @@ export const AppProvider = ({children}) => {
   const [collaboratorsChecklist, setCollaboratorsChecklist] = useState([]);
   const [userNotes, setUserNotes] = useState([]);
   const [selectedChecklist, setSelectedChecklist] = useState(null);
-  const defaultStorageBucket = storage()
-
-  console.log('storage bucket', defaultStorageBucket)
-
-  // console.log('utils path', utils.FilePath, storage().ref('icon2.png'))
 
   useEffect(() => {
     if (!user) {
@@ -50,7 +42,6 @@ export const AppProvider = ({children}) => {
     fetchChecklist();
   }, [user]);
 
-
   useEffect(() => {
     if (selectedChecklist) {
       saveSelectedChecklist(selectedChecklist);
@@ -59,16 +50,22 @@ export const AppProvider = ({children}) => {
 
   useEffect(() => {
     const loadSelectedChecklist = async () => {
+      console.log('savedddd', saveSelectedChecklist, userCheckList);
       try {
         const savedChecklistId = await getSelectedChecklist();
+        console.log('reached 1');
         if (savedChecklistId && userCheckList) {
           const savedChecklist = userCheckList.find(
             checklist =>
               checklist.id.toString() === savedChecklistId.id.toString(),
           );
           if (savedChecklist) {
+            console.log('reached 2');
             setSelectedChecklist(savedChecklist);
           }
+        } else if (userCheckList) {
+          console.log('reached 3');
+          setSelectedChecklist(userCheckList[0]);
         }
       } catch (error) {
         console.error('Error loading selected checklist:', error);
@@ -80,7 +77,7 @@ export const AppProvider = ({children}) => {
 
   const handleCreateChecklist = checklistTitle => {
     createChecklist(
-      currentUser.uid,
+      user.id,
       checklistTitle,
       setSelectedChecklist,
       saveSelectedChecklist,
@@ -91,10 +88,8 @@ export const AppProvider = ({children}) => {
     const payload = {
       checked: !check,
       updatedAt: new Date().toISOString(),
-      checkedBy: !check ? userData.username : null,
+      checkedBy: !check ? user.username : null,
     };
-
-    console.log('userrrdata', userData.username, userData, payload);
 
     try {
       await updateChecklistItem(checklistId, itemId, payload);
@@ -115,7 +110,7 @@ export const AppProvider = ({children}) => {
         userCheckList,
         handleCreateChecklist,
         setUserCheckList,
-        userNotes
+        userNotes,
       }}>
       {children}
     </AppContext.Provider>
