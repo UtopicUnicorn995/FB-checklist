@@ -7,7 +7,9 @@ import {
   TextInput,
   Keyboard,
   ActivityIndicator,
+  ImageBackground,
 } from 'react-native';
+import ImageView from 'react-native-image-viewing';
 import AppLayout from '../layout/AppLayout';
 import {convertDate} from '../utils/utilsFunc';
 import GlobalStyles from '../styles/GlobalStyles.';
@@ -16,14 +18,17 @@ import styles from '../styles/ChecklistItem.styles';
 import {UserContext} from '../context/UserContext';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import FAIcon5 from 'react-native-vector-icons/FontAwesome5';
-import {updateChecklistItem} from '../utils/firebaseServices';
+import {updateChecklistItem, uploadImage} from '../utils/firebaseServices';
 import {AppContext} from '../context/AppContext';
 import {useNavigation} from '@react-navigation/native';
+import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
 
 export default function ChecklistDetails({route}) {
-  const {userData} = useContext(UserContext);
+  const {user} = useContext(UserContext);
   const {selectedChecklist} = useContext(AppContext);
   const {selectedChecklistId, initialItem} = route.params;
+  const [imageViewerVisible, setImageViewerVisible] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const navigation = useNavigation();
 
   const checklistItemsArray = Array.isArray(selectedChecklist?.checklistItems)
@@ -36,6 +41,42 @@ export default function ChecklistDetails({route}) {
     : [];
 
   const item = checklistItemsArray.find(i => i.id === initialItem.id);
+
+  const imageViewImages = item.images
+    ? Object.values(item.images).map(img => ({uri: img.url}))
+    : [];
+
+  const launchedImage = async () => {
+    console.log('lunch');
+    const options = {
+      mediaType: 'photo',
+      includeBase64: false,
+      maxHeight: 400,
+      maxWidth: 400,
+      quality: 0.8,
+    };
+
+    launchImageLibrary(options, async response => {
+      if (response.didCancel) {
+        console.log('User cancelled image piscker');
+      } else if (response.error) {
+        console.log('Image picker error: ', response.error);
+      } else {
+        let imageUrl = response.uri || response.assets?.[0]?.uri;
+        let imageFileName = response.uri || response.assets?.[0]?.fileName;
+        console.log('selected image url1', imageUrl, imageFileName, user);
+
+        const payload = {
+          fileName: imageFileName,
+          uploadedBy: user.id,
+          uploadedAt: new Date().toISOString(),
+        };
+
+        console.log('selected image url2', imageUrl, imageFileName);
+        await uploadImage(selectedChecklist.id, item.id, payload, imageUrl);
+      }
+    });
+  };
 
   const [editedDescription, setEditedDescription] = useState(
     item?.description || '',
@@ -109,12 +150,14 @@ export default function ChecklistDetails({route}) {
                   onPress={handleEditDescription}
                   name="floppy-o"
                   size={22}
+                  color={'#262626'}
                 />
               ) : (
                 <FAIcon5
                   onPress={() => setEditDetails(true)}
                   name="edit"
                   size={22}
+                  color={'#262626'}
                 />
               )}
             </View>
@@ -131,6 +174,28 @@ export default function ChecklistDetails({route}) {
                 {item.description || 'No description'}
               </Text>
             )}
+            <View style={styles.galleryContainer}>
+              {item.images &&
+                Object.values(item.images).map((image, idx) => (
+                  <Pressable
+                    onPress={() => {
+                      setSelectedImageIndex(idx);
+                      setImageViewerVisible(true);
+                    }}
+                    key={image.imageId || idx}>
+                    <ImageBackground
+                      source={{uri: image.url}}
+                      resizeMode="cover"
+                      style={styles.imageBackground}
+                    />
+                  </Pressable>
+                ))}
+              {(!item.images || Object.values(item.images).length < 2) && (
+                <Pressable onPress={launchedImage} style={styles.addImgBtn}>
+                  <FAIcon5 size={30} color={'#262626'} name="plus" />
+                </Pressable>
+              )}
+            </View>
 
             <Pressable
               onPress={handleCheckItem}
@@ -185,6 +250,12 @@ export default function ChecklistDetails({route}) {
             )}
           </View>
         )}
+        <ImageView
+          images={imageViewImages}
+          imageIndex={selectedImageIndex}
+          visible={imageViewerVisible}
+          onRequestClose={() => setImageViewerVisible(false)}
+        />
       </ScrollView>
     </AppLayout>
   );

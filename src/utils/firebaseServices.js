@@ -10,7 +10,9 @@ import {
   orderByChild,
   equalTo,
   onValue,
+  child
 } from '@react-native-firebase/database';
+import {getStorage} from '@react-native-firebase/storage';
 
 export const getLoggedUser = async userId => {
   const db = getDatabase();
@@ -135,6 +137,40 @@ export const checkListEdit = async (checklistId, updates) => {
   await update(checklistRef, payload);
 };
 
+export const uploadImage = async (
+  checklistId,
+  checklistItemId,
+  payload,
+  imagePath,
+) => {
+  try {
+    const fileName = `${checklistItemId}-${payload.fileName}`;
+    const reference = getStorage().ref(`/checklistImg/${fileName}`);
+
+    await reference.putFile(imagePath);
+
+    const downloadURL = await reference.getDownloadURL();
+
+    // Add URL and imageId to payload
+    const imageId = push(child(ref(getDatabase()), 'tmp')).key;
+    const imageMetadata = {
+      ...payload,
+      imageId,
+      url: downloadURL,
+    };
+
+    // Save metadata in Realtime Database
+    const checklistItemRef = ref(
+      getDatabase(),
+      `/checklists/${checklistId}/checklistItems/${checklistItemId}/images/${imageId}`,
+    );
+    await set(checklistItemRef, imageMetadata);
+
+    console.log('Image uploaded and metadata saved');
+  } catch (error) {
+    console.error('Error uploading image and saving metadata:', error);
+  }
+};
 export const getNotes = async (userId, callback) => {
   const db = getDatabase();
 

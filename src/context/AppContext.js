@@ -10,6 +10,9 @@ import {
   getSelectedChecklist,
 } from '../utils/asyncStorage';
 import {UserContext} from './UserContext';
+import { utils } from '@react-native-firebase/app';
+import { getStorage } from '@react-native-firebase/storage';
+import storage from '@react-native-firebase/storage';
 
 export const AppContext = createContext();
 
@@ -20,6 +23,11 @@ export const AppProvider = ({children}) => {
   const [collaboratorsChecklist, setCollaboratorsChecklist] = useState([]);
   const [userNotes, setUserNotes] = useState([]);
   const [selectedChecklist, setSelectedChecklist] = useState(null);
+  const defaultStorageBucket = storage()
+
+  console.log('storage bucket', defaultStorageBucket)
+
+  // console.log('utils path', utils.FilePath, storage().ref('icon2.png'))
 
   useEffect(() => {
     if (!user) {

@@ -27,7 +27,7 @@ export default StyleSheet.create({
   },
   itemChecklist: {
     flex: 1,
-    maxWidth: "100%",
+    maxWidth: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     paddingRight: 40,
@@ -51,5 +51,21 @@ export default StyleSheet.create({
     color: '#888',
     textAlign: 'center',
     marginTop: 20,
+  },
+  galleryContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+  },
+  addImgBtn: {
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 70,
+    width: 70,
+  },
+  imageBackground: {
+    height: 70,
+    width: 70,
   },
 });
