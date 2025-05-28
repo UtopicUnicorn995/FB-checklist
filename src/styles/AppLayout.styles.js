@@ -30,7 +30,6 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingBottom: 10,
-    gap: 20,
     borderBottomWidth: 1.5,
     borderStyle: 'dashed',
     borderColor: 'black',
@@ -39,6 +38,11 @@ export default StyleSheet.create({
     fontSize: 32,
     fontWeight: 'bold',
     color: 'black',
-
+  },
+  floatingIcon: {
+    height: 50,
+    width: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

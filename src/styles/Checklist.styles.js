@@ -20,9 +20,22 @@ export default StyleSheet.create({
     marginTop: 24,
     borderRadius: 4,
   },
+  newChecklistInputContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 24,
+  },
   newChecklistInput: {
     backgroundColor: '#fff',
     borderRadius: 4,
-    marginTop: 24,
+    flex: 1,
+  },
+  newChecklistBtn: {
+    padding: 5,
+    height: 40,
+    width: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

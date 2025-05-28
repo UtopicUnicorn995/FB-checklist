@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, ActivityIndicator} from 'react-native';
+import {StyleSheet, Text, ActivityIndicator, View} from 'react-native';
 import PropTypes from 'prop-types';
 import Pressable from './Pressable';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
@@ -12,6 +12,7 @@ export default function Button({
   accessibilityLabel,
   isLoading,
   iconName,
+  iconColor,
 }) {
   const [isPressed, setIsPressed] = useState(false);
 
@@ -31,7 +32,16 @@ export default function Button({
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel || title}>
       {iconName ? (
-        <FAIcon name={iconName} size={btnTextStyleProp} />
+        <>
+          {title && (
+            <Text style={[styles.btnText, btnTextStyleProp]}>{title}</Text>
+          )}
+          <FAIcon
+            name={iconName}
+            size={btnTextStyleProp || 18}
+            color={iconColor || '#fff'}
+          />
+        </>
       ) : (
         <Text style={[styles.btnText, btnTextStyleProp]}>{title}</Text>
       )}
@@ -61,8 +71,8 @@ const styles = StyleSheet.create({
   btnStyle: {
     width: '100%',
     backgroundColor: '#262626',
-    padding: 10,
-    paddingTop: 5,
+    padding: 8,
+    // paddingTop: 5,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 99,
@@ -75,5 +85,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     textAlignVertical: 'center',
+    marginBottom: 2,
   },
 });

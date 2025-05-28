@@ -1,20 +1,13 @@
 import {useState, useRef, useContext, useEffect} from 'react';
 import {useSafeAreaInsets, SafeAreaView} from 'react-native-safe-area-context';
-import {
-  View,
-  TextInput,
-  Animated,
-  Easing,
-  Image,
-  StatusBar,
-  Text,
-} from 'react-native';
+import {View, TextInput, Animated, Image, StatusBar, Text} from 'react-native';
 import Pressable from '../components/Pressable';
 import {UserContext} from '../context/UserContext';
 import styles from '../styles/AppLayout.styles';
 import {useNavigation} from '@react-navigation/native';
 import ModalView from '../components/ModalView';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
+import IOIcons from 'react-native-vector-icons/Ionicons';
 import {sendNotificationToBackend} from '../utils/sendNotificationToBackend';
 import messaging from '@react-native-firebase/messaging';
 
@@ -82,9 +75,10 @@ export default function AppLayout({
                       styles.headerText,
                       isEditable && {
                         backgroundColor: '#fff',
-                        borderRadius: 5,
                         borderWidth: 1,
+                        borderRightWidth: 0,
                         borderColor: '#ccc',
+                        fontSize: 20,
                       },
                     ]}
                     editable={isEditable}
@@ -104,9 +98,30 @@ export default function AppLayout({
             )}
 
             {isEditable ? (
-              <Pressable style={styles.floatingIcon} onPress={handleTitleEdit}>
-                <FAIcon name="floppy-o" size={32} />
-              </Pressable>
+              <>
+                <Pressable
+                  style={[
+                    styles.floatingIcon,
+                    {
+                      backgroundColor: '#F44336',
+                    },
+                  ]}
+                  onPress={() => {
+                    handleTitleEdit && setIsEditable(false);
+                  }}>
+                  <IOIcons name="close" size={28} color="#fff" />
+                </Pressable>
+                <Pressable
+                  style={[
+                    styles.floatingIcon,
+                    {
+                      backgroundColor: '#262626',
+                    },
+                  ]}
+                  onPress={handleTitleEdit}>
+                  <FAIcon name="floppy-o" size={28} color="#fff" />
+                </Pressable>
+              </>
             ) : handleBack ? (
               <Pressable style={styles.floatingIcon} onPress={handleBack}>
                 <Animated.Image

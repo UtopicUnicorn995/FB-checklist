@@ -7,7 +7,8 @@ import {
   deleteChecklistItem,
   checkListEdit,
 } from '../utils/firebaseServices';
-import FAIcon from 'react-native-vector-icons/FontAwesome5';
+import FAIcon from 'react-native-vector-icons/FontAwesome';
+import IOIcon from 'react-native-vector-icons/Ionicons';
 import ChecklistItem from '../components/ChecklistItem';
 import styles from '../styles/Checklist.styles';
 import AppLayout from '../layout/AppLayout';
@@ -15,6 +16,7 @@ import {UserContext} from '../context/UserContext';
 import {AppContext} from '../context/AppContext';
 import {sortChecklist} from '../utils/utilsFunc';
 import Pressable from '../components/Pressable';
+import Button from '../components/Button';
 
 export default function Checklist() {
   const {user} = useContext(UserContext);
@@ -181,20 +183,34 @@ export default function Checklist() {
               No Checklist found. Create your first checklist Item.
             </Text>
             {isAddNewChecklist ? (
-              <View>
+              <View style={styles.newChecklistInputContainer}>
                 <TextInput
                   style={styles.newChecklistInput}
                   placeholder="Checklist title"
                 />
-                <FAIcon name="save" size={24} />
+                <Pressable
+                  onPress={() => setIsAddNewChecklist(false)}
+                  style={[
+                    styles.newChecklistBtn,
+                    {backgroundColor: '#F44336'},
+                  ]}>
+                  <IOIcon name="close" size={24} color="#fff" />
+                </Pressable>
+                <View
+                  style={[
+                    styles.newChecklistBtn,
+                    {backgroundColor: '#262626'},
+                  ]}>
+                  <FAIcon name="floppy-o" size={20} color="#fff" />
+                </View>
               </View>
             ) : (
-              <Pressable
-                style={styles.createChecklist}
-                onPress={() => setIsAddNewChecklist(true)}>
-                <FAIcon name="plus" color="#262626" size={24} />
-                <Text style={styles.noItemsText}>Create checklist</Text>
-              </Pressable>
+              <Button
+                title="Create checklist"
+                onPress={() => setIsAddNewChecklist(true)}
+                iconName="plus"
+                btnStyleProp={{marginTop: 24}}
+              />
             )}
           </View>
         )}
