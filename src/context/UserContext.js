@@ -3,6 +3,7 @@ import {Alert} from 'react-native';
 import {getAuth, signOut} from '@react-native-firebase/auth';
 import {clearSelectedChecklist} from '../utils/asyncStorage';
 import {getLoggedUser} from '../utils/firebaseServices';
+import {getDatabase, ref, onValue, off} from '@react-native-firebase/database';
 
 export const UserContext = createContext();
 
@@ -15,15 +16,35 @@ export function UserProvider({children}) {
     setAppInitializing(true);
     const unsubscribe = auth.onAuthStateChanged(async loggedUser => {
       if (loggedUser) {
-        const userData = await getLoggedUser(loggedUser.uid);
-        setUser(userData);
+        const userRef = ref(getDatabase(), `/users/${loggedUser.uid}`);
+        const listener = onValue(userRef, snapshot => {
+          const userData = snapshot.val();
+          if (userData) {
+            setUser({
+              ...userData,
+              id: loggedUser.uid,
+            });
+          } else {
+            setUser({
+              id: loggedUser.uid,
+            });
+          }
+          setAppInitializing(false);
+        });
+
+        return () => {
+          off(userRef);
+        };
       } else {
         setUser(null);
+        setAppInitializing(false);
       }
-      setAppInitializing(false);
     });
+
     return unsubscribe;
   }, []);
+
+  console.log('user a bit dynamic', user);
 
   const logoutUser = () => {
     Alert.alert('Confirm', 'Are you sure you want to log out?', [

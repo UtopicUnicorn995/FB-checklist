@@ -17,6 +17,7 @@ import {
   ref as storageRef,
   deleteObject,
 } from '@react-native-firebase/storage';
+import {getAuth} from '@react-native-firebase/auth';
 
 export const getLoggedUser = async userId => {
   const db = getDatabase();
@@ -209,6 +210,8 @@ export const uploadImage = async (
 export const getNotes = async (userId, callback) => {
   const db = getDatabase();
 
+  console.log('user eye dee', userId);
+
   try {
     const notesQuery = query(
       ref(db, `/notes`),
@@ -252,4 +255,16 @@ export const updateNotes = async (updatedNotes, notesId) => {
   const db = getDatabase();
   const notesRef = ref(db, `/notes/${notesId}`);
   await update(notesRef, updatedNotes);
+};
+
+export const updateSettings = async newSettings => {
+  if (!newSettings || typeof newSettings !== 'object') return;
+
+  const userId = getAuth().currentUser.uid;
+  const userRef = ref(getDatabase(), `/users/${userId}`);
+
+  console.log('Writing settings:', newSettings);
+
+
+  await update(userRef, {settings: newSettings});
 };

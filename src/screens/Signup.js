@@ -67,6 +67,13 @@ const Signup = () => {
           email: credentials.email,
           subscription: 'free',
           createdAt: new Date().toISOString(),
+          settings: {
+            notifications: {
+              onItemCheckedByOthers: true,
+              onInviteReceived: true,
+              onChecklistItemChanged: true,
+            },
+          },
         })
           .then(() => {
             console.log('New User created');

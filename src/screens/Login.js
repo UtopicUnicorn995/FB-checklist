@@ -33,10 +33,14 @@ const Login = () => {
   const onAuthStateChanged = async currentUser => {
     if (currentUser) {
       const userData = await getLoggedUser(currentUser.uid);
-      setUser(userData);
+      setUser({
+        ...userData,
+        id: currentUser.uid,
+      });
     } else {
       setUser(null);
     }
+
     if (initializing) setInitializing(false);
   };
 

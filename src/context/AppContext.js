@@ -31,10 +31,12 @@ export const AppProvider = ({children}) => {
     }
 
     const fetchChecklist = async () => {
+      console.log('check before1', user)
       await getChecklist(user.id, setUserCheckList);
     };
 
     const fetchNotes = async () => {
+      console.log('check before2', user.id)
       await getNotes(user.id, setUserNotes);
     };
 
