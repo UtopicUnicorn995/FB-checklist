@@ -139,6 +139,7 @@ function DrawerContent({navigation}) {
                   }}
                   iconName="plus"
                   btnTextStyleProp={18}
+                  iconColor='#aaa'
                 />
               )
             ) : (

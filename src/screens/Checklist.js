@@ -7,20 +7,17 @@ import {
   deleteChecklistItem,
   checkListEdit,
 } from '../utils/firebaseServices';
-import FAIcon from 'react-native-vector-icons/FontAwesome';
-import IOIcon from 'react-native-vector-icons/Ionicons';
 import ChecklistItem from '../components/ChecklistItem';
-import styles from '../styles/Checklist.styles';
 import AppLayout from '../layout/AppLayout';
 import {UserContext} from '../context/UserContext';
 import {AppContext} from '../context/AppContext';
 import {sortChecklist} from '../utils/utilsFunc';
-import Pressable from '../components/Pressable';
-import Button from '../components/Button';
+import NoItemFoundLayout from '../layout/NoItemFoundLayout';
 
 export default function Checklist() {
   const {user} = useContext(UserContext);
-  const {selectedChecklist} = useContext(AppContext);
+  const {selectedChecklist, userCheckList, handleCreateChecklist} =
+    useContext(AppContext);
   const [checklistItems, setChecklistItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
@@ -76,7 +73,6 @@ export default function Checklist() {
       checkedBy: !check ? user.username : null,
     };
 
-    console.log('uppddd', updatedData);
     try {
       await updateChecklistItem(checklistId, itemId, updatedData);
     } catch (error) {
@@ -109,7 +105,9 @@ export default function Checklist() {
           onPress: async () => {
             try {
               await deleteChecklistItem(checklistId, itemId);
-              setChecklist(prev => prev.filter(item => item.id !== itemId));
+              // setChecklistItems(prev =>
+              //   prev.filter(item => item.id !== itemId),
+              // );
             } catch (error) {
               console.error(`Error deleting item ${itemId}:`, error.message);
             }
@@ -119,7 +117,7 @@ export default function Checklist() {
       {cancelable: true},
     );
   };
-  const handleTitleEdit = async (newTitle) => {
+  const handleTitleEdit = async newTitle => {
     if (!selectedChecklist) {
       console.error('No checklist selected. Cannot edit title.');
       return;
@@ -141,6 +139,12 @@ export default function Checklist() {
       );
     }
   };
+  const noItemFoundText =
+    !userCheckList || userCheckList.length < 1
+      ? 'No checklist found. Create your first checklist.'
+      : !checklistItems || checklistItems.length < 1
+      ? 'No item for this checklist found. Create your first checklist item.'
+      : '';
 
   const renderItem = ({item, index}) => {
     return (
@@ -157,15 +161,23 @@ export default function Checklist() {
     );
   };
 
+  const onCreateChecklist = checklistTitle => {
+    handleCreateChecklist(checklistTitle);
+  };
+
   return (
     <AppLayout
       selectedChecklist={selectedChecklist}
-      title={title}
-      setTitle={setTitle}
-      isEditable={isEditable}
-      setIsEditable={setIsEditable}
-      handleTitleEdit={handleTitleEdit}
-      onAddItem={{func: addItem, type: 'checklist'}}>
+      {...(userCheckList && userCheckList.length > 0
+        ? {
+            title,
+            setTitle,
+            isEditable,
+            setIsEditable,
+            handleTitleEdit,
+            onAddItem: {func: addItem, type: 'checklist'},
+          }
+        : {})}>
       <View style={{flex: 1, overflow: 'hidden'}}>
         {loading ? (
           <Text>Loading...</Text>
@@ -178,41 +190,12 @@ export default function Checklist() {
             keyExtractor={item => item.id}
           />
         ) : (
-          <View>
-            <Text style={styles.noItemsText}>
-              No Checklist found. Create your first checklist Item.
-            </Text>
-            {isAddNewChecklist ? (
-              <View style={styles.newChecklistInputContainer}>
-                <TextInput
-                  style={styles.newChecklistInput}
-                  placeholder="Checklist title"
-                />
-                <Pressable
-                  onPress={() => setIsAddNewChecklist(false)}
-                  style={[
-                    styles.newChecklistBtn,
-                    {backgroundColor: '#F44336'},
-                  ]}>
-                  <IOIcon name="close" size={24} color="#fff" />
-                </Pressable>
-                <View
-                  style={[
-                    styles.newChecklistBtn,
-                    {backgroundColor: '#262626'},
-                  ]}>
-                  <FAIcon name="floppy-o" size={20} color="#fff" />
-                </View>
-              </View>
-            ) : (
-              <Button
-                title="Create checklist"
-                onPress={() => setIsAddNewChecklist(true)}
-                iconName="plus"
-                btnStyleProp={{marginTop: 24}}
-              />
-            )}
-          </View>
+          <NoItemFoundLayout
+            bodyText={noItemFoundText}
+            {...(userCheckList && userCheckList.length > 0
+              ? {}
+              : {onPress: onCreateChecklist})}
+          />
         )}
       </View>
     </AppLayout>

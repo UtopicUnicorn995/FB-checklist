@@ -44,7 +44,12 @@ export default function AppLayout({
 
   const saveNewTitle = () => {
     handleTitleEdit(layoutTitle);
-    console.log('handle save title');
+    console.log('handle save titles');
+  };
+
+  const cancelEditTitle = () => {
+    setLayoutTitle(title);
+    setIsEditable(false);
   };
 
   return (
@@ -112,7 +117,7 @@ export default function AppLayout({
                     },
                   ]}
                   onPress={() => {
-                    handleTitleEdit && setIsEditable(false);
+                    handleTitleEdit && cancelEditTitle();
                   }}>
                   <IOIcons name="close" size={28} color="#fff" />
                 </Pressable>
@@ -143,7 +148,8 @@ export default function AppLayout({
                 />
               </Pressable>
             ) : (
-              !noModalScreen && (
+              !noModalScreen &&
+              onAddItem && (
                 <Pressable
                   style={styles.floatingIcon}
                   onPress={toggleAddItemModal}>
@@ -158,7 +164,7 @@ export default function AppLayout({
           </View>
           {children}
         </View>
-        {!handleBack && !noModalScreen && (
+        {!handleBack && !noModalScreen && onAddItem && (
           <ModalView
             openMenu={isAddItemModalOpen}
             setModalMenu={toggleAddItemModal}

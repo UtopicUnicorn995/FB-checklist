@@ -3,6 +3,7 @@ import {StyleSheet, Text, ActivityIndicator, View} from 'react-native';
 import PropTypes from 'prop-types';
 import Pressable from './Pressable';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
+import {colorToRgba} from '../utils/utilsFunc';
 
 export default function Button({
   onPress,
@@ -22,7 +23,9 @@ export default function Button({
         styles.btnStyle,
         btnStyleProp,
         isPressed && {
-          backgroundColor: iconName ? '#eee' : '#444',
+          backgroundColor: btnStyleProp?.backgroundColor
+            ? colorToRgba(btnStyleProp.backgroundColor, 0.6)
+            : '#444',
           borderColor: iconName ? '#eee' : '#444',
         },
       ]}

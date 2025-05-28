@@ -6,6 +6,7 @@ import NoteItem from '../components/NoteItem';
 import {createNote} from '../utils/firebaseServices';
 import {UserContext} from '../context/UserContext';
 import {AppContext} from '../context/AppContext';
+import NoItemFoundLayout from '../layout/NoItemFoundLayout';
 
 const Notes = () => {
   const {userNotes} = useContext(AppContext);
@@ -41,7 +42,7 @@ const Notes = () => {
           <View style={{flex: 1, paddingTop: 40, alignContent: 'center'}}>
             <ActivityIndicator size="large" />
           </View>
-        ) : (
+        ) : userNotes.length > 0 ? (
           <FlatList
             data={userNotes}
             renderItem={renderItem}
@@ -49,6 +50,10 @@ const Notes = () => {
             contentContainerStyle={[styles.listContainer]}
             showsVerticalScrollIndicator={false}
           />
+        ) : (
+          <NoItemFoundLayout bodyText={
+            'No notes found. Create your first note.'
+          }/>
         )}
       </View>
     </AppLayout>

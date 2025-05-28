@@ -68,3 +68,31 @@ export const capitalize = text => {
   }
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 };
+
+export function colorToRgba(color, alpha = 1) {
+  // Handle hex
+  if (color?.[0] === '#') {
+    let c = color.replace('#', '');
+    if (c.length === 3)
+      c = c
+        .split('')
+        .map(x => x + x)
+        .join('');
+    const num = parseInt(c, 16);
+    return `rgba(${(num >> 16) & 255},${(num >> 8) & 255},${
+      num & 255
+    },${alpha})`;
+  }
+  // Handle some named colors (expand as needed)
+  const named = {
+    red: 'rgba(255,0,0,' + alpha + ')',
+    blue: 'rgba(0,0,255,' + alpha + ')',
+    green: 'rgba(0,128,0,' + alpha + ')',
+    black: 'rgba(0,0,0,' + alpha + ')',
+    white: 'rgba(255,255,255,' + alpha + ')',
+    // add more if needed
+  };
+  if (named[color]) return named[color];
+  // Fallback: just return the color (no opacity)
+  return color;
+}

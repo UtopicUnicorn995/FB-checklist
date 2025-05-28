@@ -10,13 +10,13 @@ import {
   orderByChild,
   equalTo,
   onValue,
-  child
+  child,
 } from '@react-native-firebase/database';
-import {getStorage} from '@react-native-firebase/storage';
-
-
-
-
+import {
+  getStorage,
+  ref as storageRef,
+  deleteObject,
+} from '@react-native-firebase/storage';
 
 export const getLoggedUser = async userId => {
   const db = getDatabase();
@@ -121,12 +121,41 @@ export const updateChecklistItem = async (checklistId, itemId, updatedData) => {
 
 export const deleteChecklistItem = async (checklistId, itemId) => {
   const db = getDatabase();
+  const storage = getStorage();
 
   const itemRef = ref(
     db,
     `/checklists/${checklistId}/checklistItems/${itemId}`,
   );
-  await remove(itemRef);
+
+  console.log('itemId', itemId);
+
+  try {
+    const snapshot = await get(itemRef);
+    const itemData = snapshot.val();
+
+    console.log('iteeemm data', itemData?.images);
+    if (itemData?.images) {
+      const images = itemData.images;
+      const deletePromises = Object.values(images).map(async image => {
+        try {
+          const filePath = `/checklistImg/${checklistId}/${image.fileName}`;
+          console.log('fileee path', filePath);
+          const imageRef = storageRef(storage, filePath);
+          await deleteObject(imageRef);
+        } catch (error) {
+          console.warn('Error deleting image from storage:', error);
+        }
+      });
+
+      await Promise.all(deletePromises);
+    }
+    await remove(itemRef);
+
+    console.log('Checklist item and associated images deleted.');
+  } catch (error) {
+    console.error('Error deleting checklist item:', error);
+  }
 };
 
 export const checkListEdit = async (checklistId, updates) => {
@@ -148,22 +177,23 @@ export const uploadImage = async (
   imagePath,
 ) => {
   try {
-    const fileName = `${checklistItemId}-${payload.fileName}`;
-    const reference = getStorage().ref(`/checklistImg/${fileName}`);
+    const imageId = push(child(ref(getDatabase()), 'tmp')).key;
+    const fileName = `${imageId}-${payload.fileName}`;
+    const reference = getStorage().ref(
+      `/checklistImg/${checklistId}/${fileName}`,
+    );
 
     await reference.putFile(imagePath);
 
     const downloadURL = await reference.getDownloadURL();
 
-    // Add URL and imageId to payload
-    const imageId = push(child(ref(getDatabase()), 'tmp')).key;
     const imageMetadata = {
       ...payload,
       imageId,
       url: downloadURL,
+      fileName,
     };
 
-    // Save metadata in Realtime Database
     const checklistItemRef = ref(
       getDatabase(),
       `/checklists/${checklistId}/checklistItems/${checklistItemId}/images/${imageId}`,
@@ -175,6 +205,7 @@ export const uploadImage = async (
     console.error('Error uploading image and saving metadata:', error);
   }
 };
+
 export const getNotes = async (userId, callback) => {
   const db = getDatabase();
 

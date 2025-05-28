@@ -23,6 +23,7 @@ import {AppContext} from '../context/AppContext';
 import {useNavigation} from '@react-navigation/native';
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
 import Button from '../components/Button';
+import {deleteChecklistItem} from '../utils/firebaseServices';
 
 export default function ChecklistDetails({route}) {
   const {user} = useContext(UserContext);
@@ -43,10 +44,6 @@ export default function ChecklistDetails({route}) {
 
   const item = checklistItemsArray.find(i => i.id === initialItem.id);
 
-  const imageViewImages = item.images
-    ? Object.values(item.images).map(img => ({uri: img.url}))
-    : [];
-
   const [editedDescription, setEditedDescription] = useState(
     item?.description || '',
   );
@@ -61,8 +58,8 @@ export default function ChecklistDetails({route}) {
     const options = {
       mediaType: 'photo',
       includeBase64: false,
-      maxHeight: 400,
-      maxWidth: 400,
+      maxHeight: 800,
+      maxWidth: 800,
       quality: 0.8,
     };
 
@@ -86,6 +83,11 @@ export default function ChecklistDetails({route}) {
         await uploadImage(selectedChecklist.id, item.id, payload, imageUrl);
       }
     });
+  };
+
+  const deleteItem = async () => {
+    navigation.goBack();
+    await deleteChecklistItem(selectedChecklist.id, item.id);
   };
 
   if (!item) {
@@ -132,9 +134,15 @@ export default function ChecklistDetails({route}) {
   };
 
   const handleBack = () => {
+    console.log('bacckk1');
     setEditDetails(false);
     navigation.goBack();
+    console.log('bacckk2');
   };
+
+  const imageViewImages = item.images
+    ? Object.values(item.images).map(img => ({uri: img.url}))
+    : [];
 
   return (
     <AppLayout handleBack={handleBack} title={item?.title || 'Checklist Item'}>
@@ -177,7 +185,7 @@ export default function ChecklistDetails({route}) {
             <View style={styles.checklistItemImgContainer}>
               <Text style={GlobalStyles.textPrimary}>Photos:</Text>
               <View style={styles.galleryContainer}>
-                {item.images &&
+                {item?.images &&
                   Object.values(item.images).map((image, idx) => (
                     <Pressable
                       style={{
@@ -258,6 +266,7 @@ export default function ChecklistDetails({route}) {
             <Button
               title="Delete Item"
               iconName="trash"
+              onPress={deleteItem}
               btnStyleProp={{backgroundColor: '#f44336'}}
             />
           </View>
