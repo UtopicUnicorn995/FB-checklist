@@ -22,6 +22,7 @@ import {updateChecklistItem, uploadImage} from '../utils/firebaseServices';
 import {AppContext} from '../context/AppContext';
 import {useNavigation} from '@react-navigation/native';
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
+import Button from '../components/Button';
 
 export default function ChecklistDetails({route}) {
   const {user} = useContext(UserContext);
@@ -46,8 +47,17 @@ export default function ChecklistDetails({route}) {
     ? Object.values(item.images).map(img => ({uri: img.url}))
     : [];
 
+  const [editedDescription, setEditedDescription] = useState(
+    item?.description || '',
+  );
+  const [editDetails, setEditDetails] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setEditedDescription(item?.description || '');
+  }, [item?.description]);
+
   const launchedImage = async () => {
-    console.log('lunch');
     const options = {
       mediaType: 'photo',
       includeBase64: false,
@@ -78,16 +88,6 @@ export default function ChecklistDetails({route}) {
     });
   };
 
-  const [editedDescription, setEditedDescription] = useState(
-    item?.description || '',
-  );
-  const [editDetails, setEditDetails] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    setEditedDescription(item?.description || '');
-  }, [item?.description]);
-
   if (!item) {
     return (
       <AppLayout handleBack={navigation.goBack} title="Checklist Item">
@@ -103,7 +103,7 @@ export default function ChecklistDetails({route}) {
       setIsLoading(true);
       await updateChecklistItem(selectedChecklistId, item.id, {
         checked: !item.checked,
-        checkedBy: item.checked ? null : userData?.username,
+        checkedBy: item.checked ? null : user?.username,
         updatedAt: new Date().toISOString(),
       });
       setIsLoading(false);
@@ -255,6 +255,11 @@ export default function ChecklistDetails({route}) {
                 </View>
               </>
             )}
+            <Button
+              title="Delete Item"
+              iconName="trash"
+              btnStyleProp={{backgroundColor: '#f44336'}}
+            />
           </View>
         )}
         <ImageView

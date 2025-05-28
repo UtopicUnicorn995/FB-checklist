@@ -119,7 +119,7 @@ export default function Checklist() {
       {cancelable: true},
     );
   };
-  const handleTitleEdit = async () => {
+  const handleTitleEdit = async (newTitle) => {
     if (!selectedChecklist) {
       console.error('No checklist selected. Cannot edit title.');
       return;
@@ -132,11 +132,11 @@ export default function Checklist() {
 
     try {
       setIsEditable(false);
-      await checkListEdit(selectedChecklist.id, {title: title});
+      await checkListEdit(selectedChecklist.id, {title: newTitle});
     } catch (error) {
       setIsEditable(true);
       console.error(
-        `Error changing title ${title}, ${selectedChecklist.id}`,
+        `Error changing title ${newTitle}, ${selectedChecklist.id}`,
         error,
       );
     }

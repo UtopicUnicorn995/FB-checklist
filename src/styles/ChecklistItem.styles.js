@@ -63,12 +63,13 @@ export default StyleSheet.create({
     alignItems: 'center',
     height: 70,
     width: 70,
+    borderRadius: 8,
   },
   imageBackground: {
     height: 70,
     width: 70,
   },
   checklistItemImgContainer: {
-    gap: 10
-  }
+    gap: 10,
+  },
 });

@@ -14,7 +14,6 @@ import messaging from '@react-native-firebase/messaging';
 export default function AppLayout({
   children,
   title,
-  setTitle,
   isEditable,
   setIsEditable,
   handleTitleEdit,
@@ -26,6 +25,7 @@ export default function AppLayout({
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
+  const [layoutTitle, setLayoutTitle] = useState(title);
   const [deviceToken, setDeviceToken] = useState(
     'e8AjNxiKQbGYSxuQ00yMTZ:APA91bHfRuRg19QrZn3haoxdzZqEAR0vW9Y9h_irKcOIDu9h7ap_jY710bU0WpkpQ886oZQC0o2xQUx1q9lBQe19EO5CHgc75BEhvGLLI1ePzlmKhREpeZs',
   );
@@ -40,6 +40,11 @@ export default function AppLayout({
     const data = 'sample data';
 
     await sendNotificationToBackend(deviceToken, title, body, data);
+  };
+
+  const saveNewTitle = () => {
+    handleTitleEdit(layoutTitle);
+    console.log('handle save title');
   };
 
   return (
@@ -82,8 +87,8 @@ export default function AppLayout({
                       },
                     ]}
                     editable={isEditable}
-                    value={title}
-                    onChangeText={setTitle}
+                    value={layoutTitle}
+                    onChangeText={text => setLayoutTitle(text)}
                   />
                 ) : (
                   <Text style={[styles.headerText, {paddingVertical: 10}]}>
@@ -118,7 +123,7 @@ export default function AppLayout({
                       backgroundColor: '#262626',
                     },
                   ]}
-                  onPress={handleTitleEdit}>
+                  onPress={saveNewTitle}>
                   <FAIcon name="floppy-o" size={28} color="#fff" />
                 </Pressable>
               </>
