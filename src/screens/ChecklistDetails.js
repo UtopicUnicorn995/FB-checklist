@@ -105,7 +105,7 @@ export default function ChecklistDetails({route}) {
       setIsLoading(true);
       await updateChecklistItem(selectedChecklistId, item.id, {
         checked: !item.checked,
-        checkedBy: item.checked ? null : user?.username,
+        checkedBy: user.username || "Unknown user",
         updatedAt: new Date().toISOString(),
       });
       setIsLoading(false);
@@ -233,7 +233,7 @@ export default function ChecklistDetails({route}) {
               </View>
             </Pressable>
 
-            {item.checkedBy && (
+            {item.checked && (
               <>
                 <View
                   style={[

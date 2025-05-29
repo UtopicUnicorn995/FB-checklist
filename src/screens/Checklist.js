@@ -70,7 +70,7 @@ export default function Checklist() {
     const updatedData = {
       checked: !check,
       updatedAt: new Date().toISOString(),
-      checkedBy: !check ? user.username : null,
+      checkedBy: user.username || 'Unknown user',
     };
 
     try {

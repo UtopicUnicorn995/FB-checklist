@@ -1,202 +1,62 @@
 {
-  "checklists": {
-    "checklistId1": {
-      "checklistItems": {
-        "-ONTO0twDFOb9Y5qtZeI": {
-          "checked": false,
-          "createdAt": "2025-04-10T06:29:58.942Z",
-          "description": "Aquarium",
-          "title": "Aquarium",
-          "updatedAt": "2025-04-11T01:22:25.079Z"
-        },
-        "-ONXWqSU0DeICTozxNvG": {
-          "checked": true,
-          "createdAt": "2025-04-11T01:47:00.228Z",
-          "description": "Food",
-          "title": "Samgyup",
-          "updatedAt": "2025-04-11T02:10:34.761Z"
-        },
-        "-ONXXMf0w99F7an9uthD": {
-          "checked": false,
-          "createdAt": "2025-04-11T01:49:16.263Z",
-          "description": "Food",
-          "title": "Samgyup",
-          "updatedAt": "2025-04-11T01:49:16.263Z"
-        },
-        "-ONXZOAj3a0tgOm9mDp8": {
-          "checked": false,
-          "createdAt": "2025-04-11T01:58:06.737Z",
-          "description": "",
-          "title": "Add user authentication ",
-          "updatedAt": "2025-04-11T01:58:06.737Z"
-        },
-        "-ONXZRmNPJsyx2oSRfcN": {
-          "checked": false,
-          "createdAt": "2025-04-11T01:58:21.498Z",
-          "description": "",
-          "title": "Add delete to edit btn",
-          "updatedAt": "2025-04-11T05:30:32.753Z"
-        },
-        "-ONXZUbmNCYvVr_Tvq2e": {
-          "checked": false,
-          "createdAt": "2025-04-11T01:58:33.109Z",
-          "description": "",
-          "title": "Add more items to the menu",
-          "updatedAt": "2025-04-11T01:58:33.109Z"
-        },
-        "-ONXZZgVkhNMzUrNmq4M": {
-          "checked": false,
-          "createdAt": "2025-04-11T01:58:53.890Z",
-          "description": "",
-          "title": "Add date to schema",
-          "updatedAt": "2025-04-15T03:08:47.555Z"
-        },
-        "-ONXZbgWn7hTq4iuPZi_": {
-          "checked": false,
-          "createdAt": "2025-04-11T01:59:06.180Z",
-          "description": "",
-          "title": "Make app more responsive ",
-          "updatedAt": "2025-04-11T02:10:00.121Z"
-        },
-        "-ONXZe7nJDONd4NzVcOE": {
-          "checked": false,
-          "createdAt": "2025-04-11T01:59:16.181Z",
-          "description": "",
-          "title": "Improve text description ",
-          "updatedAt": "2025-04-11T01:59:16.181Z"
-        },
-        "-ONXZflWjlh3aAxyUpp5": {
-          "checked": false,
-          "createdAt": "2025-04-11T01:59:22.883Z",
-          "description": "",
-          "title": "Refractor codes",
-          "updatedAt": "2025-04-11T01:59:22.883Z"
-        },
-        "-ONXZnmQPUgO9hBsUULQ": {
-          "checked": false,
-          "createdAt": "2025-04-11T01:59:55.709Z",
-          "description": "",
-          "title": "Add color theme",
-          "updatedAt": "2025-04-12T02:01:45.720Z"
-        },
-        "-ONXZp9-KsIKKYWJYh5q": {
-          "checked": true,
-          "createdAt": "2025-04-11T02:00:01.314Z",
-          "description": "",
-          "title": "Create basic UI",
-          "updatedAt": "2025-04-11T02:00:06.409Z"
-        },
-        "-ONX_87Mz6M52XJjcY9k": {
-          "checked": false,
-          "createdAt": "2025-04-11T02:01:22.968Z",
-          "description": "",
-          "title": "Sort app buy created date",
-          "updatedAt": "2025-04-11T02:01:22.968Z"
-        },
-        "-ONX_XJnVM3jfQ_UmyFL": {
-          "checked": true,
-          "createdAt": "2025-04-11T02:03:06.338Z",
-          "description": "",
-          "title": "Add checklist number",
-          "updatedAt": "2025-04-11T05:29:42.801Z"
-        },
-        "-ONX_qx97zeWzxlFd4SS": {
-          "checked": true,
-          "createdAt": "2025-04-11T02:04:30.842Z",
-          "description": "",
-          "title": "It's not done yet Kristine",
-          "updatedAt": "2025-04-13T07:56:29.912Z"
-        },
-        "-ONXaBO1h_YNa7u2B_9F": {
-          "checked": true,
-          "createdAt": "2025-04-11T02:05:58.642Z",
-          "description": "",
-          "title": "I loves Kristines more ",
-          "updatedAt": "2025-04-14T07:23:10.290Z"
-        },
-        "-ONXaZfdt9YJVZm1Y0Cy": {
-          "checked": true,
-          "createdAt": "2025-04-11T02:07:39.166Z",
-          "description": "",
-          "title": "Siomai",
-          "updatedAt": "2025-04-11T02:10:26.170Z"
-        },
-        "-ONXcXeKq_jw4d1_gB04": {
-          "checked": true,
-          "createdAt": "2025-04-11T02:16:14.141Z",
-          "description": "",
-          "title": "Text fixxxx especially for lng texts that overflows or adding some character limitations ",
-          "updatedAt": "2025-04-11T04:01:07.827Z"
-        },
-        "-ONXdzobXkViSFjutc8t": {
-          "checked": false,
-          "createdAt": "2025-04-11T02:22:36.715Z",
-          "description": "",
-          "title": "Hungarian Sausage",
-          "updatedAt": "2025-04-12T01:52:58.544Z"
-        },
-        "-ONXpmgET3aPWn0SIWFx": {
-          "checked": true,
-          "createdAt": "2025-04-11T03:14:08.656Z",
-          "description": "",
-          "title": "1st Month Anniversary Gift of Kristine to Ian",
-          "updatedAt": "2025-04-15T03:10:17.568Z"
-        },
-        "-ONrQJDoQ_k8_Ndli5LD": {
-          "checked": false,
-          "createdAt": "2025-04-15T03:10:29.812Z",
-          "description": "",
-          "title": "Monthsary Gift to Iyan",
-          "updatedAt": "2025-04-15T03:10:29.812Z"
-        },
-        "item1": {
-          "checked": false,
-          "createdAt": "2025-04-08T12:05:00Z",
-          "description": "Clean the house",
-          "title": "Saj hut",
-          "updatedAt": "2025-04-14T06:12:42.704Z"
-        },
-        "item2": {
-          "checked": false,
-          "createdAt": "2025-04-08T12:05:00Z",
-          "description": "Clean the car",
-          "title": "Agatona food place",
-          "updatedAt": "2025-04-10T08:42:26.671Z"
-        }
+  "insertId": "6838014c000097a090681455",
+  "jsonPayload": {
+    "traceparent": "00-1bb71f0087de07d8f183e866259f3a71-11b1768a860b6636-01",
+    "message": "data for logger",
+    "params": {
+      "itemId": "-ORPbAE7p8GwjtWbhGlm",
+      "checklistId": "-ORKxjMRaCE2nDkrt4i4"
+    },
+    "id": "xsLy7Eb9ldwKPEDWZUrIndvCT7s=",
+    "ref": "checklists/-ORKxjMRaCE2nDkrt4i4/checklistItems/-ORPbAE7p8GwjtWbhGlm",
+    "source": "//firebasedatabase.googleapis.com/projects/_/locations/asia-southeast1/instances/checklist-58756-default-rtdb",
+    "type": "google.firebase.database.ref.v1.updated",
+    "instance": "checklist-58756-default-rtdb",
+    "firebaseDatabaseHost": "asia-southeast1.firebasedatabase.app",
+    "data": {
+      "before": {
+        "checked": false,
+        "createdAt": "2025-05-29T05:56:07.652Z",
+        "updatedAt": "2025-05-29T06:29:40.275Z",
+        "title": "Penicillin ggg",
+        "description": "Ihubibi"
       },
-      "collaborators": [
-        "userId2",
-        "userId3"
-      ],
-      "createdBy": "userId1",
-      "description": "This is the first checklist",
-      "title": "Sample2"
+      "after": {
+        "description": "Ihubibi",
+        "checkedBy": "Ian",
+        "title": "Penicillin ggg",
+        "checked": true,
+        "updatedAt": "2025-05-29T06:40:11.459Z",
+        "createdAt": "2025-05-29T05:56:07.652Z"
+      }
+    },
+    "location": "asia-southeast1",
+    "specversion": "1.0",
+    "subject": "refs/checklists/-ORKxjMRaCE2nDkrt4i4/checklistItems/-ORPbAE7p8GwjtWbhGlm"
+  },
+  "resource": {
+    "type": "cloud_run_revision",
+    "labels": {
+      "configuration_name": "notifyonchecklistitemupdate",
+      "location": "asia-southeast1",
+      "project_id": "checklist-58756",
+      "service_name": "notifyonchecklistitemupdate",
+      "revision_name": "notifyonchecklistitemupdate-00002-hov"
     }
   },
-  "test": {
-    "test": "connection"
+  "timestamp": "2025-05-29T06:40:10.637Z",
+  "severity": "WARNING",
+  "labels": {
+    "goog-managed-by": "cloudfunctions",
+    "firebase-functions-hash": "de0b005921254a1c0da28c7a8d2609d4186c8320",
+    "goog-drz-cloudfunctions-location": "asia-southeast1",
+    "goog-drz-cloudfunctions-id": "notifyonchecklistitemupdate",
+    "run.googleapis.com/base_image_versions": "us-docker.pkg.dev/serverless-runtimes/google-22-full/runtimes/nodejs22:nodejs22_20250519_22_15_1_RC00",
+    "instanceId": "007f65c6d2e095080cb6d5fbfee0b6f79a8743eb788f91a9891f41947af1563a36ecaec28f54b4aec551743c2d3c7e5a641e7e9338479b62cd9f6e0bee05c455bdefa45030b0f309806e1644e0f23dc8",
+    "execution_id": "908l4vy1xebc"
   },
-  "users": {
-    "userId1": {
-      "allowedPages": 3,
-      "createdAt": "2025-04-08T12:00:00Z",
-      "password": "123",
-      "subscription": "free",
-      "username": "123456"
-    },
-    "userId2": {
-      "allowedPages": 5,
-      "createdAt": "2025-04-08T12:05:00Z",
-      "password": "123",
-      "subscription": "pro",
-      "username": "123"
-    },
-    "userId3": {
-      "allowedPages": 4,
-      "createdAt": "2025-04-08T12:05:00Z",
-      "password": "123",
-      "subscription": "free",
-      "username": "987"
-    }
-  }
+  "logName": "projects/checklist-58756/logs/run.googleapis.com%2Fstderr",
+  "trace": "projects/checklist-58756/traces/1bb71f0087de07d8f183e866259f3a71",
+  "receiveTimestamp": "2025-05-29T06:40:12.043461794Z",
+  "spanId": "1274930506849019446"
 }

@@ -18,6 +18,7 @@ import {
   deleteObject,
 } from '@react-native-firebase/storage';
 import {getAuth} from '@react-native-firebase/auth';
+// import { db } from '../config/firebaseConfig';
 
 export const getLoggedUser = async userId => {
   const db = getDatabase();
