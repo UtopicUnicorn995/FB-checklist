@@ -4,8 +4,9 @@ import AppLayout from '../layout/AppLayout';
 import GlobalStyles from '../styles/GlobalStyles.';
 import Pressable from '../components/Pressable';
 import {getDatabase, ref, get} from '@react-native-firebase/database';
-import { UserContext } from '../context/UserContext';
-import { updateSettings } from '../utils/firebaseServices';
+import {UserContext} from '../context/UserContext';
+import {updateSettings} from '../utils/firebaseServices';
+import {getUserSettings, setUserSettings} from '../utils/asyncStorage';
 
 export default function Settings() {
   const {user} = useContext(UserContext);
@@ -13,20 +14,26 @@ export default function Settings() {
 
   const defaultNotificationSettings = [
     {
-      description: 'Notify when someone else checked an item.',
+      key: 'checklistItemCreated',
+      description: 'Notify when someone created an item.',
       state: true,
     },
-    {description: 'Notify when someone sent an invite.', state: true},
     {
+      key: 'invites',
+      description: 'Notify when someone sent an invite.',
+      state: true,
+    },
+    {
+      key: 'checklistUpdates',
       description:
-        'Notify when a checklist has been added, modified or deleted.',
+        'Notify when a checklist has been modified or checked.',
       state: true,
     },
   ];
 
   const defaultDisplaySettings = [
-    {description: 'Dark Theme.', state: true},
-    {description: 'Color blind mode', state: true},
+    {key: 'theme', description: 'Dark Theme.', state: true},
+    {key: 'colorBlind', description: 'Color blind mode', state: true},
   ];
 
   const [notificationSettings, setNotificationSettings] = useState(
@@ -40,40 +47,101 @@ export default function Settings() {
     if (!user?.id) return;
 
     const fetchSettings = async () => {
-      const settingsRef = ref(db, `users/${user.id}/settings`);
-      const snapshot = await get(settingsRef);
-      const settings = snapshot.val();
+      const normalizeSettings = (storedSettings, defaultSettings) => {
+        return defaultSettings.map(defaultItem => {
+          const found = storedSettings?.find(
+            item => item.description === defaultItem.description,
+          );
+          return found
+            ? {
+                ...defaultItem, // ensures key is included
+                state: found.state,
+              }
+            : defaultItem;
+        });
+      };
 
-      if (settings?.notifications) {
-        setNotificationSettings(settings.notifications);
-      }
-      if (settings?.display) {
-        setDisplaySettings(settings.display);
+      try {
+        const cachedSettings = await getUserSettings();
+
+        if (cachedSettings?.notifications) {
+          const normalized = normalizeSettings(
+            cachedSettings.notifications,
+            defaultNotificationSettings,
+          );
+          setNotificationSettings(normalized);
+        }
+
+        if (cachedSettings?.display) {
+          const normalized = normalizeSettings(
+            cachedSettings.display,
+            defaultDisplaySettings,
+          );
+          setDisplaySettings(normalized);
+        }
+
+        const settingsRef = ref(db, `users/${user.id}/settings`);
+        const snapshot = await get(settingsRef);
+        const settings = snapshot.val();
+
+        if (settings) {
+          const normalizedNotifications = normalizeSettings(
+            settings.notifications,
+            defaultNotificationSettings,
+          );
+          const normalizedDisplay = normalizeSettings(
+            settings.display,
+            defaultDisplaySettings,
+          );
+
+          setNotificationSettings(normalizedNotifications);
+          setDisplaySettings(normalizedDisplay);
+
+          await setUserSettings(
+            {
+              notifications: normalizedNotifications,
+              display: normalizedDisplay,
+            },
+            user.id,
+          );
+        }
+      } catch (error) {
+        console.error(
+          'Error fetching settings:',
+          error instanceof Error ? error.message : error,
+        );
       }
     };
 
     fetchSettings();
   }, [user?.id]);
 
-  const handleSettings = (index, type) => {
+  const handleSettings = async (index, type) => {
+    let updatedNotificationSettings = notificationSettings;
+    let updatedDisplaySettings = displaySettings;
+
     if (type === 'display') {
-      const updated = displaySettings.map((setting, i) =>
+      updatedDisplaySettings = displaySettings.map((setting, i) =>
         i === index ? {...setting, state: !setting.state} : setting,
       );
-      setDisplaySettings(updated);
-      updateSettings({
-        notifications: notificationSettings,
-        display: updated,
-      });
+      setDisplaySettings(updatedDisplaySettings);
     } else {
-      const updated = notificationSettings.map((setting, i) =>
+      updatedNotificationSettings = notificationSettings.map((setting, i) =>
         i === index ? {...setting, state: !setting.state} : setting,
       );
-      setNotificationSettings(updated);
-      updateSettings({
-        notifications: updated,
-        display: displaySettings, 
-      });
+      setNotificationSettings(updatedNotificationSettings);
+    }
+
+    const updatedSettings = {
+      notifications: updatedNotificationSettings,
+      display: updatedDisplaySettings,
+    };
+
+    try {
+      await updateSettings(updatedSettings);
+      await setUserSettings(updatedSettings, user.id);
+    } catch (err) {
+      console.error('Failed to update settings:', err);
     }
   };
 

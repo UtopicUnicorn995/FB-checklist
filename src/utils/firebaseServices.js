@@ -211,8 +211,6 @@ export const uploadImage = async (
 export const getNotes = async (userId, callback) => {
   const db = getDatabase();
 
-  console.log('user eye dee', userId);
-
   try {
     const notesQuery = query(
       ref(db, `/notes`),

@@ -31,12 +31,10 @@ export const AppProvider = ({children}) => {
     }
 
     const fetchChecklist = async () => {
-      console.log('check before1', user)
       await getChecklist(user.id, setUserCheckList);
     };
 
     const fetchNotes = async () => {
-      console.log('check before2', user.id)
       await getNotes(user.id, setUserNotes);
     };
 
@@ -52,21 +50,18 @@ export const AppProvider = ({children}) => {
 
   useEffect(() => {
     const loadSelectedChecklist = async () => {
-      console.log('savedddd', saveSelectedChecklist, userCheckList);
       try {
         const savedChecklistId = await getSelectedChecklist();
-        console.log('reached 1');
+
         if (savedChecklistId && userCheckList) {
           const savedChecklist = userCheckList.find(
             checklist =>
               checklist.id.toString() === savedChecklistId.id.toString(),
           );
           if (savedChecklist) {
-            console.log('reached 2');
             setSelectedChecklist(savedChecklist);
           }
         } else if (userCheckList) {
-          console.log('reached 3');
           setSelectedChecklist(userCheckList[0]);
         }
       } catch (error) {

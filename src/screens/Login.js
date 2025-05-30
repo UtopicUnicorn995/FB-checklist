@@ -17,6 +17,30 @@ import {UserContext} from '../context/UserContext';
 import {useContext} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {getLoggedUser} from '../utils/firebaseServices';
+import {setUserSettings} from '../utils/asyncStorage';
+
+const defaultNotificationSettings = [
+  {
+    key: 'checklistItemCreated',
+    description: 'Notify when someone else checked an item.',
+    state: true,
+  },
+  {
+    key: 'invites',
+    description: 'Notify when someone sent an invite.',
+    state: true,
+  },
+  {
+    key: 'checklistUpdates',
+    description: 'Notify when a checklist has been added, modified or deleted.',
+    state: true,
+  },
+];
+
+const defaultDisplaySettings = [
+  {key: 'theme', description: 'Dark Theme.', state: true},
+  {key: 'colorBlind', description: 'Color blind mode', state: true},
+];
 
 const Login = () => {
   const {navigate} = useNavigation();
@@ -33,10 +57,22 @@ const Login = () => {
   const onAuthStateChanged = async currentUser => {
     if (currentUser) {
       const userData = await getLoggedUser(currentUser.uid);
+
       setUser({
         ...userData,
         id: currentUser.uid,
       });
+
+      if (!userData.settings) {
+        const defaultSettings = {
+          notifications: defaultNotificationSettings,
+          display: defaultDisplaySettings,
+        };
+
+        await setUserSettings(defaultSettings, currentUser.uid);
+      } else {
+        await setUserSettings(defaultSettings, currentUser.uid);
+      }
     } else {
       setUser(null);
     }

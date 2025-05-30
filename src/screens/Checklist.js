@@ -56,6 +56,7 @@ export default function Checklist() {
       checked: false,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      updatedBy: user.id,
     };
 
     try {
@@ -71,6 +72,7 @@ export default function Checklist() {
       checked: !check,
       updatedAt: new Date().toISOString(),
       checkedBy: user.username || 'Unknown user',
+      updatedBy: user.id,
     };
 
     try {
@@ -85,11 +87,13 @@ export default function Checklist() {
       await updateChecklistItem(checklistId, itemId, {
         ...updatedData,
         updatedAt: new Date().toISOString(),
+        updatedBy: user.id,
       });
     } catch (error) {
       console.error(`Error updating item ${itemId}:`, error.message);
     }
   };
+
   const deleteItem = async (checklistId, itemId) => {
     Alert.alert(
       'Delete Item',
@@ -105,9 +109,6 @@ export default function Checklist() {
           onPress: async () => {
             try {
               await deleteChecklistItem(checklistId, itemId);
-              // setChecklistItems(prev =>
-              //   prev.filter(item => item.id !== itemId),
-              // );
             } catch (error) {
               console.error(`Error deleting item ${itemId}:`, error.message);
             }

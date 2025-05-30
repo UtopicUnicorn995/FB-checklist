@@ -44,8 +44,6 @@ export function UserProvider({children}) {
     return unsubscribe;
   }, []);
 
-  console.log('user a bit dynamic', user);
-
   const logoutUser = () => {
     Alert.alert('Confirm', 'Are you sure you want to log out?', [
       {

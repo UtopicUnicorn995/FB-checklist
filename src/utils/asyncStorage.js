@@ -30,3 +30,25 @@ export const clearSelectedChecklist = async () => {
     console.error('Error clearing selected checklist:', error);
   }
 };
+
+export const setUserSettings = async (settings, userId) => {
+  try {
+    await AsyncStorage.setItem(
+      `user_settings_${userId}`,
+      JSON.stringify(settings),
+    );
+    console.log('settt', settings, userId)
+  } catch (error) {
+    console.error('Error saving user settings', error);
+  }
+};
+
+export const getUserSettings = async userId => {
+  try {
+    const jsonValue = await AsyncStorage.getItem(`user_settings_${userId}`);
+    console.log('hson value', jsonValue)
+    return jsonValue != null ? JSON.parse(jsonValue) : null;
+  } catch (error) {
+    console.error('Error retrieving user settings', error);
+  }
+};
