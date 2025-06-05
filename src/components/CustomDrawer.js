@@ -63,7 +63,7 @@ function DrawerContent({navigation}) {
     <View style={styles.drawerContainer}>
       <View style={{gap: 15}}>
         <View style={styles.drawerHeader}>
-          <Text style={styles.drawerTitle}>App name and s</Text>
+          <Text style={styles.drawerTitle}>App name and icon</Text>
         </View>
         <View style={styles.drawerItemsContainer}>
           <View

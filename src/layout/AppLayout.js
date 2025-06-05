@@ -1,4 +1,4 @@
-import {useState, useRef, useContext, useEffect} from 'react';
+import {useState} from 'react';
 import {useSafeAreaInsets, SafeAreaView} from 'react-native-safe-area-context';
 import {View, TextInput, Animated, Image, StatusBar, Text} from 'react-native';
 import Pressable from '../components/Pressable';
@@ -6,10 +6,11 @@ import {UserContext} from '../context/UserContext';
 import styles from '../styles/AppLayout.styles';
 import {useNavigation} from '@react-navigation/native';
 import ModalView from '../components/ModalView';
+import InviteModal from '../components/InviteModal';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import IOIcons from 'react-native-vector-icons/Ionicons';
-import {sendNotificationToBackend} from '../utils/sendNotificationToBackend';
-import messaging from '@react-native-firebase/messaging';
+import {getFunctions, httpsCallable} from '@react-native-firebase/functions';
+import {getApp} from '@react-native-firebase/app';
 
 export default function AppLayout({
   children,
@@ -20,26 +21,15 @@ export default function AppLayout({
   handleBack,
   noModalScreen,
   onAddItem,
-  isDetails,
+  invitationModal,
 }) {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
   const [layoutTitle, setLayoutTitle] = useState(title);
-  const [deviceToken, setDeviceToken] = useState(
-    'e8AjNxiKQbGYSxuQ00yMTZ:APA91bHfRuRg19QrZn3haoxdzZqEAR0vW9Y9h_irKcOIDu9h7ap_jY710bU0WpkpQ886oZQC0o2xQUx1q9lBQe19EO5CHgc75BEhvGLLI1ePzlmKhREpeZs',
-  );
 
   const toggleAddItemModal = () => {
     setIsAddItemModalOpen(prev => !prev);
-  };
-
-  const testNotification = async () => {
-    const title = 'sample Title';
-    const body = 'booooddyy';
-    const data = 'sample data';
-
-    await sendNotificationToBackend(deviceToken, title, body, data);
   };
 
   const saveNewTitle = () => {
@@ -52,6 +42,22 @@ export default function AppLayout({
     setIsEditable(false);
   };
 
+  async function sendInvite() {
+    try {
+      const functions = getFunctions(undefined, 'asia-southeast1');
+      const sendInviteFn = httpsCallable(functions, 'sendInvites');
+      const result = await sendInviteFn({email: 'christian.degulacion@gmail.com'});
+      console.log('result', result.data);
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error('❌ Error message:', err.message);
+        console.error('❌ Error stack:', err.stack);
+      } else {
+        console.error('❌ Non-Error thrown:', err);
+      }
+    }
+  }
+
   return (
     <SafeAreaView
       style={{flex: 1, backgroundColor: 'black'}}
@@ -63,9 +69,7 @@ export default function AppLayout({
             styles.container,
             {paddingTop: insets.top + 10, paddingBottom: insets.bottom - 30},
           ]}>
-          <Pressable
-            onPress={navigation.toggleDrawer}
-            style={styles.headerFold}>
+          <Pressable onPress={sendInvite} style={styles.headerFold}>
             <Image
               source={require('../assets/fold.png')}
               style={{width: 45, height: 45}}
@@ -165,7 +169,7 @@ export default function AppLayout({
           {children}
         </View>
         {!handleBack && !noModalScreen && onAddItem && (
-          <ModalView
+          <InviteModal
             openMenu={isAddItemModalOpen}
             setModalMenu={toggleAddItemModal}
             handleAddItem={onAddItem}
