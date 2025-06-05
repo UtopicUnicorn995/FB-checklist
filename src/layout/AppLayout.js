@@ -9,8 +9,6 @@ import ModalView from '../components/ModalView';
 import InviteModal from '../components/InviteModal';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import IOIcons from 'react-native-vector-icons/Ionicons';
-import {getFunctions, httpsCallable} from '@react-native-firebase/functions';
-import {getApp} from '@react-native-firebase/app';
 
 export default function AppLayout({
   children,
@@ -42,21 +40,7 @@ export default function AppLayout({
     setIsEditable(false);
   };
 
-  async function sendInvite() {
-    try {
-      const functions = getFunctions(undefined, 'asia-southeast1');
-      const sendInviteFn = httpsCallable(functions, 'sendInvites');
-      const result = await sendInviteFn({email: 'christian.degulacion@gmail.com'});
-      console.log('result', result.data);
-    } catch (err) {
-      if (err instanceof Error) {
-        console.error('❌ Error message:', err.message);
-        console.error('❌ Error stack:', err.stack);
-      } else {
-        console.error('❌ Non-Error thrown:', err);
-      }
-    }
-  }
+
 
   return (
     <SafeAreaView

@@ -18,6 +18,8 @@ import {
   deleteObject,
 } from '@react-native-firebase/storage';
 import {getAuth} from '@react-native-firebase/auth';
+import {getFunctions, httpsCallable} from '@react-native-firebase/functions';
+
 // import { db } from '../config/firebaseConfig';
 
 export const getLoggedUser = async userId => {
@@ -264,6 +266,27 @@ export const updateSettings = async newSettings => {
 
   console.log('Writing settings:', newSettings);
 
-
   await update(userRef, {settings: newSettings});
+};
+
+export const sendInvite = async (email, selectedChecklist, username) => {
+  try {
+    const functions = getFunctions(undefined, 'asia-southeast1');
+    const sendInviteFn = httpsCallable(functions, 'sendInvites');
+    const payload = {
+      email,
+      checklistId: selectedChecklist.id,
+      checklistTitle: selectedChecklist.title,
+      username,
+    };
+    const result = await sendInviteFn(payload);
+    console.log('result', result.data);
+  } catch (err) {
+    if (err instanceof Error) {
+      console.error('❌ Error message:', err.message);
+      console.error('❌ Error stack:', err.stack);
+    } else {
+      console.error('❌ Non-Error thrown:', err);
+    }
+  }
 };
