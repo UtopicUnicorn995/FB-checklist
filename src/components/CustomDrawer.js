@@ -139,7 +139,7 @@ function DrawerContent({navigation}) {
                   }}
                   iconName="plus"
                   btnTextStyleProp={18}
-                  iconColor='#aaa'
+                  iconColor="#aaa"
                 />
               )
             ) : (
@@ -173,7 +173,7 @@ function DrawerContent({navigation}) {
             />
             <Text style={styles.drawerItemText}>Notes</Text>
           </Pressable>
-          {/* <Pressable
+          <Pressable
             style={[
               styles.drawerItem,
               currentScreenName === 'Collaborators' && {
@@ -187,7 +187,7 @@ function DrawerContent({navigation}) {
               source={require('../assets/users.png')}
             />
             <Text style={styles.drawerItemText}>Collaborators</Text>
-          </Pressable> */}
+          </Pressable>
 
           <Pressable
             style={[
